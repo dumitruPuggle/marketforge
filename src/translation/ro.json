@@ -1,0 +1,10 @@
+{
+    "back": "Înapoi",
+    "firstName": "Nume",
+    "lastName": "Prenume",
+    "email": "Adresă de e-mail",
+    "required": "Câmp obligatoriu",
+    "invalidAddress": "Adresă incorectă",
+    "next": "Înainte",
+    "signup": "Înregistrare"
+}

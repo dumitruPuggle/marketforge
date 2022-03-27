@@ -1,0 +1,10 @@
+{
+    "back": "Back",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "E-mail address",
+    "required": "Required",
+    "invalidAddress": "Invalid address",
+    "next": "Next",
+    "signup": "Sign Up"
+}

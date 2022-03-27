@@ -1,0 +1,11 @@
+.sign-up-row{
+    margin: 0px;
+    padding-top: 37px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+
+.sign-up-left{
+    background-color: #e9e9e9;
+}
