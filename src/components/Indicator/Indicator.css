@@ -1,0 +1,25 @@
+.indicator-circle{
+    border-radius: 50%;
+    width: 6px;
+    height: 6px;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.indicator-circle-active{
+    background-color: #3578E5;
+}
+
+.indicator-circle-inactive{
+    background-color: rgba(0, 0, 0, 0.199)
+}
+
+.indicator-container{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}

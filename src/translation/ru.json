@@ -6,5 +6,7 @@
     "required": "Обязательное поле",
     "invalidAddress": "Неверный адрес",
     "next": "Далее",
-    "signup": "Регистрация"
+    "signup": "Регистрация",
+    "verification": "Проверка",
+    "phoneNumber": "Номер телефона"
 }

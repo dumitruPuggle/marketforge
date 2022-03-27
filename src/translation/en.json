@@ -6,5 +6,7 @@
     "required": "Required",
     "invalidAddress": "Invalid address",
     "next": "Next",
-    "signup": "Sign Up"
+    "signup": "Sign Up",
+    "verification": "Verification",
+    "phoneNumber": "Phone number"
 }

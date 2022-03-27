@@ -12,6 +12,7 @@
     text-decoration: none;
     color: black;
     margin-left: 10px;
+    cursor: pointer;
 }
 
 .active-link:hover{

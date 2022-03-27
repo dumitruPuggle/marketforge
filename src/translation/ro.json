@@ -6,5 +6,7 @@
     "required": "Câmp obligatoriu",
     "invalidAddress": "Adresă incorectă",
     "next": "Înainte",
-    "signup": "Înregistrare"
+    "signup": "Înregistrare",
+    "verification": "Verificare",
+    "phoneNumber": "Număr de telefon"
 }
