@@ -27,8 +27,9 @@ function SignUp() {
   }
   const onVerificationSubmitted = (values: any) => {
     setState({...state, verification: values})
-    
   }
+
+  
   return (
     <div className='row sign-up-row'>
       <Back />
