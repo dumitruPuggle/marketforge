@@ -7,9 +7,10 @@ import './SignUp.css'
 import { useState } from 'react';
 import Indicator from '../../components/Indicator/Indicator';
 import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
-
+import GlobeImage from '../../assets/globe.americas.fill.svg'
 function SignUp() {
   let { path } = useRouteMatch();
+
   const history = useHistory()
   const [state, setState] = useState({
     personalInfo: {
@@ -28,6 +29,9 @@ function SignUp() {
   const onVerificationSubmitted = (values: any) => {
     setState({...state, verification: values})
   }
+  //Some redirect tricks.
+  const isEmpty = !Object.values(state.personalInfo).some((x : any) => x !== null && x !== '');
+  window.onbeforeunload = s => !isEmpty ? "" : null;
 
   
   return (
@@ -42,8 +46,14 @@ function SignUp() {
             <Route exact path={`${path}`}>
               <PersonInfo defValues={state.personalInfo} onSubmit={onPersonalInfoSubmitted}/>
             </Route>
-            <Route exact path={`${path}/1`}>
-              <Verification defValues={state.verification} onSubmit={onVerificationSubmitted}/>
+            {
+              !isEmpty &&
+              <Route exact path={`${path}/1`}>
+                <Verification defValues={state.verification} onSubmit={onVerificationSubmitted}/>
+              </Route>
+            }
+            <Route exact path={`*`}>
+              <NotFound />
             </Route>
           </Switch>
         </div>
@@ -164,4 +174,15 @@ const Verification = ({onSubmit, defValues}: any) => {
     </form>
   );
 };
+
+function NotFound(){
+  return (
+    <div>
+      <img draggable={false} alt="" src={GlobeImage} />
+      <h1 className="not-found-title">This section is not available.</h1>
+      <small>Please contact the person that linked you to the original URL and let them know their link is broken.</small>
+    </div>
+  )
+}
+
 export default SignUp;
