@@ -13,7 +13,7 @@ import {
   useHistory,
   useRouteMatch,
 } from "react-router-dom";
-import { signUpSession1 } from "../../service/service";
+import { signUpSession1, signUpSession2 } from "../../service/service";
 import { warnBeforeClose } from "../../service/warnBeforeClose";
 import { useMediaQuery } from "react-responsive";
 import SignUpTempTokenSession from "../../service/SignUpTempTokenSession";
@@ -49,9 +49,18 @@ function SignUp() {
     }
   };
 
-  const onVerificationSubmitted = (values: any) => {
+  const onVerificationSubmitted = async (values: any) => {
     setState({ ...state, verification: values });
-    
+    try {
+      const {message} = await signUpSession2({
+        "phoneNumber": values.phoneNumber,
+        "lang": localStorage.getItem("i18nextLng")
+      });
+      
+      alert(message);
+    }catch(e){
+      
+    }
   };
 
   //Warn user before closing the window, if he is not done with the sign up process.
