@@ -8,5 +8,11 @@
     "next": "Next",
     "signup": "Sign Up",
     "verification": "Verification",
-    "phoneNumber": "Phone number"
+    "phoneNumber": "Phone number",
+    "networkError": "Network error",
+    "invalidEmail": "Invalid e-mail address",
+    "unknownError": "Unknown error, please try again later",
+    "invalidPhoneNumber": "Invalid phone number",
+    "disclaimerPersonalInfo": "Your data will not be processed by third parties. The application will receive a one-time token to continue the registration process. The current session will be anonymous, cannot be reviewed.",
+    "disclaimerVerification": "The verification code will be sent to the phone number you provided. The cost of verification is free. No fees or commissions."
 }

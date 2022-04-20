@@ -1,11 +1,6 @@
-import { TextField, Button } from "@mui/material";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 import Back from "../../components/Back/Back";
-import { useTranslation } from "react-i18next";
 import "./SignUp.css";
-import { useState } from "react";
-import Indicator from "../../components/Indicator/Indicator";
+import { createContext, useState } from "react";
 import {
   Redirect,
   Route,
@@ -17,6 +12,13 @@ import { signUpSession1, signUpSession2 } from "../../service/service";
 import { warnBeforeClose } from "../../service/warnBeforeClose";
 import { useMediaQuery } from "react-responsive";
 import SignUpTempTokenSession from "../../service/SignUpTempTokenSession";
+import PersonInfo from "./PersonInformation";
+import Verification from "./Verification";
+import { t } from "i18next";
+
+export const SignUpContext = createContext({});
+export const totalSteps = 3;
+
 function SignUp() {
   let { path } = useRouteMatch();
 
@@ -36,216 +38,116 @@ function SignUp() {
       phoneNumber: "",
     },
   });
+  const errorHandler: any = useState({
+    personalInfo: {
+      error: "",
+    },
+    verification: {
+      error: "",
+    },
+  });
+
+  const errors = errorHandler[0];
+  const setError = (key: string, value: string) => {
+    errorHandler[1]({
+      ...errors,
+      [key]: {
+        error: value,
+      },
+    });
+  }
+  const hasErrors = (key: string) => errors[key].error !== "";
 
   //Methods used to handle submit.
   const onPersonalInfoSubmitted = async (values: any) => {
     setState({ ...state, personalInfo: values });
     try {
-      const {token} = await signUpSession1(values);
-      new SignUpTempTokenSession(token).signUpSession1()
+      const { token } = await signUpSession1(values);
+      new SignUpTempTokenSession(token).signUpSession1();
       history.push(`${path}/1`);
-    }catch(e){
-      
+      if (hasErrors('personalInfo')) {
+        setError('personalInfo', '');
+      }
+    } catch (e: any) {
+      if (e.message === "Network Error") {
+        setError("personalInfo", t('networkError'));
+      } else if (e.response?.status === 403 && e.response.data?.field === "email") {
+        setError("personalInfo", t('invalidEmail'));
+      } else {
+        setError("personalInfo", t('unknownError'));
+      }
     }
   };
 
   const onVerificationSubmitted = async (values: any) => {
     setState({ ...state, verification: values });
     try {
-      const {message} = await signUpSession2({
-        "phoneNumber": values.phoneNumber,
-        "lang": localStorage.getItem("i18nextLng")
+      await signUpSession2({
+        phoneNumber: `+373${values.phoneNumber}`,
+        lang: localStorage.getItem("i18nextLng"),
       });
-      
-      alert(message);
-    }catch(e){
-      
+    } catch (e: any) {
+      if (e.message === "Network Error") {
+        setError("verification", t('networkError'));
+      } else if (e.response?.status === 403 && e.response.data?.field === "phoneNumber") {
+        setError("verification", t('invalidPhoneNumber'));
+      }
     }
   };
 
   //Warn user before closing the window, if he is not done with the sign up process.
-  const isEmpty = !Object.values(state.personalInfo).some((x: any) => x !== null && x !== "");
-  warnBeforeClose(!isEmpty)
+  const isEmpty = !Object.values(state.personalInfo).some(
+    (x: any) => x !== null && x !== ""
+  );
+  warnBeforeClose(!isEmpty);
 
   //Media queries for responsiveness.
   const Desktop = ({ children }: any) => {
-    const isDesktop = useMediaQuery({ minWidth: 992 })
-    return isDesktop ? children : null
-  }
+    const isDesktop = useMediaQuery({ minWidth: 992 });
+    return isDesktop ? children : null;
+  };
+
+  const personalInfoError = errors?.personalInfo?.error;
+  const verificationError = errors?.verification?.error;
   return (
-    <div className="row sign-up-row">
-      <Back />
-      <Desktop>
-        <div className="col pt-5 sign-up-left"></div>
-      </Desktop>
-      <div className="col">
-        <div className="form-center mt-5">
-          <Switch>
-            <Route exact path={`${path}`}>
-              <PersonInfo
-                defValues={state.personalInfo}
-                onSubmit={onPersonalInfoSubmitted}
-              />
-            </Route>
-            {!isEmpty && (
-              <Route exact path={`${path}/1`}>
-                <Verification
-                  defValues={state.verification}
-                  onSubmit={onVerificationSubmitted}
+    <SignUpContext.Provider value={{state, errors, hasErrors, setState, setError}}>
+      <div className="row sign-up-row">
+        <Back />
+        <Desktop>
+          <div className="col pt-5 sign-up-left"></div>
+        </Desktop>
+        <div className="col">
+          <div className="form-center mt-5">
+            <Switch>
+              <Route exact path={`${path}`}>
+                {personalInfoError.length > 0 && (
+                  <p className="error-message">{personalInfoError}</p>
+                )}
+                <PersonInfo
+                  defValues={state.personalInfo}
+                  onSubmit={onPersonalInfoSubmitted}
                 />
               </Route>
-            )}
-            <Route exact path={`*`}>
-              <Redirect to={`${path}`} />
-            </Route>
-          </Switch>
+              {!isEmpty && (
+                <Route exact path={`${path}/1`}>
+                  {verificationError.length > 0 && (
+                    <p className="error-message">{verificationError}</p>
+                  )}
+                  <Verification
+                    defValues={state.verification}
+                    onSubmit={onVerificationSubmitted}
+                  />
+                </Route>
+              )}
+              <Route exact path={`*`}>
+                <Redirect to={`${path}`} />
+              </Route>
+            </Switch>
+          </div>
         </div>
       </div>
-    </div>
+    </SignUpContext.Provider>
   );
 }
-
-const PersonInfo = ({ onSubmit, defValues }: any) => {
-  const { t } = useTranslation();
-  const formik = useFormik({
-    initialValues: {
-      firstName: defValues.firstName,
-      lastName: defValues.lastName,
-      email: defValues.email,
-    },
-    validationSchema: Yup.object({
-      firstName: Yup.string()
-        .max(15, "Must be 15 characters or less")
-        .required(t("required")),
-      lastName: Yup.string()
-        .max(20, "Must be 20 characters or less")
-        .required(t("required")),
-      email: Yup.string().email(t("invalidAddress")).required(t("required")),
-    }),
-    onSubmit: (values) => {
-      onSubmit(values);
-    },
-  });
-  return (
-    <form className="form-global" onSubmit={formik.handleSubmit}>
-      <h4 className="mb-4 form-title">{t("signup")}</h4>
-      <Indicator className="mb-4" value={0} counts={2} />
-      <TextField
-        helperText={formik.errors.firstName}
-        id="demo-helper-text-misaligned"
-        label={t("firstName")}
-        name="firstName"
-        className="mb-3"
-        type="name"
-        error={
-          formik.errors.firstName && formik.touched.firstName ? true : false
-        }
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.firstName}
-      />
-      <TextField
-        helperText={formik.errors.lastName}
-        id="demo-helper-text-misaligned"
-        label={t("lastName")}
-        name="lastName"
-        className="mb-3"
-        type="name"
-        error={formik.errors.lastName && formik.touched.lastName ? true : false}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.lastName}
-      />
-      <TextField
-        helperText={formik.errors.email}
-        id="demo-helper-text-misaligned"
-        label={t("email")}
-        name="email"
-        type="email"
-        className="mb-3"
-        error={formik.errors.email && formik.touched.email ? true : false}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.email}
-      />
-      <Button
-        variant="contained"
-        disableElevation
-        className="mt-3"
-        type="submit"
-      >
-        {t("next")}
-      </Button>
-      <hr />
-      <small className="w-100 form-disclaimer">
-        BEFORE YOU GET STARTED, Lorem Ipsum is simply dummy text of the printing
-        and typesetting industry. Lorem Ipsum has been the industry's standard
-        dummy text ever since the 1500s, when an unknown printer took a galley
-        of type and scrambled it to make a type specimen book. It has survived
-        not only five centuries, but also the leap into electronic typesetting,
-        remaining essentially unchanged. It was popularised in the 1960s with
-        the release of Letraset sheets containing Lorem Ipsum passages, and more
-        recently with desktop publishing software like Aldus PageMaker including
-        versions of Lorem Ipsum.
-      </small>
-    </form>
-  );
-};
-
-const Verification = ({ onSubmit, defValues }: any) => {
-  const { t } = useTranslation();
-  const formik = useFormik({
-    initialValues: {
-      phoneNumber: defValues.phoneNumber,
-    },
-    validationSchema: Yup.object({
-      phoneNumber: Yup.number(),
-    }),
-    onSubmit: (values) => {
-      onSubmit(values);
-    },
-  });
-  return (
-    <form className="form-global" onSubmit={formik.handleSubmit}>
-      <h4 className="mb-4 form-title">{t("verification")}</h4>
-      <Indicator className="mb-4" value={1} counts={2} />
-      <TextField
-        helperText={formik.errors.phoneNumber}
-        id="demo-helper-text-misaligned"
-        label={t("phoneNumber")}
-        name="phoneNumber"
-        className="mb-3"
-        placeholder="+373 (000)-000-00"
-        type="phone"
-        error={
-          formik.errors.phoneNumber && formik.touched.phoneNumber ? true : false
-        }
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.phoneNumber}
-      />
-      <Button
-        variant="contained"
-        disableElevation
-        className="mt-3"
-        type="submit"
-      >
-        {t("next")}
-      </Button>
-      <hr />
-      <small className="w-100 form-disclaimer">
-        BEFORE YOU GET STARTED, Lorem Ipsum is simply dummy text of the printing
-        and typesetting industry. Lorem Ipsum has been the industry's standard
-        dummy text ever since the 1500s, when an unknown printer took a galley
-        of type and scrambled it to make a type specimen book. It has survived
-        not only five centuries, but also the leap into electronic typesetting,
-        remaining essentially unchanged. It was popularised in the 1960s with
-        the release of Letraset sheets containing Lorem Ipsum passages, and more
-        recently with desktop publishing software like Aldus PageMaker including
-        versions of Lorem Ipsum.
-      </small>
-    </form>
-  );
-};
 
 export default SignUp;
