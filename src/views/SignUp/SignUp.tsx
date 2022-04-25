@@ -8,13 +8,14 @@ import {
   useHistory,
   useRouteMatch,
 } from "react-router-dom";
-import { signUpSession1, signUpSession2 } from "../../service/service";
+import { signUpSession1, signUpSession2, signUpSession3 } from "../../service/service";
 import { warnBeforeClose } from "../../service/warnBeforeClose";
 import { useMediaQuery } from "react-responsive";
 import SignUpTempTokenSession from "../../service/SignUpTempTokenSession";
 import PersonInfo from "./PersonInformation";
 import Verification from "./Verification";
 import { t } from "i18next";
+import CodeValidation from "./CodeValidation";
 
 export const SignUpContext = createContext({});
 export const totalSteps = 3;
@@ -37,6 +38,9 @@ function SignUp() {
     verification: {
       phoneNumber: "",
     },
+    codeValidation: {
+      code: [null, null, null, null, null, null]
+    }
   });
   const errorHandler: any = useState({
     personalInfo: {
@@ -45,6 +49,9 @@ function SignUp() {
     verification: {
       error: "",
     },
+    codeValidation: {
+      error: ""
+    }
   });
 
   const errors = errorHandler[0];
@@ -63,7 +70,7 @@ function SignUp() {
     setState({ ...state, personalInfo: values });
     try {
       const { token } = await signUpSession1(values);
-      new SignUpTempTokenSession(token).signUpSession1();
+      new SignUpTempTokenSession(token).setToken();
       history.push(`${path}/1`);
       if (hasErrors('personalInfo')) {
         setError('personalInfo', '');
@@ -82,10 +89,15 @@ function SignUp() {
   const onVerificationSubmitted = async (values: any) => {
     setState({ ...state, verification: values });
     try {
-      await signUpSession2({
+      const {token} = await signUpSession2({
         phoneNumber: `+373${values.phoneNumber}`,
         lang: localStorage.getItem("i18nextLng"),
       });
+      new SignUpTempTokenSession(token).setToken();
+      history.push(`${path}/2`);
+      if (hasErrors('verification')) {
+        setError('verification', '');
+      }
     } catch (e: any) {
       if (e.message === "Network Error") {
         setError("verification", t('networkError'));
@@ -95,11 +107,31 @@ function SignUp() {
     }
   };
 
+  const onCodeValidationSubmitted = async (values: any) => {
+    try {
+      await signUpSession3({
+        code: values.code.join(""),
+        token: localStorage.getItem("_temptoken") || ""
+      });
+      history.push(`${path}/finish-sign-up`);
+    }catch (e: any) {
+      alert('error')
+    }
+  }
+
   //Warn user before closing the window, if he is not done with the sign up process.
-  const isEmpty = !Object.values(state.personalInfo).some(
+  const isPersonalInfoEmpty = !Object.values(state.personalInfo).some(
     (x: any) => x !== null && x !== ""
   );
-  warnBeforeClose(!isEmpty);
+  warnBeforeClose(!isPersonalInfoEmpty);
+
+  const isVerficationEmpty = !Object.values(state.verification).some(
+    (x: any) => x !== null && x !== ""
+  );
+
+  const isCodeVerification = !Object.values(state.codeValidation).some(
+    (x: any) => x !== null && x !== ""
+  );
 
   //Media queries for responsiveness.
   const Desktop = ({ children }: any) => {
@@ -109,6 +141,7 @@ function SignUp() {
 
   const personalInfoError = errors?.personalInfo?.error;
   const verificationError = errors?.verification?.error;
+  const codeValidationError = errors?.codeValidation?.error;
   return (
     <SignUpContext.Provider value={{state, errors, hasErrors, setState, setError}}>
       <div className="row sign-up-row">
@@ -128,7 +161,7 @@ function SignUp() {
                   onSubmit={onPersonalInfoSubmitted}
                 />
               </Route>
-              {!isEmpty && (
+              {!isPersonalInfoEmpty && (
                 <Route exact path={`${path}/1`}>
                   {verificationError.length > 0 && (
                     <p className="error-message">{verificationError}</p>
@@ -137,6 +170,22 @@ function SignUp() {
                     defValues={state.verification}
                     onSubmit={onVerificationSubmitted}
                   />
+                </Route>
+              )}
+              {!isVerficationEmpty && (
+                <Route exact path={`${path}/2`}>
+                  {codeValidationError.length > 0 && (
+                    <p className="error-message">{verificationError}</p>
+                  )}
+                  <CodeValidation
+                    defValues={state.codeValidation}
+                    onSubmit={onCodeValidationSubmitted}
+                  />
+                </Route>
+              )}
+              {!isCodeVerification && (
+                <Route exact path={`${path}/finish-sign-up`}>
+                  Success
                 </Route>
               )}
               <Route exact path={`*`}>

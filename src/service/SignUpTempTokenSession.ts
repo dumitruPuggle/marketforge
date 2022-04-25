@@ -12,7 +12,7 @@ class SignUpTempTokenSession {
             return false;
         }
     }
-    signUpSession1(){
+    setToken(){
         if(this.isTokenValid()){
             localStorage.setItem('_temptoken', this.token);
         }
