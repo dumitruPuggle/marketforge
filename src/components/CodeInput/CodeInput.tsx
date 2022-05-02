@@ -50,6 +50,7 @@ function CodeInput({ value, onValueChange, error, style }: ICodeInputProps) {
 
   useEffect(() => {
     onValueChange(values);
+    // eslint-disable-next-line
   }, [values]);
 
   const setFocus = (id: number) => {
@@ -93,7 +94,7 @@ function CodeInput({ value, onValueChange, error, style }: ICodeInputProps) {
 
               //Check if the key is command + v (on mac)
               const isPasteOnMac = e.metaKey && e.keyCode === 86
-              const isPasteOnWindows = e.ctrlKey && e.keyCode == 86
+              const isPasteOnWindows = e.ctrlKey && e.keyCode === 86
               if (isPasteOnMac || isPasteOnWindows) {
                 e.preventDefault();
                 const clipboardData = await navigator.clipboard.readText();

@@ -3,9 +3,9 @@ import { useFormik } from "formik";
 import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
-import NativeButton from "../../components/Buttons/NativeButton";
-import Indicator from "../../components/Indicator/Indicator";
-import { SignUpContext, totalSteps } from "./SignUp";
+import NativeButton from "../../../../components/Buttons/NativeButton";
+import Indicator from "../../../../components/Indicator/Indicator";
+import { personalInfoStep, SignUpContext, totalSteps } from "../SignUp";
 
 const PersonInfo = ({ onSubmit, defValues }: any) => {
   const {errors, setError} : any = useContext(SignUpContext);
@@ -28,16 +28,20 @@ const PersonInfo = ({ onSubmit, defValues }: any) => {
     onSubmit: (values) => onSubmit(values)
   });
 
+  // eslint-disable-next-line
   const firstNameError = formik.errors.firstName && formik.touched.firstName ? true : false
+  // eslint-disable-next-line
   const lastNameError = formik.errors.lastName && formik.touched.lastName ? true : false
+  // eslint-disable-next-line
   const emailError = formik.errors.email && formik.touched.email || errors.personalInfo.error === t('invalidEmail') ? true : false
 
   //Remove error message when user starts typing again.
+  // eslint-disable-next-line
   useEffect(() => setError('personalInfo', ''), [formik.values.email]);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       <h4 className="mb-4 form-title">{t("signup")}</h4>
-      <Indicator className="mb-4" value={0} counts={totalSteps} />
+      <Indicator className="mb-4" value={personalInfoStep} counts={totalSteps} />
       <TextField
         helperText={formik.errors.firstName}
         id="demo-helper-text-misaligned"

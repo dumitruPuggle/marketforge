@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import '@blueprintjs/core/lib/css/blueprint.css';
 import "./i18next.ts";
 
 const theme = createTheme({

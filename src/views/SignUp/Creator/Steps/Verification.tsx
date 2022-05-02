@@ -3,9 +3,9 @@ import { useFormik } from "formik";
 import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
-import NativeButton from "../../components/Buttons/NativeButton";
-import Indicator from "../../components/Indicator/Indicator";
-import { SignUpContext, totalSteps } from "./SignUp";
+import NativeButton from "../../../../components/Buttons/NativeButton";
+import Indicator from "../../../../components/Indicator/Indicator";
+import { SignUpContext, totalSteps, verificationStep } from "../SignUp";
 
 const Verification = ({ onSubmit, defValues }: any) => {
   const { errors, setError }: any = useContext(SignUpContext);
@@ -33,11 +33,12 @@ const Verification = ({ onSubmit, defValues }: any) => {
       : false;
 
   //Remove error message when user starts typing again.
+  // eslint-disable-next-line
   useEffect(() => setError("verification", ""), [formik.values.phoneNumber]);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       <h4 className="mb-4 form-title">{t("verification")}</h4>
-      <Indicator className="mb-4" value={1} counts={totalSteps} />
+      <Indicator className="mb-4" value={verificationStep} counts={totalSteps} />
       <TextField
         helperText={formik.errors.phoneNumber}
         id="demo-helper-text-misaligned"

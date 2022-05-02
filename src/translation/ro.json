@@ -15,5 +15,8 @@
     "invalidPhoneNumber": "Număr de telefon incorect",
     "disclaimerPersonalInfo": "Datele dumneavoastră nu vor fi prelucrate de către terți. Aplicatia va primi un token de unică folosință pentru a continua procesul de înregistrare. Sesiunea curentă va fi anonimă, nu va putea fi revăzută.",
     "disclaimerVerification": "Mesajul de verificare cu un cod va fi trimis pe numărul de telefon indicat de dumneavoastră. Costul de verificare este gratuit. Fără taxe sau comisioane.",
-    "invalidCode": "Cod incorect"
+    "invalidCode": "Cod incorect",
+    "createPassword": "Creați o parolă",
+    "password": "Parolă",
+    "createAccount": "Creați un cont"
 }

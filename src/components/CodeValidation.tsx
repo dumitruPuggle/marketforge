@@ -1,10 +1,10 @@
 import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
-import NativeButton from "../../components/Buttons/NativeButton";
-import CodeInput from "../../components/CodeInput/CodeInput";
-import Indicator from "../../components/Indicator/Indicator";
-import { totalSteps } from "./SignUp";
+import NativeButton from "./Buttons/NativeButton";
+import CodeInput from "./CodeInput/CodeInput";
+import Indicator from "./Indicator/Indicator";
+import { codeValidationStep, totalSteps } from "../views/SignUp/Creator/SignUp";
 
 function CodeValidation({ onSubmit, defValues }: any) {
   const { t } = useTranslation();
@@ -25,7 +25,7 @@ function CodeValidation({ onSubmit, defValues }: any) {
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       <h4 className="mb-4 form-title">{t("verification")}</h4>
-      <Indicator className="mb-4" value={2} counts={totalSteps} />
+      <Indicator className="mb-4" value={codeValidationStep} counts={totalSteps} />
       <CodeInput value={formik.values.code} onValueChange={handleValueChange} />
       <NativeButton className="mt-3" type="submit" title={t("next")} />
       <hr />
