@@ -9,6 +9,9 @@ class PasswordService {
         
     }
     
+    getVersion = async() => {
+        
+    }
 }
 
 export default PasswordService;

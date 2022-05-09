@@ -18,5 +18,6 @@
     "invalidCode": "Invalid code",
     "createPassword": "Create password",
     "password": "Password",
-    "createAccount": "Create account"
+    "createAccount": "Create account",
+    "emailAlreadyExists": "An user with this e-mail address already exists"
 }

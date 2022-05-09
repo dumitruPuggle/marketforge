@@ -18,5 +18,6 @@
     "invalidCode": "Неверный код",
     "createPassword": "Придумайте пароль",
     "password": "Пароль",
-    "createAccount": "Создать аккаунт"
+    "createAccount": "Создать аккаунт",
+    "emailAlreadyExists": "Этот адрес электронной почты уже зарегистрирован"
 }

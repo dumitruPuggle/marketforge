@@ -1,15 +1,25 @@
 import { TextField } from "@mui/material";
 import { useFormik } from "formik";
-import { useContext, useEffect } from "react";
+import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import NativeButton from "../../../../components/Buttons/NativeButton";
 import Indicator from "../../../../components/Indicator/Indicator";
-import { personalInfoStep, SignUpContext, totalSteps } from "../SignUp";
+import { signUpSession1 } from "../../../../service/Auth/Creator/endpoints";
+import SignUpTempTokenSession from "../../../../service/Auth/Creator/SignUpTempTokenSession";
+import { routes } from "../../../../service/internal-routes";
+import PersonalInformationHandler from "../../../../store/PersonalInformationHandler";
+import { personalInfoStep, totalSteps } from "../SignUp";
 
-const PersonInfo = ({ onSubmit, defValues }: any) => {
-  const {errors, setError} : any = useContext(SignUpContext);
+const PersonInfo = observer(() => {
+  const state = PersonalInformationHandler;
   const { t } = useTranslation();
+  const history = useHistory();
+
+  const defValues = state.fields;
+
   const formik = useFormik({
     initialValues: {
       firstName: defValues.firstName,
@@ -25,23 +35,58 @@ const PersonInfo = ({ onSubmit, defValues }: any) => {
         .required(t("required")),
       email: Yup.string().email(t("invalidAddress")).required(t("required")),
     }),
-    onSubmit: (values) => onSubmit(values)
+    onSubmit: async function (values) {
+      try {
+        const { token } = await signUpSession1(values);
+        new SignUpTempTokenSession(token).setToken();
+        history.push(`${routes.SignUp}/1`);
+        if (state.hasErrors()) {
+          state.resetAllErrors();
+        }
+      } catch (e: any) {
+        const userExists = e?.response?.data?.message === "User already exists";
+        if (e.message === "Network Error") {
+          state.setError("*", t("networkError"));
+        } else if (userExists && e.response.status === 403) {
+          state.setError("email", t("emailAlreadyExists"));
+        } else if (
+          e.response?.status === 403 &&
+          e.response.data?.field === "email" &&
+          !userExists
+        ) {
+          state.setError("email", t("invalidEmail"));
+        } else {
+          state.setError("*", t("unknownError"));
+        }
+      }
+    },
   });
 
-  // eslint-disable-next-line
-  const firstNameError = formik.errors.firstName && formik.touched.firstName ? true : false
-  // eslint-disable-next-line
-  const lastNameError = formik.errors.lastName && formik.touched.lastName ? true : false
-  // eslint-disable-next-line
-  const emailError = formik.errors.email && formik.touched.email || errors.personalInfo.error === t('invalidEmail') ? true : false
+  const firstNameError =
+    formik.errors.firstName && formik.touched.firstName ? true : false;
+  const lastNameError =
+    formik.errors.lastName && formik.touched.lastName ? true : false;
+  const emailError =
+    (formik.errors.email && formik.touched.email) ||
+    state.errors.email === t("invalidEmail") ||
+    state.errors.email === t("emailAlreadyExists")
+      ? true
+      : false;
 
   //Remove error message when user starts typing again.
-  // eslint-disable-next-line
-  useEffect(() => setError('personalInfo', ''), [formik.values.email]);
+  useEffect(() => state.setError("email", ""), [formik.values.email]);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
+      {state.hasErrors() &&
+        state.listErrors().map((error: string, index: number) => {
+          return <p key={index} className="error-message mb-2">{error}</p>;
+        })}
       <h4 className="mb-4 form-title">{t("signup")}</h4>
-      <Indicator className="mb-4" value={personalInfoStep} counts={totalSteps} />
+      <Indicator
+        className="mb-4"
+        value={personalInfoStep}
+        counts={totalSteps}
+      />
       <TextField
         helperText={formik.errors.firstName}
         id="demo-helper-text-misaligned"
@@ -85,5 +130,6 @@ const PersonInfo = ({ onSubmit, defValues }: any) => {
       </small>
     </form>
   );
-};
+});
+
 export default PersonInfo;

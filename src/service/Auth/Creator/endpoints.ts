@@ -2,10 +2,8 @@ import { api } from "../../api";
 
 interface signUpProps {
   email: string;
-  password: string;
   firstName: string;
   lastName: string;
-  phoneNumber: string;
 }
 
 interface signUpPropsSession2 {

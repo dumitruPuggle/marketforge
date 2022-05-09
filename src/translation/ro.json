@@ -18,5 +18,6 @@
     "invalidCode": "Cod incorect",
     "createPassword": "Creați o parolă",
     "password": "Parolă",
-    "createAccount": "Creați un cont"
+    "createAccount": "Creați un cont",
+    "emailAlreadyExists": "Un cont cu această adresă de e-mail există deja"
 }
