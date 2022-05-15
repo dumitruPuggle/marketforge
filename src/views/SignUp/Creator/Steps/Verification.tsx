@@ -1,13 +1,17 @@
 import { TextField } from "@mui/material";
 import { useFormik } from "formik";
+import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import NativeButton from "../../../../components/Buttons/NativeButton";
 import Indicator from "../../../../components/Indicator/Indicator";
+import Timer from "../../../../components/Timer/Timer";
+import { defaults } from "../../../../defaults";
 import { signUpSession2 } from "../../../../service/Auth/Creator/endpoints";
 import { routes } from "../../../../service/internal-routes";
+import { getTempToken } from "../../../../service/miscellaneous/tempTokenUtils";
 import { totalSteps, verificationStep } from "../SignUp";
 
 const Verification = ({ state }: any) => {
@@ -22,8 +26,6 @@ const Verification = ({ state }: any) => {
   };
 
   const [errors, setErrors] = useState(errorsInitialState);
-
-  const _temptoken = localStorage.getItem("_temptoken") || "";
 
   type errorFieldTypes = "phoneNumber" | "*";
 
@@ -50,6 +52,9 @@ const Verification = ({ state }: any) => {
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
+
+  const _temptoken = getTempToken()
+
   const formik = useFormik({
     initialValues: {
       phoneNumber: verification.phoneNumber,
@@ -61,14 +66,17 @@ const Verification = ({ state }: any) => {
         .required(t("required")),
     }),
     onSubmit: async function (values) {
+      if (!_temptoken) return
       setVerification({ ...verification, phoneNumber: values.phoneNumber });
       try {
         const { token } = await signUpSession2(
           {
             phoneNumber: `+373${values.phoneNumber}`,
-            lang: localStorage.getItem("i18nextLng"),
+            lang: localStorage.getItem("i18nextLng") || defaults.lang,
           },
-          { _temptoken }
+          {
+            _temptoken,
+          }
         );
         localStorage.setItem("_temptoken", token);
         history.push(`${routes.SignUp}/2`);
@@ -82,7 +90,6 @@ const Verification = ({ state }: any) => {
           e.response?.status === 403 &&
           e.response.data?.field === "phoneNumber"
         ) {
-          
           setError("phoneNumber", t("invalidPhoneNumber"));
         }
       }

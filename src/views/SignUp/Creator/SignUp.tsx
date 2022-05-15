@@ -1,18 +1,15 @@
 import Back from "../../../components/Back/Back";
 import "./SignUp.css";
-import { createContext, useEffect, useState } from "react";
-import {
-  Redirect,
-  Route,
-  Switch,
-  useHistory,
-  useRouteMatch,
-} from "react-router-dom";
+import { createContext, useState } from "react";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { warnBeforeClose } from "../../../service/miscellaneous/warnBeforeClose";
 import { useMediaQuery } from "react-responsive";
 import PersonInfo from "./Steps/PersonInformation";
 import Verification from "./Steps/Verification";
-import CodeValidation from "../../../components/CodeValidation";
+import CodeValidation from "./Steps/CodeValidation";
+import { getTempToken } from "../../../service/miscellaneous/tempTokenUtils";
+import jwtDecode from "jwt-decode";
+import Timer from "../../../components/Timer/Timer";
 // import PasswordService from "./Steps/CreatePassword";
 
 export const SignUpContext = createContext({});
@@ -63,10 +60,8 @@ function SignUp() {
 
   //Warn user before closing the window, if he is not done with the sign up process.
   const isEmpty = (objectLink: object) => {
-    return !Object.values(objectLink).some(
-      (x: any) => x !== null && x !== ""
-    );
-  }
+    return !Object.values(objectLink).some((x: any) => x !== null && x !== "");
+  };
 
   const isPersonalInfoEmpty = isEmpty(personalInfo[0]);
   const isVerficationEmpty = isEmpty(verification[0]);
@@ -90,9 +85,7 @@ function SignUp() {
             )}
             {!isVerficationEmpty && (
               <Route exact path={`${path}/2`}>
-                <CodeValidation
-                  state={codeValidation}
-                />
+                <CodeValidation state={codeValidation} />
               </Route>
             )}
             {/* {!isCodeVerificationEmpty && (

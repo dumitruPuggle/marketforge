@@ -8,6 +8,7 @@ import NativeButton from "../../../../components/Buttons/NativeButton";
 import Indicator from "../../../../components/Indicator/Indicator";
 import { signUpSession1 } from "../../../../service/Auth/Creator/endpoints";
 import { routes } from "../../../../service/internal-routes";
+import { resetTempToken, setTempToken } from "../../../../service/miscellaneous/tempTokenUtils";
 import { personalInfoStep, totalSteps } from "../SignUp";
 
 interface IPersonalInfo {
@@ -71,8 +72,8 @@ const PersonInfo = ({ state }: any) => {
       setPersonalInfo(values);
       try {
         const { token } = await signUpSession1(values);
-        localStorage.setItem("_temptoken", token);
-        history.push(`${routes.SignUp}/1`);
+        setTempToken(token)
+        history.push(`${routes.SignUp}/${routes.SignUpSteps.verification}`);
         if (hasErrors()) {
           resetAllErrors();
         }
@@ -109,6 +110,8 @@ const PersonInfo = ({ state }: any) => {
   // Remove error message when user starts typing again.
   useEffect(() => setError("email", ""), [formik.values.email]);
 
+  //Reset the temptoken to avoid going through errors
+  useEffect(() => resetTempToken(), []);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {hasErrors() &&

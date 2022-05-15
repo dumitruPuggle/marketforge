@@ -7,6 +7,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import EN from './translation/en.json'
 import RU from './translation/ru.json'
 import RO from './translation/ro.json'
+import { defaults } from './defaults';
 
 i18n
   // detect user language
@@ -17,7 +18,7 @@ i18n
   // init i18next
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
-    fallbackLng: 'en',
+    fallbackLng: defaults.lang,
     debug: true,
     resources: {
       en: {
