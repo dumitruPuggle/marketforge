@@ -4,19 +4,40 @@ import * as Yup from "yup";
 import NativeButton from "./Buttons/NativeButton";
 import CodeInput from "./CodeInput/CodeInput";
 import Indicator from "./Indicator/Indicator";
-import { codeValidationStep, totalSteps } from "../views/SignUp/Creator/SignUp";
+import { codeValidationStep, tempToken, totalSteps } from "../views/SignUp/Creator/SignUp";
+import { signUpSession3 } from "../service/Auth/Creator/endpoints";
+import { routes } from "../service/internal-routes";
+import { useHistory } from "react-router-dom";
 
-function CodeValidation({ onSubmit, defValues }: any) {
+interface ICodeVerification {
+  code: number[];
+}
+
+function CodeValidation({ state }: any) {
+  const history = useHistory()
   const { t } = useTranslation();
+
+  const [codeValidation] = state;
+
   const formik = useFormik({
     initialValues: {
-      code: defValues.code,
+      code: codeValidation.code,
     },
     validationSchema: Yup.object({
       code: Yup.array().of(Yup.number().required(t("required"))),
     }),
-    onSubmit: (values) => {
-      onSubmit(values);
+    onSubmit: async function (values: ICodeVerification) {
+      try {
+        await signUpSession3(
+          {
+            code: values.code.join(""),
+          },
+          { _temptoken: tempToken }
+        );
+        history.push(`${routes.SignUp}/password-service`);
+      } catch (e: any) {
+        alert("error");
+      }
     },
   });
   const handleValueChange = (value: Array<number | null>) => {

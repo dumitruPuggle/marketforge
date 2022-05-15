@@ -1,30 +1,62 @@
 import { TextField } from "@mui/material";
 import { useFormik } from "formik";
-import { observer } from "mobx-react-lite";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import NativeButton from "../../../../components/Buttons/NativeButton";
 import Indicator from "../../../../components/Indicator/Indicator";
 import { signUpSession1 } from "../../../../service/Auth/Creator/endpoints";
-import SignUpTempTokenSession from "../../../../service/Auth/Creator/SignUpTempTokenSession";
 import { routes } from "../../../../service/internal-routes";
-import PersonalInformationHandler from "../../../../store/PersonalInformationHandler";
 import { personalInfoStep, totalSteps } from "../SignUp";
 
-const PersonInfo = observer(() => {
-  const state = PersonalInformationHandler;
+interface IPersonalInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+const PersonInfo = ({ state }: any) => {
   const { t } = useTranslation();
   const history = useHistory();
 
-  const defValues = state.fields;
+  const [personalInfo, setPersonalInfo] = state;
+
+  const errorsInitialState = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    "*": "",
+  };
+  const [errors, setErrors] = useState(errorsInitialState);
+
+  type errorFieldTypes = "firstName" | "lastName" | "email" | "*";
+
+  const setError = (field: errorFieldTypes, error: string) => {
+    setErrors({ ...errors, [field]: error });
+  };
+
+  const hasErrors = (key?: errorFieldTypes) => {
+    if (!key) {
+      //IF theres no key, check if there are any errors
+      return Object.values(errors).some((key) => key !== "");
+    }
+    return errors[key] !== "";
+  };
+
+  const resetAllErrors = () => {
+    setErrors(errorsInitialState);
+  };
+
+  const listErrors = () => {
+    return Object.values(errors).filter((key) => key !== "");
+  };
 
   const formik = useFormik({
     initialValues: {
-      firstName: defValues.firstName,
-      lastName: defValues.lastName,
-      email: defValues.email,
+      firstName: personalInfo.firstName,
+      lastName: personalInfo.lastName,
+      email: personalInfo.email,
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
@@ -35,28 +67,29 @@ const PersonInfo = observer(() => {
         .required(t("required")),
       email: Yup.string().email(t("invalidAddress")).required(t("required")),
     }),
-    onSubmit: async function (values) {
+    onSubmit: async function (values: IPersonalInfo) {
+      setPersonalInfo(values);
       try {
         const { token } = await signUpSession1(values);
-        new SignUpTempTokenSession(token).setToken();
+        localStorage.setItem("_temptoken", token);
         history.push(`${routes.SignUp}/1`);
-        if (state.hasErrors()) {
-          state.resetAllErrors();
+        if (hasErrors()) {
+          resetAllErrors();
         }
       } catch (e: any) {
         const userExists = e?.response?.data?.message === "User already exists";
         if (e.message === "Network Error") {
-          state.setError("*", t("networkError"));
+          setError("*", t("networkError"));
         } else if (userExists && e.response.status === 403) {
-          state.setError("email", t("emailAlreadyExists"));
+          setError("email", t("emailAlreadyExists"));
         } else if (
           e.response?.status === 403 &&
           e.response.data?.field === "email" &&
           !userExists
         ) {
-          state.setError("email", t("invalidEmail"));
+          setError("email", t("invalidEmail"));
         } else {
-          state.setError("*", t("unknownError"));
+          setError("*", t("unknownError"));
         }
       }
     },
@@ -68,18 +101,23 @@ const PersonInfo = observer(() => {
     formik.errors.lastName && formik.touched.lastName ? true : false;
   const emailError =
     (formik.errors.email && formik.touched.email) ||
-    state.errors.email === t("invalidEmail") ||
-    state.errors.email === t("emailAlreadyExists")
+    errors.email === t("invalidEmail") ||
+    errors.email === t("emailAlreadyExists")
       ? true
       : false;
 
-  //Remove error message when user starts typing again.
-  useEffect(() => state.setError("email", ""), [formik.values.email]);
+  // Remove error message when user starts typing again.
+  useEffect(() => setError("email", ""), [formik.values.email]);
+
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
-      {state.hasErrors() &&
-        state.listErrors().map((error: string, index: number) => {
-          return <p key={index} className="error-message mb-2">{error}</p>;
+      {hasErrors() &&
+        listErrors().map((error: string, index: number) => {
+          return (
+            <p key={index} className="error-message mb-2">
+              {error}
+            </p>
+          );
         })}
       <h4 className="mb-4 form-title">{t("signup")}</h4>
       <Indicator
@@ -130,6 +168,6 @@ const PersonInfo = observer(() => {
       </small>
     </form>
   );
-});
+};
 
 export default PersonInfo;
