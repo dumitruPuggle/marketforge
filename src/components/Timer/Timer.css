@@ -17,6 +17,7 @@
 
 .timer-body:hover{
     background-color: gray;
+    cursor: pointer;
     color: #fff;
     transition: 0s;
 }
