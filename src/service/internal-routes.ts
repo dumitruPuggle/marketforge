@@ -2,9 +2,11 @@ export const routes = {
     root: "/",
     SignUp: "/authentification-v1/variant/sign-up",
     SignUpSteps: {
-        personalInformation: "/",
-        verification: "1",
-        confirmation: "2"
+        root: "1",
+        personalInformation: "1",
+        verification: "2",
+        confirmation: "3",
+        pathLevelSplit: 4
     },
     test: "/test"
 }

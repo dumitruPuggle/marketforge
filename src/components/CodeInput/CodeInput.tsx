@@ -12,13 +12,14 @@ interface ICodeInputProps {
 function CodeInput({ value, onValueChange, error, style }: ICodeInputProps) {
   const myRefs: any = useRef([]);
   const [values, setAllValues] = useState(value);
+
   const handleInputChange = (e: any, index: number) => {
     const inputValue = e.target.value;
     const isNumber = !isNaN(Number(inputValue));
     //Prevent user from entering non-numeric characters
     if (!isNumber) {
       e.target.value = "";
-      return
+      return;
     }
     if (inputValue.length > 0) {
       setAllValues(
@@ -36,11 +37,9 @@ function CodeInput({ value, onValueChange, error, style }: ICodeInputProps) {
     const currentRef = myRefs.current[index];
     const currentValue = currentRef.value;
     const prevRef = myRefs.current[index - 1];
-    
+
     setAllValues(
-      values.map((item: any, i: number) =>
-        i === index ? null : item
-      )
+      values.map((item: any, i: number) => (i === index ? null : item))
     );
     if (currentValue.length === 0 && prevRef) {
       prevRef.focus();
@@ -56,9 +55,10 @@ function CodeInput({ value, onValueChange, error, style }: ICodeInputProps) {
   const setFocus = (id: number) => {
     const currentRef = myRefs.current[id];
     currentRef.focus();
-  }
+  };
 
   if (value.length <= 0) return <></>;
+
   return (
     <div className="code-layout">
       {value.map((item, index: number) => {
@@ -67,10 +67,13 @@ function CodeInput({ value, onValueChange, error, style }: ICodeInputProps) {
             ref={(input) => (myRefs.current[index] = input)}
             key={index}
             className={"code-input"}
-            style={error ? { border: "1px solid red", outline: 'none', ...style } : style}
+            style={
+              error
+                ? { border: "1px solid red", outline: "none", ...style }
+                : style
+            }
             type={"tel"}
-
-            onKeyDown={async (e) => {              
+            onKeyDown={async (e) => {
               if (e.keyCode === 8) {
                 onDelete(index);
               }
@@ -79,7 +82,7 @@ function CodeInput({ value, onValueChange, error, style }: ICodeInputProps) {
                 const prevRef = myRefs.current[index - 1];
                 const { selectionStart }: any = prevRef;
                 if (prevRef) {
-                  e.preventDefault()
+                  e.preventDefault();
                   prevRef.focus();
                   prevRef.setSelectionRange(selectionStart, 2);
                 }
@@ -93,16 +96,18 @@ function CodeInput({ value, onValueChange, error, style }: ICodeInputProps) {
               }
 
               //Check if the key is command + v (on mac)
-              const isPasteOnMac = e.metaKey && e.keyCode === 86
-              const isPasteOnWindows = e.ctrlKey && e.keyCode === 86
+              const isPasteOnMac = e.metaKey && e.keyCode === 86;
+              const isPasteOnWindows = e.ctrlKey && e.keyCode === 86;
               if (isPasteOnMac || isPasteOnWindows) {
                 e.preventDefault();
                 const clipboardData = await navigator.clipboard.readText();
-                const isCode = /^\d+$/.test(clipboardData) && clipboardData.length === value.length;
-                const lastInput = value.length - 1
-                if (isCode){
-                  setAllValues(clipboardData.split('').map(Number));
-                  setFocus(lastInput)
+                const isCode =
+                  /^\d+$/.test(clipboardData) &&
+                  clipboardData.length === value.length;
+                const lastInput = value.length - 1;
+                if (isCode) {
+                  setAllValues(clipboardData.split("").map(Number));
+                  setFocus(lastInput);
                 }
               }
             }}

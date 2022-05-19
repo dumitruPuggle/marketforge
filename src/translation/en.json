@@ -19,5 +19,8 @@
     "createPassword": "Create password",
     "password": "Password",
     "createAccount": "Create account",
-    "emailAlreadyExists": "An user with this e-mail address already exists"
+    "emailAlreadyExists": "An user with this e-mail address already exists",
+    "sessionExpired": "Session expired",
+    "retry": "Retry",
+    "sessionExpiredMessage": "Your session has expired. Please, try again."
 }

@@ -19,5 +19,8 @@
     "createPassword": "Creați o parolă",
     "password": "Parolă",
     "createAccount": "Creați un cont",
-    "emailAlreadyExists": "Un cont cu această adresă de e-mail există deja"
+    "emailAlreadyExists": "Un cont cu această adresă de e-mail există deja",
+    "sessionExpired": "Sesiunea a expirat",
+    "sessionExpiredMessage": "Sesiunea a expirat. Vă rugăm să reîncercați.",
+    "retry": "Reîncercați"
 }

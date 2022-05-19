@@ -1,15 +1,15 @@
 import Back from "../../../components/Back/Back";
 import "./SignUp.css";
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { warnBeforeClose } from "../../../service/miscellaneous/warnBeforeClose";
 import { useMediaQuery } from "react-responsive";
 import PersonInfo from "./Steps/PersonInformation";
 import Verification from "./Steps/Verification";
 import CodeValidation from "./Steps/CodeValidation";
-import { getTempToken } from "../../../service/miscellaneous/tempTokenUtils";
-import jwtDecode from "jwt-decode";
-import Timer from "../../../components/Timer/Timer";
+import DialogTokenExpired from "../../../components/DialogTokenExpired/DialogTokenExpired";
+import { routes } from "../../../service/internal-routes";
+import TokenExpiration from "../../../service/Auth/Creator/TokenExpiration";
 // import PasswordService from "./Steps/CreatePassword";
 
 export const SignUpContext = createContext({});
@@ -23,16 +23,19 @@ export const tempToken = localStorage.getItem("_temptoken") || "";
 function SignUp() {
   let { path } = useRouteMatch();
 
+  const [personalInfoToken, setPersonalInfoToken] = useState<string>("");
   const personalInfo = useState({
     firstName: "",
     lastName: "",
     email: "",
   });
 
+  const [verificationToken, setVerificationToken] = useState<string>("");
   const verification = useState({
     phoneNumber: "",
   });
 
+  const [codeValidationToken, setCodeValidationToken] = useState<string>("");
   const codeValidation = useState({
     code: [null, null, null, null, null, null],
   });
@@ -66,6 +69,55 @@ function SignUp() {
   const isPersonalInfoEmpty = isEmpty(personalInfo[0]);
   const isVerficationEmpty = isEmpty(verification[0]);
   warnBeforeClose(!isPersonalInfoEmpty);
+
+  const [sessionExpiredDialogShown, setSessionExpiredDialogShown] =
+    useState<boolean>(false);
+
+  // const getState = (entireState: [any, Function]) => {
+  //   return entireState[0];
+  // };
+
+  const resetAllTokens = () => {
+    setPersonalInfoToken("");
+    setVerificationToken("");
+    setCodeValidationToken("");
+  };
+
+  const deps = [
+    personalInfoToken,
+    verificationToken,
+    codeValidationToken,
+    window.location.pathname,
+    personalInfo,
+    verification,
+    codeValidation,
+  ];
+  useEffect(() => {
+    const currentPath = () => {
+      const pathSplitNumber = routes.SignUpSteps.pathLevelSplit;
+      const pathLevel = window.location.pathname.split("/")[pathSplitNumber];
+      const pathIndex = parseInt(pathLevel) - 2;
+      if (pathIndex >= 0) {
+        return pathIndex;
+      }
+      return 0;
+    };
+    const tokens = [personalInfoToken, verificationToken, codeValidationToken];
+    const currentToken = tokens[currentPath()];
+
+    if (currentToken && !sessionExpiredDialogShown) {
+      const tokenExpirationHandler = new TokenExpiration(currentToken);
+      const expirationDate = tokenExpirationHandler.getExpirationDate();
+      if (expirationDate !== null)
+        if (Date.now() > expirationDate) {
+          setSessionExpiredDialogShown(true);
+        }
+    }
+  }, deps);
+
+  const handleDialogRetry = () => {
+    resetAllTokens();
+  };
   return (
     <div className="row sign-up-row">
       <Back />
@@ -74,18 +126,40 @@ function SignUp() {
       </Desktop>
       <div className="col">
         <div className="form-center mt-5">
+          <DialogTokenExpired
+            state={sessionExpiredDialogShown}
+            setState={setSessionExpiredDialogShown}
+            onRetry={handleDialogRetry}
+          />
           <Switch>
             <Route exact path={`${path}`}>
-              <PersonInfo state={personalInfo} />
+              <Redirect to={`${path}/${routes.SignUpSteps.root}`} />
+            </Route>
+            <Route
+              exact
+              path={`${path}/${routes.SignUpSteps.personalInformation}`}
+            >
+              <PersonInfo
+                state={personalInfo}
+                setToken={setPersonalInfoToken}
+              />
             </Route>
             {!isPersonalInfoEmpty && (
-              <Route exact path={`${path}/1`}>
-                <Verification state={verification} />
+              <Route exact path={`${path}/${routes.SignUpSteps.verification}`}>
+                <Verification
+                  state={verification}
+                  submitToken={personalInfoToken}
+                  setToken={setVerificationToken}
+                />
               </Route>
             )}
             {!isVerficationEmpty && (
-              <Route exact path={`${path}/2`}>
-                <CodeValidation state={codeValidation} />
+              <Route exact path={`${path}/${routes.SignUpSteps.confirmation}`}>
+                <CodeValidation
+                  state={codeValidation}
+                  submitToken={verificationToken}
+                  setToken={setCodeValidationToken}
+                />
               </Route>
             )}
             {/* {!isCodeVerificationEmpty && (

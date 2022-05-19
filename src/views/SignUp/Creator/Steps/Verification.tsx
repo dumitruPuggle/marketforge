@@ -1,20 +1,19 @@
 import { TextField } from "@mui/material";
 import { useFormik } from "formik";
-import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import NativeButton from "../../../../components/Buttons/NativeButton";
+import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
 import Indicator from "../../../../components/Indicator/Indicator";
-import Timer from "../../../../components/Timer/Timer";
 import { defaults } from "../../../../defaults";
 import { signUpSession2 } from "../../../../service/Auth/Creator/endpoints";
+import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import { routes } from "../../../../service/internal-routes";
-import { getTempToken } from "../../../../service/miscellaneous/tempTokenUtils";
 import { totalSteps, verificationStep } from "../SignUp";
 
-const Verification = ({ state }: any) => {
+const Verification = ({ state, submitToken, setToken }: any) => {
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -26,34 +25,10 @@ const Verification = ({ state }: any) => {
   };
 
   const [errors, setErrors] = useState(errorsInitialState);
-
-  type errorFieldTypes = "phoneNumber" | "*";
-
-  const setError = (field: errorFieldTypes, error: string) => {
-    setErrors({ ...errors, [field]: error });
-  };
-
-  const hasErrors = (key?: errorFieldTypes) => {
-    if (!key) {
-      //IF theres no key, check if there are any errors
-      return Object.values(errors).some((key) => key !== "");
-    }
-    return errors[key] !== "";
-  };
-
-  const resetAllErrors = () => {
-    setErrors(errorsInitialState);
-  };
-
-  const listErrors = () => {
-    return Object.values(errors).filter((key) => key !== "");
-  };
+  const ErrorHandler = new Error(errors, setErrors, errorsInitialState);
 
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
-
-  const _temptoken = getTempToken()
 
   const formik = useFormik({
     initialValues: {
@@ -66,7 +41,7 @@ const Verification = ({ state }: any) => {
         .required(t("required")),
     }),
     onSubmit: async function (values) {
-      if (!_temptoken) return
+      if (!submitToken) return
       setVerification({ ...verification, phoneNumber: values.phoneNumber });
       try {
         const { token } = await signUpSession2(
@@ -75,22 +50,22 @@ const Verification = ({ state }: any) => {
             lang: localStorage.getItem("i18nextLng") || defaults.lang,
           },
           {
-            _temptoken,
+            _temptoken: submitToken,
           }
         );
-        localStorage.setItem("_temptoken", token);
-        history.push(`${routes.SignUp}/2`);
-        if (hasErrors()) {
-          resetAllErrors();
+        setToken(token);
+        history.push(`${routes.SignUp}/${routes.SignUpSteps.confirmation}`);
+        if (ErrorHandler.hasErrors()) {
+          ErrorHandler.resetAllErrors();
         }
       } catch (e: any) {
         if (e.message === "Network Error") {
-          setError("*", t("networkError"));
+          ErrorHandler.setFieldError("*", t("networkError"));
         } else if (
           e.response?.status === 403 &&
           e.response.data?.field === "phoneNumber"
         ) {
-          setError("phoneNumber", t("invalidPhoneNumber"));
+          ErrorHandler.setFieldError("phoneNumber", t("invalidPhoneNumber"));
         }
       }
     },
@@ -103,17 +78,12 @@ const Verification = ({ state }: any) => {
 
   //Remove error message when user starts typing again.
   // eslint-disable-next-line
-  useEffect(() => setError("phoneNumber", ""), [formik.values.phoneNumber]);
+  useEffect(() => ErrorHandler.setFieldError("phoneNumber", ""), [formik.values.phoneNumber]);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
-      {hasErrors() &&
-        listErrors().map((error: string, index: number) => {
-          return (
-            <p key={index} className="error-message mb-2">
-              {error}
-            </p>
-          );
-        })}
+      {ErrorHandler.hasErrors() && (
+        <ErrorBubble errorList={ErrorHandler.listErrors()} />
+      )}
       <h4 className="mb-4 form-title">{t("verification")}</h4>
       <Indicator
         className="mb-4"

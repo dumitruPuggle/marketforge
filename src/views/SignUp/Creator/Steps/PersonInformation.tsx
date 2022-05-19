@@ -7,9 +7,10 @@ import * as Yup from "yup";
 import NativeButton from "../../../../components/Buttons/NativeButton";
 import Indicator from "../../../../components/Indicator/Indicator";
 import { signUpSession1 } from "../../../../service/Auth/Creator/endpoints";
+import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import { routes } from "../../../../service/internal-routes";
-import { resetTempToken, setTempToken } from "../../../../service/miscellaneous/tempTokenUtils";
 import { personalInfoStep, totalSteps } from "../SignUp";
+import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
 
 interface IPersonalInfo {
   firstName: string;
@@ -17,7 +18,7 @@ interface IPersonalInfo {
   email: string;
 }
 
-const PersonInfo = ({ state }: any) => {
+const PersonInfo = ({ state, setToken }: any) => {
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -30,28 +31,7 @@ const PersonInfo = ({ state }: any) => {
     "*": "",
   };
   const [errors, setErrors] = useState(errorsInitialState);
-
-  type errorFieldTypes = "firstName" | "lastName" | "email" | "*";
-
-  const setError = (field: errorFieldTypes, error: string) => {
-    setErrors({ ...errors, [field]: error });
-  };
-
-  const hasErrors = (key?: errorFieldTypes) => {
-    if (!key) {
-      //IF theres no key, check if there are any errors
-      return Object.values(errors).some((key) => key !== "");
-    }
-    return errors[key] !== "";
-  };
-
-  const resetAllErrors = () => {
-    setErrors(errorsInitialState);
-  };
-
-  const listErrors = () => {
-    return Object.values(errors).filter((key) => key !== "");
-  };
+  const ErrorHandler = new Error(errors, setErrors, errorsInitialState);
 
   const formik = useFormik({
     initialValues: {
@@ -72,25 +52,25 @@ const PersonInfo = ({ state }: any) => {
       setPersonalInfo(values);
       try {
         const { token } = await signUpSession1(values);
-        setTempToken(token)
+        setToken(token);
         history.push(`${routes.SignUp}/${routes.SignUpSteps.verification}`);
-        if (hasErrors()) {
-          resetAllErrors();
+        if (ErrorHandler.hasErrors()) {
+          ErrorHandler.resetAllErrors();
         }
       } catch (e: any) {
         const userExists = e?.response?.data?.message === "User already exists";
         if (e.message === "Network Error") {
-          setError("*", t("networkError"));
+          ErrorHandler.setFieldError("*", t("networkError"));
         } else if (userExists && e.response.status === 403) {
-          setError("email", t("emailAlreadyExists"));
+          ErrorHandler.setFieldError("email", t("emailAlreadyExists"));
         } else if (
           e.response?.status === 403 &&
           e.response.data?.field === "email" &&
           !userExists
         ) {
-          setError("email", t("invalidEmail"));
+          ErrorHandler.setFieldError("email", t("invalidEmail"));
         } else {
-          setError("*", t("unknownError"));
+          ErrorHandler.setFieldError("*", t("unknownError"));
         }
       }
     },
@@ -108,20 +88,18 @@ const PersonInfo = ({ state }: any) => {
       : false;
 
   // Remove error message when user starts typing again.
-  useEffect(() => setError("email", ""), [formik.values.email]);
+  useEffect(
+    () => ErrorHandler.setFieldError("email", ""),
+    [formik.values.email]
+  );
 
-  //Reset the temptoken to avoid going through errors
-  useEffect(() => resetTempToken(), []);
+  //Reset the token to avoid going through errors
+  useEffect(() => setToken(""), []);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
-      {hasErrors() &&
-        listErrors().map((error: string, index: number) => {
-          return (
-            <p key={index} className="error-message mb-2">
-              {error}
-            </p>
-          );
-        })}
+      {ErrorHandler.hasErrors() && (
+        <ErrorBubble errorList={ErrorHandler.listErrors()} />
+      )}
       <h4 className="mb-4 form-title">{t("signup")}</h4>
       <Indicator
         className="mb-4"

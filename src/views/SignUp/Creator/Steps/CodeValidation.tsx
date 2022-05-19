@@ -8,25 +8,38 @@ import { codeValidationStep, totalSteps } from "../SignUp";
 import { signUpSession3 } from "../../../../service/Auth/Creator/endpoints";
 import { routes } from "../../../../service/internal-routes";
 import { useHistory } from "react-router-dom";
-import { getTempToken } from "../../../../service/miscellaneous/tempTokenUtils";
 import Timer from "../../../../components/Timer/Timer";
 import jwtDecode from "jwt-decode";
+import { useState } from "react";
+import Error from "../../../../service/Auth/Creator/ErrorHandler";
+import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
 
 interface ICodeVerification {
   code: number[];
 }
 
-function CodeValidation({ state }: any) {
-  const history = useHistory()
+interface ICodeVerificationError {
+  code: string;
+  "*": string;
+}
+
+function CodeValidation({ state, submitToken, setToken }: any) {
+  const history = useHistory();
   const { t } = useTranslation();
 
   const [codeValidation] = state;
 
-  const _temptoken = getTempToken()
+  const errorsInitialState = {
+    code: "",
+    "*": "",
+  };
+  const [errors, setErrors] =
+    useState<ICodeVerificationError>(errorsInitialState);
+  const ErrorHandler = new Error(errors, setErrors, errorsInitialState);
 
   const expirationTime = () => {
-    if (!_temptoken) return 0;
-    const decodedToken: any = jwtDecode(_temptoken);
+    if (!submitToken) return 0;
+    const decodedToken: any = jwtDecode(submitToken);
     return decodedToken["exp"] * 1000;
   };
 
@@ -38,17 +51,23 @@ function CodeValidation({ state }: any) {
       code: Yup.array().of(Yup.number().required(t("required"))),
     }),
     onSubmit: async function (values: ICodeVerification) {
-      if (!_temptoken) return
+      if (!submitToken) return;
       try {
-        await signUpSession3(
+        const { token } = await signUpSession3(
           {
             code: values.code.join(""),
           },
-          { _temptoken }
+          { _temptoken: submitToken }
         );
+        setToken(token);
         history.push(`${routes.SignUp}/password-service`);
       } catch (e: any) {
-        alert(e.response.data.message);
+        const message = e.response?.data?.message;
+        if (message === "Invalid code") {
+          ErrorHandler.setFieldError("code", t("invalidCode"));
+        } else if (message === "Token expired") {
+          ErrorHandler.setFieldError("*", t("sessionExpired"));
+        }
       }
     },
   });
@@ -57,15 +76,27 @@ function CodeValidation({ state }: any) {
   };
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
+      {ErrorHandler.hasErrors() && (
+        <ErrorBubble errorList={ErrorHandler.listErrors()} />
+      )}
       <h4 className="mb-4 form-title">{t("verification")}</h4>
-      <Indicator className="mb-4" value={codeValidationStep} counts={totalSteps} />
-      <CodeInput value={formik.values.code} onValueChange={handleValueChange} />
+      <Indicator
+        className="mb-4"
+        value={codeValidationStep}
+        counts={totalSteps}
+      />
+      {
+        <CodeInput
+          value={formik.values.code}
+          onValueChange={handleValueChange}
+        />
+      }
       <NativeButton className="mt-3" type="submit" title={t("next")} />
       <hr />
       <small className="w-100 form-disclaimer">
         {t("disclaimerVerification")}
       </small>
-      {_temptoken && <Timer endTime={expirationTime()}/>}
+      {submitToken && <Timer endTime={expirationTime()} />}
     </form>
   );
 }
