@@ -48,7 +48,7 @@ const PersonInfo = ({ state, setToken }: any) => {
         .required(t("required")),
       email: Yup.string().email(t("invalidAddress")).required(t("required")),
     }),
-    onSubmit: async function (values: IPersonalInfo) {
+    onSubmit: async function (values: IPersonalInfo): Promise<void> {
       setPersonalInfo(values);
       try {
         const { token } = await signUpSession1(values);

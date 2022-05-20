@@ -1,18 +1,26 @@
-class Error {
+import { Dispatch, SetStateAction } from "react";
+
+/**
+ * @author Dumitru Cucu
+ * @date 2022-05-20
+ */
+
+class Error <T extends object> {
   protected errors;
   protected setErrors;
   protected initialErrors;
 
-  constructor(errors: object, setErrors: Function, initialErrors: object) {
+  constructor(errors: T, setErrors: Dispatch<SetStateAction<any>>, initialErrors: T) {
     this.errors = errors;
     this.setErrors = setErrors;
     this.initialErrors = initialErrors;
   }
-  setFieldError(field: string, error: string) {
+
+  public setFieldError(field: keyof T, error: string): void {
     this.setErrors({ ...this.errors, [field]: error });
   }
 
-  hasErrors(key?: string) {
+  public hasErrors(key?: keyof T): boolean {
     if (!key) {
       //IF theres no key, check if there are any errors
       return Object.values(this.errors).some((key) => key !== "");
@@ -20,11 +28,11 @@ class Error {
     return (this.errors as any)[key] !== "";
   }
 
-  resetAllErrors() {
+  public resetAllErrors(): void {
     this.setErrors(this.initialErrors);
   }
 
-  listErrors() {
+  public listErrors(): string[] {
     return Object.values(this.errors).filter((key) => key !== "");
   }
 }
