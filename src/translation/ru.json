@@ -22,5 +22,16 @@
     "emailAlreadyExists": "Этот адрес электронной почты уже зарегистрирован",
     "sessionExpired": "Сессия истекла",
     "sessionExpiredMessage": "Ваша сессия истекла. Пожалуйста, повторите попытку.",
-    "retry": "Повторить снова"
+    "retry": "Повторить снова",
+    "areYouSureToCancel": "Вы уверены, что хотите отменить регистрацию?",
+    "areYouSureToCancelDescription": "Вы потеряете все данные, которые вы ввели до этого.",
+    "yes": "Да",
+    "iWantToGoChangeMyPhoneNumber": "Я хочу изменить мой номер телефона",
+    "securityLevel": "Уровень безопасности:",
+    "weak": "Слабый",
+    "fair": "Средний",
+    "strong": "Сильный",
+    "shouldNotIncludeNames": "Не включайте имена в пароль",
+    "oneCapitalLetter": "Одна заглавная буква",
+    "specialCharacter": "Один специальный символ"
 }

@@ -6,7 +6,9 @@ export const routes = {
         personalInformation: "1",
         verification: "2",
         confirmation: "3",
-        pathLevelSplit: 4
+        passwordService: "4",
+        finish: "finish",
+        pathLevelSplit: 4,
     },
     test: "/test"
 }

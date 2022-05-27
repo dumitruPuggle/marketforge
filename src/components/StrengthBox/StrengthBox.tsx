@@ -1,6 +1,8 @@
 import { LinearProgress, LinearProgressProps } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./StrengthBox.css";
+import StrengthBoxBrain from "./StrengthBoxBrain";
 
 interface IStrengthBoxProps {
   password: string;
@@ -15,112 +17,44 @@ function StrengthBox({
   lastName,
   ...props
 }: IStrengthBoxProps) {
+  const { t } = useTranslation();
   const [level, setLevel] = useState(0);
   const [color, setColor] = useState<LinearProgressProps["color"]>("primary");
   const [levelWord, setWord] = useState("");
-  const [errors, setErrors] = useState({
-    shouldNotIncludeNames: false,
-    oneCapitalLetter: false,
-    specialCharacter: false,
-  });
 
-  const specialCharacter = [
-    "_",
-    ".",
-    "-",
-    "!",
-    "@",
-    "#",
-    "$",
-    "%",
-    "^",
-    "&",
-    "*",
-    "(",
-    ")",
-    "+",
-    "=",
-    "{",
-    "}",
-    "[",
-    "]",
-    ":",
-    ";",
-    '"',
-    "'",
-    "<",
-    ">",
-    ",",
-    "?",
-    "/",
-    "|",
-    "\\",
-    "~",
-    "`",
-  ];
-  const bannedWords = ["Dumitru", "Cucu"];
   useEffect(() => {
-    if (password.length === 0) {
-      setColor("warning");
-      setWord("-");
-      setLevel(0);
-    }
-
-    if (password.length > 0) {
-      setColor("error");
-      setWord("Weak 👎");
-      setLevel(0);
-    }
-
-    if (password.length > 4) {
-      setColor("error");
-      setWord("Weak 👎");
-      setLevel(10);
-    }
-
-    if (password.length > 5) {
-      setColor("error");
-      setWord("Weak 👎");
-      setLevel(18);
-    }
-
-    if (password.length > 6) {
-      setColor("error");
-      setWord("Weak 👎");
-      setLevel(24);
-    }
-
-    if (password.length > 7) {
-      setColor("warning");
-      setWord("Fair 👌");
-      setLevel(30);
-    }
-
-    const oneCapitalLetter = password.match(/[A-Z]/g);
-    const noBannedWords = bannedWords.every(
-      (word: string) => !password.includes(word)
-    );
-    const containSpecialChar = specialCharacter.some((character: string) =>
-      password.includes(character)
-    );
-
-    if (
-      password.length > 8 &&
-      containSpecialChar &&
-      noBannedWords &&
-      oneCapitalLetter
-    ) {
-      setColor("primary");
-      setWord("👍");
-      setLevel(50);
-    }
+    const StrengthBoxHandler = new StrengthBoxBrain();
+    const output = StrengthBoxHandler.getStrength(password);
+    // StrengthBoxHandler.createTrainingData(password);
+    output.then((level) => {
+      setLevel(level);
+    });
   }, [password]);
+
+  useEffect(() => {
+    if (level < 2) {
+      setColor("error");
+      setWord("");
+    } else if (level < 25) {
+      setColor("error");
+      setWord(t("weak"));
+    } else if (level < 50) {
+      setColor("warning");
+      setWord(t("fair"));
+    } else if (level < 75) {
+      setColor("primary");
+      setWord(t("strong"));
+    } else {
+      setColor("primary");
+      setWord(t("strong"));
+    }
+  }, [level]);
 
   return (
     <div {...props} className={"strength-box " + props?.className}>
       <div className="strength-box-title-layout">
         <small className="strength-box-title">
-          Security level: <strong>{levelWord}</strong>
+          {t('securityLevel')} <strong>{levelWord}</strong>
         </small>
       </div>
       {levelWord !== "👍" && (
@@ -128,10 +62,10 @@ function StrengthBox({
           <LinearProgress color={color} variant="determinate" value={level} />
           <div className="strength-box-layout">
             <small className="strength-box-text">
-              Should not include names
+              {t('shouldNotIncludeNames')}
             </small>
-            <small className="strength-box-text">One capital letter</small>
-            <small className="strength-box-text">Special character</small>
+            <small className="strength-box-text">{t('oneCapitalLetter')}</small>
+            <small className="strength-box-text">{t('specialCharacter')}</small>
           </div>
         </>
       )}

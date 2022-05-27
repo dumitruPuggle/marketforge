@@ -22,5 +22,16 @@
     "emailAlreadyExists": "Un cont cu această adresă de e-mail există deja",
     "sessionExpired": "Sesiunea a expirat",
     "sessionExpiredMessage": "Sesiunea a expirat. Vă rugăm să reîncercați.",
-    "retry": "Reîncercați"
+    "retry": "Reîncercați",
+    "areYouSureToCancel": "Sunteți sigur să anulați?",
+    "areYouSureToCancelDescription": "Contul va fi pierdut.",
+    "yes": "Da",
+    "iWantToGoChangeMyPhoneNumber": "Vreau să schimb numărul meu de telefon",
+    "securityLevel": "Nivel de securitate:",
+    "weak": "Slab",
+    "fair": "Acceptabil",
+    "strong": "Puternic",
+    "shouldNotIncludeNames": "Nu trebuie să includă numele",
+    "oneCapitalLetter": "O literă mare",
+    "specialCharacter": "Caracter special"
 }

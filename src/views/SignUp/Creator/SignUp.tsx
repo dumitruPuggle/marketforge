@@ -10,6 +10,8 @@ import CodeValidation from "./Steps/CodeValidation";
 import DialogTokenExpired from "../../../components/DialogTokenExpired/DialogTokenExpired";
 import { routes } from "../../../service/internal-routes";
 import TokenExpiration from "../../../service/Auth/Creator/TokenExpiration";
+import PasswordService from "./Steps/CreatePassword";
+import Success from "../Success";
 // import PasswordService from "./Steps/CreatePassword";
 
 export const SignUpContext = createContext({});
@@ -40,7 +42,7 @@ function SignUp() {
     code: [null, null, null, null, null, null],
   });
 
-  const [passwordService, setPasswordService] = useState({
+  const password = useState({
     password: "",
   });
 
@@ -50,11 +52,6 @@ function SignUp() {
 
   //   history.push(`${path}/finish-sign-up`);
   // };
-
-  // const isCodeVerificationEmpty = state.codeValidation.code.every(
-  //   (item: any) => item !== null
-  // );
-
   //Media queries for responsiveness.
   const Desktop = ({ children }: any) => {
     const isDesktop = useMediaQuery({ minWidth: 992 });
@@ -68,6 +65,8 @@ function SignUp() {
 
   const isPersonalInfoEmpty = isEmpty(personalInfo[0]);
   const isVerficationEmpty = isEmpty(verification[0]);
+  const isCodeValidationEmpty = isEmpty(codeValidation[0]);
+
   warnBeforeClose(!isPersonalInfoEmpty);
 
   const [sessionExpiredDialogShown, setSessionExpiredDialogShown] =
@@ -83,11 +82,12 @@ function SignUp() {
     setCodeValidationToken("");
   };
 
+  //Used to display to the user that the session has expired.
   const deps = [
     personalInfoToken,
     verificationToken,
     codeValidationToken,
-    window.location.pathname,
+    window.location.href,
     personalInfo,
     verification,
     codeValidation,
@@ -162,29 +162,24 @@ function SignUp() {
                 />
               </Route>
             )}
-            {/* {!isCodeVerificationEmpty && (
-              <Route exact path={`${path}/password-service`}>
+            {!isCodeValidationEmpty && (
+              <Route
+                exact
+                path={`${path}/${routes.SignUpSteps.passwordService}`}
+              >
                 <PasswordService
+                  state={password}
+                  submitToken={codeValidationToken}
                   indicator={{
                     counts: totalSteps,
                     value: passwordServiceStep,
                   }}
-                  onSubmit={handlePasswordServiceSubmit}
                 />
-                <Dialog title="Your password" icon="info-sign" isOpen={true}>
-                  <div className={Classes.DIALOG_BODY}>
-                    <p>
-                      Your password is <b>2240204052_</b>
-                    </p>
-                  </div>
-                </Dialog>
               </Route>
             )}
-            {!isCodeVerificationEmpty && (
-              <Route exact path={`${path}/finish-sign-up`}>
-                Success
-              </Route>
-            )} */}
+            <Route exact path={`${path}/${routes.SignUpSteps.finish}`}>
+              <Success />
+            </Route>
             <Route exact path={`*`}>
               <Redirect to={`${path}`} />
             </Route>

@@ -13,7 +13,23 @@ import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import { routes } from "../../../../service/internal-routes";
 import { totalSteps, verificationStep } from "../SignUp";
 
-const Verification = ({ state, submitToken, setToken }: any) => {
+type VerificationState = {
+  phoneNumber: string;
+};
+interface VerificationInterface {
+  state: [
+    VerificationState,
+    React.Dispatch<React.SetStateAction<VerificationState>>
+  ];
+  submitToken: string;
+  setToken: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const Verification = ({
+  state,
+  submitToken,
+  setToken,
+}: VerificationInterface) => {
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -41,7 +57,7 @@ const Verification = ({ state, submitToken, setToken }: any) => {
         .required(t("required")),
     }),
     onSubmit: async function (values) {
-      if (!submitToken) return
+      if (!submitToken) return;
       setVerification({ ...verification, phoneNumber: values.phoneNumber });
       try {
         const { token } = await signUpSession2(
@@ -78,7 +94,10 @@ const Verification = ({ state, submitToken, setToken }: any) => {
 
   //Remove error message when user starts typing again.
   // eslint-disable-next-line
-  useEffect(() => ErrorHandler.setFieldError("phoneNumber", ""), [formik.values.phoneNumber]);
+  useEffect(
+    () => ErrorHandler.setFieldError("phoneNumber", ""),
+    [formik.values.phoneNumber]
+  );
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {ErrorHandler.hasErrors() && (

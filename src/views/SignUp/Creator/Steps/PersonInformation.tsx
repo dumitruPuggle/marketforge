@@ -12,13 +12,18 @@ import { routes } from "../../../../service/internal-routes";
 import { personalInfoStep, totalSteps } from "../SignUp";
 import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
 
-interface IPersonalInfo {
+type PersonalInfoState = {
   firstName: string;
   lastName: string;
   email: string;
 }
 
-const PersonInfo = ({ state, setToken }: any) => {
+interface PersonInfoInterface {
+  state: [PersonalInfoState, Function];
+  setToken: Function;
+}
+
+function PersonInfo({ state, setToken }: PersonInfoInterface) {
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -48,7 +53,7 @@ const PersonInfo = ({ state, setToken }: any) => {
         .required(t("required")),
       email: Yup.string().email(t("invalidAddress")).required(t("required")),
     }),
-    onSubmit: async function (values: IPersonalInfo): Promise<void> {
+    onSubmit: async function (values: PersonalInfoState): Promise<void> {
       setPersonalInfo(values);
       try {
         const { token } = await signUpSession1(values);
@@ -149,6 +154,6 @@ const PersonInfo = ({ state, setToken }: any) => {
       </small>
     </form>
   );
-};
+}
 
 export default PersonInfo;

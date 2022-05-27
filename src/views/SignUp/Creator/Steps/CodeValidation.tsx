@@ -14,8 +14,8 @@ import { useState } from "react";
 import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
 
-interface ICodeVerification {
-  code: number[];
+type CodeVerificationState = {
+  code: Array<any>;
 }
 
 interface ICodeVerificationError {
@@ -23,7 +23,13 @@ interface ICodeVerificationError {
   "*": string;
 }
 
-function CodeValidation({ state, submitToken, setToken }: any) {
+interface CodeVerificationInterface {
+  state: [CodeVerificationState, React.Dispatch<React.SetStateAction<CodeVerificationState>>];
+  submitToken: string;
+  setToken: React.Dispatch<React.SetStateAction<string>>;
+}
+
+function CodeValidation({ state, submitToken, setToken }: CodeVerificationInterface) {
   const history = useHistory();
   const { t } = useTranslation();
 
@@ -50,7 +56,7 @@ function CodeValidation({ state, submitToken, setToken }: any) {
     validationSchema: Yup.object({
       code: Yup.array().of(Yup.number().required(t("required"))),
     }),
-    onSubmit: async function (values: ICodeVerification) {
+    onSubmit: async function (values: CodeVerificationState): Promise<void> {
       if (!submitToken) return;
       try {
         const { token } = await signUpSession3(
@@ -60,13 +66,14 @@ function CodeValidation({ state, submitToken, setToken }: any) {
           { _temptoken: submitToken }
         );
         setToken(token);
-        history.push(`${routes.SignUp}/password-service`);
+        history.push(`${routes.SignUp}/${routes.SignUpSteps.passwordService}`);
       } catch (e: any) {
         const message = e.response?.data?.message;
         if (message === "Invalid code") {
           ErrorHandler.setFieldError("code", t("invalidCode"));
         } else if (message === "Token expired") {
           ErrorHandler.setFieldError("*", t("sessionExpired"));
+          history.push('?token=expired');
         }
       }
     },

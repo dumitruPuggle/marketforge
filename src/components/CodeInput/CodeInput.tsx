@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRef } from "react";
 import "./CodeInput.css";
 
@@ -9,11 +9,11 @@ interface ICodeInputProps {
   style?: any;
 }
 
-function CodeInput({ value, onValueChange, error, style }: ICodeInputProps) {
+function CodeInput({ value, onValueChange, error, style }: ICodeInputProps): JSX.Element {
   const myRefs: any = useRef([]);
   const [values, setAllValues] = useState(value);
 
-  const handleInputChange = (e: any, index: number) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const inputValue = e.target.value;
     const isNumber = !isNaN(Number(inputValue));
     //Prevent user from entering non-numeric characters
@@ -73,7 +73,7 @@ function CodeInput({ value, onValueChange, error, style }: ICodeInputProps) {
                 : style
             }
             type={"tel"}
-            onKeyDown={async (e) => {
+            onKeyDown={async (e: React.KeyboardEvent<HTMLInputElement>) => {
               if (e.keyCode === 8) {
                 onDelete(index);
               }

@@ -22,5 +22,16 @@
     "emailAlreadyExists": "An user with this e-mail address already exists",
     "sessionExpired": "Session expired",
     "retry": "Retry",
-    "sessionExpiredMessage": "Your session has expired. Please, try again."
+    "sessionExpiredMessage": "Your session has expired. Please, try again.",
+    "areYouSureToCancel": "Are you sure to cancel?",
+    "areYouSureToCancelDescription": "You will lose all the data you entered.",
+    "yes": "Yes",
+    "iWantToGoChangeMyPhoneNumber": "I want to change my phone number",
+    "securityLevel": "Security level:",
+    "weak": "Weak",
+    "fair": "Fair",
+    "strong": "Strong",
+    "shouldNotIncludeNames": "Should not include names",
+    "oneCapitalLetter": "One capital letter",
+    "specialCharacter": "Special character"
 }
