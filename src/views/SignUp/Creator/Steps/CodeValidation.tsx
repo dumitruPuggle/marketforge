@@ -13,6 +13,7 @@ import jwtDecode from "jwt-decode";
 import { useState } from "react";
 import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
+import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
 
 type CodeVerificationState = {
   code: Array<any>;
@@ -86,6 +87,10 @@ function CodeValidation({ state, submitToken, setToken }: CodeVerificationInterf
       {ErrorHandler.hasErrors() && (
         <ErrorBubble errorList={ErrorHandler.listErrors()} />
       )}
+      {
+        formik.isSubmitting &&
+        <LoadingForeground />
+      }
       <h4 className="mb-4 form-title">{t("verification")}</h4>
       <Indicator
         className="mb-4"

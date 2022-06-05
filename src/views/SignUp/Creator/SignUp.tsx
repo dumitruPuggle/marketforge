@@ -12,6 +12,7 @@ import { routes } from "../../../service/internal-routes";
 import TokenExpiration from "../../../service/Auth/Creator/TokenExpiration";
 import PasswordService from "./Steps/CreatePassword";
 import Success from "../Success";
+import LanguagePopUp from "../../../components/LanguagePopUp/LanguagePopUp";
 // import PasswordService from "./Steps/CreatePassword";
 
 export const SignUpContext = createContext({});
@@ -122,7 +123,9 @@ function SignUp() {
     <div className="row sign-up-row">
       <Back />
       <Desktop>
-        <div className="col pt-5 sign-up-left"></div>
+        <div className="col pt-5 sign-up-left">
+          <LanguagePopUp />
+        </div>
       </Desktop>
       <div className="col">
         <div className="form-center mt-5">

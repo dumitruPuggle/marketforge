@@ -1,3 +1,4 @@
+import i18n from "../../../i18next";
 import { api } from "../../api";
 
 interface signUpProps {
@@ -24,18 +25,13 @@ interface signUpPropsSession4 {
 }
 
 const useLang = () => {
-  return {
-    lang: localStorage.getItem("i18nextLng"),
-  };
+  const lang = i18n.language
+  return lang || "en"
 };
 
 export const signUpSession1 = (body: signUpProps) =>
   api
-    .post("signup/1", body, {
-      headers: {
-        ...useLang,
-      },
-    })
+    .post("signup/1", body)
     .then(({ data }) => data);
 
 export const signUpSession2 = (
@@ -43,7 +39,7 @@ export const signUpSession2 = (
   { _temptoken }: requireTokenProps
 ) =>
   api
-    .post("signup/2", body, { headers: { _temptoken, ...useLang } })
+    .post("signup/2", body, { headers: { _temptoken, lang: useLang() } })
     .then(({ data }) => data);
 
 export const signUpSession3 = (

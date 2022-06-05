@@ -7,10 +7,13 @@ import * as Yup from "yup";
 import NativeButton from "../../../../components/Buttons/NativeButton";
 import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
 import Indicator from "../../../../components/Indicator/Indicator";
+import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
 import { defaults } from "../../../../defaults";
+import { SessionTwo } from "../../../../service/Auth/Creator/Auth.SessionTwo";
 import { signUpSession2 } from "../../../../service/Auth/Creator/endpoints";
 import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import { routes } from "../../../../service/internal-routes";
+import { lang } from "../../../../translation/utils";
 import { totalSteps, verificationStep } from "../SignUp";
 
 type VerificationState = {
@@ -60,10 +63,10 @@ const Verification = ({
       if (!submitToken) return;
       setVerification({ ...verification, phoneNumber: values.phoneNumber });
       try {
-        const { token } = await signUpSession2(
+        const { token } = await new SessionTwo().submit(
           {
             phoneNumber: `+373${values.phoneNumber}`,
-            lang: localStorage.getItem("i18nextLng") || defaults.lang,
+            lang: (localStorage.getItem("i18nextLng") || defaults.lang) as lang,
           },
           {
             _temptoken: submitToken,
@@ -77,20 +80,15 @@ const Verification = ({
       } catch (e: any) {
         if (e.message === "Network Error") {
           ErrorHandler.setFieldError("*", t("networkError"));
-        } else if (
-          e.response?.status === 403 &&
-          e.response.data?.field === "phoneNumber"
-        ) {
-          ErrorHandler.setFieldError("phoneNumber", t("invalidPhoneNumber"));
+        } else {
+          ErrorHandler.setFieldError("phoneNumber", e.response.data.message);
         }
       }
     },
   });
   const error =
     (formik.errors.phoneNumber && formik.touched.phoneNumber) ||
-    errors.phoneNumber === t("invalidPhoneNumber")
-      ? true
-      : false;
+    errors.phoneNumber?.length > 0
 
   //Remove error message when user starts typing again.
   // eslint-disable-next-line
@@ -103,6 +101,10 @@ const Verification = ({
       {ErrorHandler.hasErrors() && (
         <ErrorBubble errorList={ErrorHandler.listErrors()} />
       )}
+      {
+        formik.isSubmitting &&
+        <LoadingForeground />
+      }
       <h4 className="mb-4 form-title">{t("verification")}</h4>
       <Indicator
         className="mb-4"

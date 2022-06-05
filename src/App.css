@@ -13,6 +13,7 @@
   flex-direction: column;
   padding: 20px;
   width: 70%;
+  position: relative;
 }
 
 .form-disclaimer{

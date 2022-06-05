@@ -1,13 +1,16 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import { useFormik } from "formik";
-import React, { SetStateAction, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Prompt, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import NativeButton from "../../../../components/Buttons/NativeButton";
+import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
 import Indicator from "../../../../components/Indicator/Indicator";
+import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
 import StrengthBox from "../../../../components/StrengthBox/StrengthBox";
 import { signUpSession4 } from "../../../../service/Auth/Creator/endpoints";
+import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import { routes } from "../../../../service/internal-routes";
 
 interface IPasswordServiceProps {
@@ -21,10 +24,16 @@ interface IPasswordServiceProps {
 
 function PasswordService({ indicator, state, submitToken }: IPasswordServiceProps) {
   const history = useHistory()
-  const [leaveDialog, setLeaveDialog] = useState(false);
   const { t } = useTranslation();
 
   const [passwordState, setState] = state;
+
+  const errorsInitialState = {
+    password: "",
+    "*": ""
+  };
+  const [errors, setErrors] = useState(errorsInitialState);
+  const ErrorHandler = new Error(errors, setErrors, errorsInitialState)
 
   const formik = useFormik({
     initialValues: {
@@ -33,45 +42,34 @@ function PasswordService({ indicator, state, submitToken }: IPasswordServiceProp
     validationSchema: Yup.object({}),
     onSubmit: async function (values) {
       setState({ ...passwordState, password: values.password });
-      console.log(submitToken)
       try {
         await signUpSession4({password: values.password}, {_temptoken: submitToken});
         history.push(`${routes.SignUp}/${routes.SignUpSteps.finish}`);
-      } catch (error) {
-        console.log(error);
+      } catch (e: any) {
+        if (e.message === "Network Error") {
+          ErrorHandler.setFieldError("*", t("networkError"));
+        } else {
+          ErrorHandler.setFieldError("password", e.response.data.message);
+        }
       }
     },
   });
 
+  // Remove error message when user starts typing again.
+  useEffect(
+    () => ErrorHandler.setFieldError("password", ""),
+    [formik.values.password]
+  );
+
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
-      <Prompt
-        message={(location, action) => {
-          if (action === "POP") {
-            setLeaveDialog(!leaveDialog);
-          }
-          return false;
-        }}
-      />
-      <Dialog
-        title={t('areYouSureToCancel')}
-        open={leaveDialog}
-        onClose={() => setLeaveDialog(false)}
-      >
-        <DialogTitle title={t('areYouSureToCancel')}>
-          {t('areYouSureToCancel')}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {t('areYouSureToCancelDescription')}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => window.location.pathname = "/"} autoFocus>
-            {t("yes")}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {ErrorHandler.hasErrors() && (
+        <ErrorBubble errorList={ErrorHandler.listErrors()} />
+      )}
+      {
+        formik.isSubmitting &&
+        <LoadingForeground />
+      }
       <h4 className="mb-4 form-title">{t("createPassword")}</h4>
       {indicator && (
         <Indicator
@@ -93,7 +91,7 @@ function PasswordService({ indicator, state, submitToken }: IPasswordServiceProp
         name="password"
         className="mb-3"
         type="password"
-        error={formik.errors.password && formik.touched.password ? true : false}
+        error={(formik.errors.password && formik.touched.password) || errors.password?.length > 0 ? true : false}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values.password}

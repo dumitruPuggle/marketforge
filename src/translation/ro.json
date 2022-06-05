@@ -33,5 +33,9 @@
     "strong": "Puternic",
     "shouldNotIncludeNames": "Nu trebuie să includă numele",
     "oneCapitalLetter": "O literă mare",
-    "specialCharacter": "Caracter special"
+    "specialCharacter": "Caracter special",
+    "chooseLanguage": "Alegeți limba",
+    "english": "Engleză",
+    "romanian": "Română",
+    "russian": "Rusă"
 }

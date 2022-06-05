@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { CircularProgress, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,8 @@ import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import { routes } from "../../../../service/internal-routes";
 import { personalInfoStep, totalSteps } from "../SignUp";
 import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
+import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
+import { SessionOne } from "../../../../service/Auth/Creator/Auth.SessionOne";
 
 type PersonalInfoState = {
   firstName: string;
@@ -56,7 +58,7 @@ function PersonInfo({ state, setToken }: PersonInfoInterface) {
     onSubmit: async function (values: PersonalInfoState): Promise<void> {
       setPersonalInfo(values);
       try {
-        const { token } = await signUpSession1(values);
+        const { token } = await new SessionOne().submit(values)
         setToken(token);
         history.push(`${routes.SignUp}/${routes.SignUpSteps.verification}`);
         if (ErrorHandler.hasErrors()) {
@@ -87,10 +89,7 @@ function PersonInfo({ state, setToken }: PersonInfoInterface) {
     formik.errors.lastName && formik.touched.lastName ? true : false;
   const emailError =
     (formik.errors.email && formik.touched.email) ||
-    errors.email === t("invalidEmail") ||
-    errors.email === t("emailAlreadyExists")
-      ? true
-      : false;
+    errors.email.length > 0
 
   // Remove error message when user starts typing again.
   useEffect(
@@ -105,6 +104,10 @@ function PersonInfo({ state, setToken }: PersonInfoInterface) {
       {ErrorHandler.hasErrors() && (
         <ErrorBubble errorList={ErrorHandler.listErrors()} />
       )}
+      {
+        formik.isSubmitting &&
+        <LoadingForeground />
+      }
       <h4 className="mb-4 form-title">{t("signup")}</h4>
       <Indicator
         className="mb-4"

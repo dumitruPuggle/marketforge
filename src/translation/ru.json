@@ -33,5 +33,9 @@
     "strong": "Сильный",
     "shouldNotIncludeNames": "Не включайте имена в пароль",
     "oneCapitalLetter": "Одна заглавная буква",
-    "specialCharacter": "Один специальный символ"
+    "specialCharacter": "Один специальный символ",
+    "chooseLanguage": "Выберите язык",
+    "english": "Английский",
+    "romanian": "Румынский",
+    "russian": "Русский"
 }

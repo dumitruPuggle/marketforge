@@ -92,7 +92,7 @@
       "lowercaseLetters": 3
     },
     "output": {
-      "strength": 0.005
+      "strength": 0.003
     }
   },
   {
@@ -104,7 +104,7 @@
       "lowercaseLetters": 0
     },
     "output": {
-      "strength": 0.005
+      "strength": 0.003
     }
   },
   {
@@ -152,7 +152,7 @@
       "lowercaseLetters": 5
     },
     "output": {
-      "strength": 0.0095
+      "strength": 0.0092
     }
   },
   {
@@ -164,7 +164,7 @@
       "lowercaseLetters": 6
     },
     "output": {
-      "strength": 0.0195
+      "strength": 0.01
     }
   },
   {
@@ -176,7 +176,7 @@
       "lowercaseLetters": 5
     },
     "output": {
-      "strength": 0.095
+      "strength": 0.02
     }
   },
   {
@@ -188,7 +188,7 @@
       "lowercaseLetters": 2
     },
     "output": {
-      "strength": 0.1
+      "strength": 0.07
     }
   },
   {
@@ -200,7 +200,7 @@
       "lowercaseLetters": 4
     },
     "output": {
-      "strength": 0.5
+      "strength": 0.1
     }
   },
   {
@@ -212,7 +212,7 @@
       "lowercaseLetters": 7
     },
     "output": {
-      "strength": 0.85
+      "strength": 0.30
     }
   },
   {
@@ -224,7 +224,7 @@
       "lowercaseLetters": 2
     },
     "output": {
-      "strength": 0.85
+      "strength": 0.40
     }
   },
   {
@@ -236,7 +236,7 @@
       "lowercaseLetters": 5
     },
     "output": {
-      "strength": 0.86
+      "strength": 0.45
     }
   },
   {
@@ -248,7 +248,7 @@
       "lowercaseLetters": 16
     },
     "output": {
-      "strength": 0.70
+      "strength": 0.5
     }
   },
   {
@@ -260,7 +260,7 @@
       "lowercaseLetters": 6
     },
     "output": {
-      "strength": 0.80
+      "strength": 0.55
     }
   },
   {
@@ -272,7 +272,7 @@
       "lowercaseLetters": 3
     },
     "output": {
-      "strength": 0.30
+      "strength": 0.66
     }
   },
   {
@@ -284,7 +284,7 @@
       "lowercaseLetters": 7
     },
     "output": {
-      "strength": 0.30
+      "strength": 0.2
     }
   },
   {
@@ -296,7 +296,7 @@
       "lowercaseLetters": 3
     },
     "output": {
-      "strength": 0.40
+      "strength": 0.2
     }
   }
 ]

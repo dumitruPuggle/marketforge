@@ -33,5 +33,9 @@
     "strong": "Strong",
     "shouldNotIncludeNames": "Should not include names",
     "oneCapitalLetter": "One capital letter",
-    "specialCharacter": "Special character"
+    "specialCharacter": "Special character",
+    "chooseLanguage": "Choose language",
+    "english": "English",
+    "romanian": "Romanian",
+    "russian": "Russian"
 }
