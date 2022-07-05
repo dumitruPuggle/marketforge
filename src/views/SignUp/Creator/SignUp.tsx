@@ -1,8 +1,7 @@
 import Back from "../../../components/Back/Back";
 import "./SignUp.css";
-import { createContext, useEffect, useState } from "react";
-import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
-import { warnBeforeClose } from "../../../service/miscellaneous/warnBeforeClose";
+import { createContext, useCallback, useEffect, useState } from "react";
+import { Redirect, Route, Switch, useLocation, useRouteMatch } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import PersonInfo from "./Steps/PersonInformation";
 import Verification from "./Steps/Verification";
@@ -11,7 +10,7 @@ import DialogTokenExpired from "../../../components/DialogTokenExpired/DialogTok
 import { routes } from "../../../service/internal-routes";
 import TokenExpiration from "../../../service/Auth/Creator/TokenExpiration";
 import PasswordService from "./Steps/CreatePassword";
-import Success from "../Success";
+import Success from "./Steps/Success";
 import LanguagePopUp from "../../../components/LanguagePopUp/LanguagePopUp";
 // import PasswordService from "./Steps/CreatePassword";
 
@@ -41,7 +40,7 @@ function SignUp() {
   const [codeValidationToken, setCodeValidationToken] = useState<string>("");
   const codeValidation = useState({
     code: [null, null, null, null, null, null],
-  });
+  });  
 
   const password = useState({
     password: "",
@@ -66,9 +65,8 @@ function SignUp() {
 
   const isPersonalInfoEmpty = isEmpty(personalInfo[0]);
   const isVerficationEmpty = isEmpty(verification[0]);
-  const isCodeValidationEmpty = isEmpty(codeValidation[0]);
-
-  warnBeforeClose(!isPersonalInfoEmpty);
+  const [codeValidationSubmitted, setCodeValidationSubmitted] = useState(false)
+  const isPasswordEmpty = isEmpty(password[0]);
 
   const [sessionExpiredDialogShown, setSessionExpiredDialogShown] =
     useState<boolean>(false);
@@ -118,7 +116,7 @@ function SignUp() {
 
   const handleDialogRetry = () => {
     resetAllTokens();
-  };
+  }; 
   return (
     <div className="row sign-up-row">
       <Back />
@@ -156,16 +154,17 @@ function SignUp() {
                 />
               </Route>
             )}
-            {!isVerficationEmpty && (
+            {(!isVerficationEmpty && !codeValidationSubmitted) && (
               <Route exact path={`${path}/${routes.SignUpSteps.confirmation}`}>
                 <CodeValidation
                   state={codeValidation}
                   submitToken={verificationToken}
                   setToken={setCodeValidationToken}
+                  onApproved={() => setCodeValidationSubmitted(true)}
                 />
               </Route>
             )}
-            {!isCodeValidationEmpty && (
+            {codeValidationSubmitted && (
               <Route
                 exact
                 path={`${path}/${routes.SignUpSteps.passwordService}`}
@@ -180,9 +179,11 @@ function SignUp() {
                 />
               </Route>
             )}
-            <Route exact path={`${path}/${routes.SignUpSteps.finish}`}>
-              <Success />
-            </Route>
+            {!isPasswordEmpty && (
+              <Route exact path={`${path}/${routes.SignUpSteps.finish}`}>
+                <Success />
+              </Route>
+            )}
             <Route exact path={`*`}>
               <Redirect to={`${path}`} />
             </Route>

@@ -14,6 +14,7 @@ import { useState } from "react";
 import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
+import { SessionThree } from "../../../../service/Auth/Creator/Auth.SessionThree";
 
 type CodeVerificationState = {
   code: Array<any>;
@@ -28,9 +29,10 @@ interface CodeVerificationInterface {
   state: [CodeVerificationState, React.Dispatch<React.SetStateAction<CodeVerificationState>>];
   submitToken: string;
   setToken: React.Dispatch<React.SetStateAction<string>>;
+  onApproved: () => void;
 }
 
-function CodeValidation({ state, submitToken, setToken }: CodeVerificationInterface) {
+function CodeValidation({ state, submitToken, setToken, onApproved }: CodeVerificationInterface) {
   const history = useHistory();
   const { t } = useTranslation();
 
@@ -60,13 +62,14 @@ function CodeValidation({ state, submitToken, setToken }: CodeVerificationInterf
     onSubmit: async function (values: CodeVerificationState): Promise<void> {
       if (!submitToken) return;
       try {
-        const { token } = await signUpSession3(
+        const { token } = await new SessionThree().submit(
           {
             code: values.code.join(""),
           },
           { _temptoken: submitToken }
         );
         setToken(token);
+        onApproved();
         history.push(`${routes.SignUp}/${routes.SignUpSteps.passwordService}`);
       } catch (e: any) {
         const message = e.response?.data?.message;

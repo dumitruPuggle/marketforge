@@ -1,7 +1,7 @@
 import axios, { Axios } from "axios";
 
 class ApiService {
-    public baseURL = 'http://127.0.0.1:5000';
+    public baseURL = 'http://0.0.0.0:5000';
     public api: Axios;
     constructor(){
         this.api = axios.create({

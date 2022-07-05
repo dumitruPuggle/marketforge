@@ -2,38 +2,42 @@ import { TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { Prompt, useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import NativeButton from "../../../../components/Buttons/NativeButton";
 import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
 import Indicator from "../../../../components/Indicator/Indicator";
 import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
 import StrengthBox from "../../../../components/StrengthBox/StrengthBox";
-import { signUpSession4 } from "../../../../service/Auth/Creator/endpoints";
+import { SessionFour } from "../../../../service/Auth/Creator/Auth.SessionFour";
 import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import { routes } from "../../../../service/internal-routes";
 
 interface IPasswordServiceProps {
-  state: [object, Function]
-  submitToken: string
+  state: [object, Function];
+  submitToken: string;
   indicator?: {
     value: number;
     counts: number;
   };
 }
 
-function PasswordService({ indicator, state, submitToken }: IPasswordServiceProps) {
-  const history = useHistory()
+function PasswordService({
+  indicator,
+  state,
+  submitToken,
+}: IPasswordServiceProps) {
+  const history = useHistory();
   const { t } = useTranslation();
 
   const [passwordState, setState] = state;
 
   const errorsInitialState = {
     password: "",
-    "*": ""
+    "*": "",
   };
   const [errors, setErrors] = useState(errorsInitialState);
-  const ErrorHandler = new Error(errors, setErrors, errorsInitialState)
+  const ErrorHandler = new Error(errors, setErrors, errorsInitialState);
 
   const formik = useFormik({
     initialValues: {
@@ -43,7 +47,11 @@ function PasswordService({ indicator, state, submitToken }: IPasswordServiceProp
     onSubmit: async function (values) {
       setState({ ...passwordState, password: values.password });
       try {
-        await signUpSession4({password: values.password}, {_temptoken: submitToken});
+        const {token} = await new SessionFour().submit(
+          { password: values.password },
+          { _temptoken: submitToken }
+        );
+        localStorage.setItem("authToken", token);
         history.push(`${routes.SignUp}/${routes.SignUpSteps.finish}`);
       } catch (e: any) {
         if (e.message === "Network Error") {
@@ -63,13 +71,21 @@ function PasswordService({ indicator, state, submitToken }: IPasswordServiceProp
 
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
+      <Prompt
+        message={(location, action) => {
+          if (location.pathname.endsWith("finish")){
+            return true;
+          }
+          return false
+          // return location.pathname.endsWith("finish")
+          //   ? true
+          //   : `${t("areYouSureToCancel")}`;
+        }}
+      />
       {ErrorHandler.hasErrors() && (
         <ErrorBubble errorList={ErrorHandler.listErrors()} />
       )}
-      {
-        formik.isSubmitting &&
-        <LoadingForeground />
-      }
+      {formik.isSubmitting && <LoadingForeground />}
       <h4 className="mb-4 form-title">{t("createPassword")}</h4>
       {indicator && (
         <Indicator
@@ -91,7 +107,12 @@ function PasswordService({ indicator, state, submitToken }: IPasswordServiceProp
         name="password"
         className="mb-3"
         type="password"
-        error={(formik.errors.password && formik.touched.password) || errors.password?.length > 0 ? true : false}
+        error={
+          (formik.errors.password && formik.touched.password) ||
+          errors.password?.length > 0
+            ? true
+            : false
+        }
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values.password}

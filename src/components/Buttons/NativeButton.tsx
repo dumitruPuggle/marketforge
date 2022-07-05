@@ -8,7 +8,7 @@ const NativeButton = ({title, ...props}: any) => {
         disableElevation
         style={{
           ...props.style,
-          backgroundColor: '#007AFF',
+          backgroundColor: props?.style?.backgroundColor ? props?.style?.backgroundColor : '#007AFF',
           padding: '10px',
           borderRadius: '10px'
         }}

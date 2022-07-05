@@ -1,9 +1,4 @@
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import { Button, Classes, Dialog } from "@blueprintjs/core";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { routes } from "../../service/internal-routes";
@@ -11,7 +6,7 @@ import { routes } from "../../service/internal-routes";
 export default function DialogTokenExpired({
   state,
   setState,
-  onRetry
+  onRetry,
 }: {
   state: boolean;
   setState: Function;
@@ -34,24 +29,20 @@ export default function DialogTokenExpired({
 
   return (
     <Dialog
-      open={state}
-      onClose={handleClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
+      isOpen={state}
+      onClose={() => setState(false)}
+      title={t("sessionExpired")}
+      canOutsideClickClose={false}
+      canEscapeKeyClose={false}
     >
-      <DialogTitle title={t("sessionExpired")}>
-        {t("sessionExpired")}
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          {t("sessionExpiredMessage")}
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
+      <div className={Classes.DIALOG_BODY}>
+        <pre className="mb-0">{t("sessionExpiredMessage")}</pre>
+      </div>
+      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}} className={Classes.DIALOG_FOOTER}>
         <Button onClick={() => handleRetryButton()} autoFocus>
           {t("retry")}
         </Button>
-      </DialogActions>
+      </div>
     </Dialog>
   );
 }

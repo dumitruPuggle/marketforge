@@ -10,5 +10,8 @@ export const routes = {
         finish: "finish",
         pathLevelSplit: 4,
     },
-    test: "/test"
+    SetupAccount: "/creator/account/setup",
+    SetupAccountSteps: {
+        root: "/"
+    }
 }

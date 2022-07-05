@@ -37,5 +37,10 @@
     "chooseLanguage": "Alegeți limba",
     "english": "Engleză",
     "romanian": "Română",
-    "russian": "Rusă"
+    "russian": "Rusă",
+    "voila": "Voilà",
+    "accountHasBeenCreated": "Contul a fost creat",
+    "setupAccount": "Configurați contul",
+    "selectPlatform": "Selectați platforma",
+    "clickToSelect": "Click pentru a selecta"
 }

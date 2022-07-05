@@ -37,5 +37,10 @@
     "chooseLanguage": "Выберите язык",
     "english": "Английский",
     "romanian": "Румынский",
-    "russian": "Русский"
+    "russian": "Русский",
+    "voila": "Voilà",
+    "accountHasBeenCreated": "Аккаунт создан",
+    "setupAccount": "Настройка аккаунта",
+    "selectPlatform": "Выберите платформу",
+    "clickToSelect": "Нажмите, чтобы выбрать"
 }

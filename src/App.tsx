@@ -3,6 +3,7 @@ import './App.css';
 import { routes } from "./service/internal-routes";
 import SignUp from "./views/SignUp/Creator/SignUp";
 import Home from "./views/Home/Home";
+import DashboardLayout from "./components/DashboardLayout/DashboardLayout";
 
 function App() {
   return (
@@ -14,6 +15,9 @@ function App() {
           </Route>
           <Route path={routes.SignUp}>
             <SignUp />
+          </Route>
+          <Route path={routes.SetupAccount}>
+            <DashboardLayout />
           </Route>
         </Switch>
       </Router>
