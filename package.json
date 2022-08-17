@@ -35,9 +35,9 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "GENERATE_SOURCEMAP=false DISABLE_ESLINT_PLUGIN=true react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false DISABLE_ESLINT_PLUGIN=true react-scripts build",
-    "test": "GENERATE_SOURCEMAP=false DISABLE_ESLINT_PLUGIN=true react-scripts test",
+    "start": "GENERATE_SOURCEMAP=false react-scripts start",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "test": "GENERATE_SOURCEMAP=false react-scripts test",
     "eject": "GENERATE_SOURCEMAP=false react-scripts eject"
   },
   "eslintConfig": {
