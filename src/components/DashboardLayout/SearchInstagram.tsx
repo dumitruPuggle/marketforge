@@ -1,7 +1,6 @@
 import {
   Classes,
   DialogStep,
-  InputGroup,
   MultistepDialog,
 } from "@blueprintjs/core";
 import { TextField } from "@mui/material";
@@ -59,7 +58,7 @@ function ViewProfile({username}: {username: string}){
       console.log(data)
     })
     
-  }, [])
+  }, [username])
   if (data) return (
     <div className={Classes.DIALOG_BODY}>
       <img src={data?.['hd_profile_pic_versions'][0]?.['url']} style={{width: 150, height: 150, borderRadius: '100%'}} />

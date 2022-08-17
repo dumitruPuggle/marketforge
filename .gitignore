@@ -24,3 +24,4 @@ yarn-error.log*
 
 # third party
 .firebase
+.firebase/hosting.YnVpbGQ.cache
