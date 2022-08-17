@@ -1,0 +1,44 @@
+.back-button{
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: 10px;
+    background-color: rgba(236, 236, 236, 0.164);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    box-shadow: 0px 0.5px 1px #b9b9b9;
+    color: #3578E5;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    user-select: none;
+    margin: 0px;
+    z-index: 10;
+}
+
+.back-text{
+    margin-bottom: 0px;
+    line-height: 0px;
+    font-size: 13px;
+}
+
+.back-inner{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-inner:hover{
+    transition: 0.1s linear;
+    opacity: 0.8;
+}
+
+.back-inner:active{
+    transition: 0s linear;
+    opacity: 0.35;
+}

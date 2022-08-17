@@ -1,0 +1,29 @@
+.code-layout{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.code-input{
+    width: 100%;
+    height: 100%;
+    border: 1px solid #4242;
+    font-size: 1.8rem;
+    text-align: center;
+    font-weight: 300;
+    color: #333;
+    background: transparent;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.code-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.code-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

@@ -1,0 +1,24 @@
+.sign-up-row{
+    margin: 0px;
+    padding-top: 37px;
+    height: 100vh;
+}
+
+.sign-up-left{
+    background-color: #f7f7f7;
+}
+
+.not-found-title{
+    font-weight: 800;
+}
+
+.error-message{
+    color: white;
+    font-weight: 500;
+    background-color: red;
+    padding: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 13px;
+    border-radius: 5px;
+}
