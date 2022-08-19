@@ -9,6 +9,7 @@ import "./Dashboard.css";
 import spiderSpringPattern from "../../assets/spider-spring-background.webp";
 import UserCircle from "../UserCircle/UserCircle";
 import InstagramSetup from "./SearchInstagram";
+import { SiAsana } from "react-icons/si";
 
 function DashboardLayout() {
   const instagramDialogState = useState(false)
@@ -54,6 +55,11 @@ function DashboardLayout() {
             </Route>
           </Switch>
         </Container>
+        <div>
+          <SiAsana style={{color: 'gray', transform: `rotate(40deg)`, transition: 'transform 150ms ease'}} size={40} className="mt-5" />
+          <h6 style={{color: 'rgb(0, 0, 0, 0.35)'}} className="bold-title mt-3">Analytics not available</h6>
+          <code style={{bottom: '20px'}} className="position-absolute start-0 end-0">build v0.1</code>
+        </div>
       </div>
     </>
   );
