@@ -5,6 +5,9 @@ import { Dialog } from "@blueprintjs/core";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18next";
 import checkmark from '../../assets/checkmark.svg';
+import us from '../../assets/us.png'
+import ro from '../../assets/ro.png'
+import ru from '../../assets/ru.png'
 
 function LanguagePopUp() {
   const [dialog, setDialog] = useState(false);
@@ -12,15 +15,21 @@ function LanguagePopUp() {
 	const languages = [
 		{
 			name: t("english"),
-			code: "en"
+			code: "en",
+			hyphenCase: "en-US",
+			icon: us
 		},
 		{
 			name: t('romanian'),
-			code: "ro"
+			code: "ro",
+			hyphenCase: "ro-MD",
+			icon: ro
 		},
 		{
 			name: t('russian'),
-			code: "ru"
+			code: "ru",
+			hyphenCase: "ru-MD",
+			icon: ru
 		}
 	]
 	const handleLangClick = (lang: string) => {
@@ -36,9 +45,13 @@ function LanguagePopUp() {
 				>
 					<div className="lang-list">
 						{
-							languages.map(({name, code}) => (
+							languages.map(({name, code, icon, hyphenCase}) => (
 								<div onClick={() => handleLangClick(code)} className="lang-list-item">
-									<small>{name}</small>
+									<img style={{width: 38}} src={icon} alt="" /> 
+									<div style={{display: 'flex', flexDirection: 'column'}}>
+										<small style={{fontWeight: 600}}>{name}</small>
+										<small>{hyphenCase}</small>
+									</div>
 									{
 										i18n.language === code && <img className="lang-list-item-checkmark" src={checkmark} alt=""/>
 									}
