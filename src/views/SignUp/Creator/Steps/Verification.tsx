@@ -1,5 +1,5 @@
 import { TextField } from "@mui/material";
-import { useFormik } from "formik";
+import { Formik, useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -10,7 +10,6 @@ import Indicator from "../../../../components/Indicator/Indicator";
 import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
 import { defaults } from "../../../../defaults";
 import { SessionTwo } from "../../../../service/Auth/Creator/Auth.SessionTwo";
-import { signUpSession2 } from "../../../../service/Auth/Creator/endpoints";
 import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import { routes } from "../../../../service/internal-routes";
 import { lang } from "../../../../translation/utils";
@@ -56,7 +55,7 @@ const Verification = ({
     validationSchema: Yup.object({
       phoneNumber: Yup.string()
         .matches(phoneRegExp, t("invalidPhoneNumber"))
-        .max(9, t("invalidPhoneNumber"))
+        .max(13, t("invalidPhoneNumber"))
         .required(t("required")),
     }),
     onSubmit: async function (values) {
@@ -114,7 +113,7 @@ const Verification = ({
       <TextField
         helperText={formik.errors.phoneNumber}
         id="demo-helper-text-misaligned"
-        label={t("phoneNumber")}
+        label={`${t("phoneNumber")} (+373)`}
         name="phoneNumber"
         className="mb-3"
         placeholder="0 (000)-000-00"
