@@ -6,7 +6,6 @@ import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import NativeButton from "../../../../components/Buttons/NativeButton";
 import Indicator from "../../../../components/Indicator/Indicator";
-import { signUpSession1 } from "../../../../service/Auth/Creator/endpoints";
 import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import { routes } from "../../../../service/internal-routes";
 import { personalInfoStep, totalSteps } from "../SignUp";

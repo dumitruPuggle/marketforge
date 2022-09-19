@@ -5,7 +5,6 @@ import NativeButton from "../../../../components/Buttons/NativeButton";
 import CodeInput from "../../../../components/CodeInput/CodeInput";
 import Indicator from "../../../../components/Indicator/Indicator";
 import { codeValidationStep, totalSteps } from "../SignUp";
-import { signUpSession3 } from "../../../../service/Auth/Creator/endpoints";
 import { routes } from "../../../../service/internal-routes";
 import { useHistory } from "react-router-dom";
 import Timer from "../../../../components/Timer/Timer";
