@@ -1,4 +1,4 @@
-import { CircularProgress, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -11,7 +11,7 @@ import { routes } from "../../../../service/internal-routes";
 import { personalInfoStep, totalSteps } from "../SignUp";
 import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
-import { SessionOne } from "../../../../service/Auth/Creator/Auth.SessionOne";
+import { SessionOne } from "../../../../service/Auth/Creator/SessionOne.Service";
 
 type PersonalInfoState = {
   firstName: string;

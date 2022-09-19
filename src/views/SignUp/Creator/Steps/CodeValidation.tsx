@@ -13,7 +13,7 @@ import { useState } from "react";
 import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
-import { SessionThree } from "../../../../service/Auth/Creator/Auth.SessionThree";
+import { SessionThree } from "../../../../service/Auth/Creator/SessionThree.Service";
 
 type CodeVerificationState = {
   code: Array<any>;
