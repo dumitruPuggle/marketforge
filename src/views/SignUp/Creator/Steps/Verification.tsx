@@ -9,7 +9,7 @@ import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
 import Indicator from "../../../../components/Indicator/Indicator";
 import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
 import { defaults } from "../../../../defaults";
-import { SessionTwo } from "../../../../service/Auth/Creator/Auth.SessionTwo";
+import { SessionTwo } from "../../../../service/Auth/Creator/SessionTwo.Service";
 import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import { routes } from "../../../../service/internal-routes";
 import { lang } from "../../../../translation/utils";
