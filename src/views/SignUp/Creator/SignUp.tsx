@@ -12,7 +12,6 @@ import TokenExpiration from "../../../service/Auth/Creator/TokenExpiration";
 import PasswordService from "./Steps/CreatePassword";
 import Success from "./Steps/Success";
 import LanguagePopUp from "../../../components/LanguagePopUp/LanguagePopUp";
-// import PasswordService from "./Steps/CreatePassword";
 
 export const SignUpContext = createContext({});
 export const totalSteps = 4;

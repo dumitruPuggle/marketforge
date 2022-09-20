@@ -6,7 +6,7 @@ class SignUpService extends ApiService {
   constructor() {
     super();
     this.api = axios.create({
-      baseURL: `${this.baseURL}/api/`,
+      baseURL: `${this.getApiURL()}/api/`,
       headers: {
         "Content-Type": "application/json",
       },
