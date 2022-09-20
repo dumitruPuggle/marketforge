@@ -1,0 +1,104 @@
+.spinner {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  border: 1px solid #000000;
+  border-radius: 50%;
+  transition: 200ms all;
+}
+.spinner::before {
+  content: "";
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background-image: conic-gradient(transparent 10%, #333333);
+  animation: spin 3s infinite linear;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  position: absolute;
+  opacity: 0;
+  background-color: #f00;
+  animation: bip 3s infinite linear;
+  animation-delay: 2.2s;
+}
+
+.arc {
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.arc:nth-child(2) {
+  width: 25%;
+  height: 25%;
+}
+
+.arc:nth-child(3) {
+  width: 50%;
+  height: 50%;
+}
+
+.arc:nth-child(4) {
+  width: 75%;
+  height: 75%;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes bip {
+  0% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.shine {
+  position: relative;
+  z-index: 3;
+  border-radius: 100%;
+  border: 1px solid #163445;
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(rgba(255, 255, 255, 0.1)),
+    to(rgba(255, 255, 255, 0.001))
+  );
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.001)
+  );
+  -webkit-box-shadow: inset 0 1px 0 rgb(255 255 255 / 20%),
+    0 0 10px rgb(0 0 0 / 30%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 20%), 0 0 10px rgb(0 0 0 / 30%);
+}
+
+.map {
+  outline: none;
+  user-select: none;
+  filter: invert(1);
+  width: 100%;
+  border-radius: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
