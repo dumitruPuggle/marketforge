@@ -11,3 +11,14 @@
 .text-medium {
   font-weight: 600;
 }
+
+.construction-image {
+  width: 50%;
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  .construction-image {
+    width: 90%;
+  }
+}

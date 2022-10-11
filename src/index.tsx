@@ -2,16 +2,21 @@ import React from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ReactDOM from "react-dom";
 import "./index.css";
+import { initializeApp } from "firebase/app";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import '@blueprintjs/core/lib/css/blueprint.css';
 import "./i18next.ts";
+import { firebaseConfig } from "./constant/firebaseConfig";
 
 const theme = createTheme({
   typography: {
     fontFamily: ["Inter"].join(","),
   },
 });
+
+ // Initialize Firebase
+initializeApp(firebaseConfig);
 
 ReactDOM.render(
   <React.StrictMode>

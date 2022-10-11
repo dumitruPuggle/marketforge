@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import './App.css';
+import './App.css'
+import { getAnalytics } from "firebase/analytics";
+import { getRemoteConfig } from "firebase/remote-config";
 import { routes } from "./service/internal-routes";
 import SignUp from "./views/SignUp/Creator/SignUp";
 import Home from "./views/Home/Home";
@@ -8,7 +10,6 @@ import { useEffect, useState } from "react";
 import { SRadar } from "./service/ServerRadar/ServerRadar.Service";
 import { useAtom } from "jotai";
 import {atomWithStorage} from "jotai/utils"
-import { Dialog } from "@blueprintjs/core";
 import RadarDialog from "./components/RadarDialog/RadarDialog";
 
 export const useBackupApi = atomWithStorage('useBackupApi', false)
@@ -43,6 +44,13 @@ function App() {
     }
     getStatus()
   }, [navigator.onLine])
+  
+  const analytics = getAnalytics();
+  const remoteConfig = getRemoteConfig();
+
+	remoteConfig.defaultConfig = {
+    home_image: require("./assets/homepage/under_construction.jpeg"),
+  };
   return (
     <div className="App">
       <Router>

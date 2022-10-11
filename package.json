@@ -16,6 +16,7 @@
     "@types/react-dom": "^17.0.11",
     "axios": "^0.26.1",
     "brain.js": "^2.0.0-beta.15",
+    "firebase": "^9.11.0",
     "formik": "^2.2.9",
     "gpu.js": "^2.15.2",
     "i18next": "^21.6.13",
