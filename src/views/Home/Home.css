@@ -1,0 +1,13 @@
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-align-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.text-medium {
+  font-weight: 600;
+}
