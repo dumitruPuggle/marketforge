@@ -45,7 +45,7 @@ function App() {
     getStatus()
   }, [navigator.onLine])
   
-  const analytics = getAnalytics();
+  getAnalytics();
   const remoteConfig = getRemoteConfig();
 
 	remoteConfig.defaultConfig = {

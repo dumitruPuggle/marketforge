@@ -8,6 +8,16 @@
   justify-content: center;
 }
 
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-center-left {
+  align-items: flex-start;
+  justify-content: center;
+}
+
 .text-medium {
   font-weight: 600;
 }
