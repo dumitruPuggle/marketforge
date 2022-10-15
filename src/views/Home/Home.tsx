@@ -20,7 +20,7 @@ function Home(){
 				<img draggable={false} style={{width: 64, marginRight: 10}} src={HundredPercentImage} />
 				<div className='flex-column flex-center-left'>
 					<small style={{fontSize: 14, fontWeight: 600}}>Fluency is 100% policy-free</small>
-					<small>We do not restrict our clients, regardless of their nationality</small>
+					<small style={{textAlign: 'start'}}>We do not restrict our clients, regardless of their nationality</small>
 					<small style={{color: 'thistle'}}>#WeAreAllHumans</small>
 				</div>
 			</div>

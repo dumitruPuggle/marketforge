@@ -1,6 +1,6 @@
-import { TextField } from "@mui/material";
-import { Formik, useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { InputAdornment, TextField } from "@mui/material";
+import { useFormik } from "formik";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
@@ -14,6 +14,7 @@ import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import { routes } from "../../../../service/internal-routes";
 import { lang } from "../../../../translation/utils";
 import { totalSteps, verificationStep } from "../SignUp";
+import { IMaskInput } from "react-imask";
 
 type VerificationState = {
   phoneNumber: string;
@@ -26,6 +27,24 @@ interface VerificationInterface {
   submitToken: string;
   setToken: React.Dispatch<React.SetStateAction<string>>;
 }
+
+const TextMaskCustom = React.forwardRef<HTMLElement>(
+  function TextMaskCustom(props: any, ref) {
+    const { onChange, ...other }: any = props;
+    return (
+      <IMaskInput
+        {...other}
+        mask="(#00) 000-0000"
+        definitions={{
+          '#': /[1-9]/,
+        }}
+        inputRef={ref}
+        onAccept={(value: any, mask) => onChange({ target: { name: props.name, value: mask.unmaskedValue } })}
+        overwrite
+      />
+    );
+  },
+);
 
 const Verification = ({
   state,
@@ -64,7 +83,7 @@ const Verification = ({
       try {
         const { token } = await new SessionTwo().submit(
           {
-            phoneNumber: `+373${values.phoneNumber}`,
+            phoneNumber: `+3730${values.phoneNumber}`,
             lang: (localStorage.getItem("i18nextLng") || defaults.lang) as lang,
           },
           {
@@ -88,6 +107,8 @@ const Verification = ({
   const error =
     (formik.errors.phoneNumber && formik.touched.phoneNumber) ||
     errors.phoneNumber?.length > 0
+
+  console.log(formik.values.phoneNumber)
 
   //Remove error message when user starts typing again.
   // eslint-disable-next-line
@@ -113,15 +134,19 @@ const Verification = ({
       <TextField
         helperText={formik.errors.phoneNumber}
         id="demo-helper-text-misaligned"
-        label={`${t("phoneNumber")} (+373)`}
+        label={`${t("phoneNumber")}`}
         name="phoneNumber"
         className="mb-3"
-        placeholder="0 (000)-000-00"
+        placeholder="(000)-000-00"
         type="phone"
         error={error}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values.phoneNumber}
+        InputProps={{
+          inputComponent: TextMaskCustom as any,
+          startAdornment: <InputAdornment position="start">+373</InputAdornment>
+        }}
       />
       <NativeButton className="mt-3" type="submit" title={t("next")} />
       <hr />
