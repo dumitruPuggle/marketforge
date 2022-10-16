@@ -1,42 +1,42 @@
 .App {
   text-align: center;
-  font-family: 'Inter', sans-serif
+  font-family: "Inter", sans-serif;
 }
 
-.form-center{
+.form-center {
   display: grid;
   place-items: center;
 }
 
-.form-global{
+.form-global {
   display: flex;
   flex-direction: column;
   padding: 20px;
-  width: 70%;
+  width: 500px;
   position: relative;
 }
 
-.form-disclaimer{
+.form-disclaimer {
   font-size: 10px;
   text-transform: uppercase;
   color: #424242;
 }
 
-.mr-2{
+.mr-2 {
   margin-right: 5px;
 }
 
-.form-title{
+.form-title {
   font-weight: 800;
 }
 
-.center{
+.center {
   display: grid;
   place-items: center;
 }
 
 @media screen and (max-width: 600px) {
-  .form-global{
+  .form-global {
     width: 100%;
   }
 }
@@ -44,4 +44,26 @@
 *::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.outline-button {
+  background: transparent;
+  border: 0;
+  letter-spacing: -0.75px;
+  font-size: 12px;
+}
+
+.outline-button:hover {
+  color: #424242;
+}
+
+.outline-button:active {
+  outline: 1px;
+  color: #000000;
+}
+
+.transparent-input {
+  background: transparent;
+  border: 0;
+  outline: none;
 }

@@ -50,6 +50,7 @@ function App() {
 
 	remoteConfig.defaultConfig = {
     home_image: require("./assets/homepage/under_construction.jpeg"),
+    auth_provider: "phone"
   };
   return (
     <div className="App">

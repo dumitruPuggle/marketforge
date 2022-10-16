@@ -8,10 +8,10 @@ import NativeButton from "../../../../components/Buttons/NativeButton";
 import Indicator from "../../../../components/Indicator/Indicator";
 import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import { routes } from "../../../../service/internal-routes";
-import { personalInfoStep, totalSteps } from "../SignUp";
 import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
 import { SessionOne } from "../../../../service/Auth/Creator/SessionOne.Service";
+import { personalInfoStep, totalSteps } from "../../../../constant/SignUp.Constant";
 
 type PersonalInfoState = {
   firstName: string;

@@ -13,8 +13,8 @@ import { SessionTwo } from "../../../../service/Auth/Creator/SessionTwo.Service"
 import Error from "../../../../service/Auth/Creator/ErrorHandler";
 import { routes } from "../../../../service/internal-routes";
 import { lang } from "../../../../translation/utils";
-import { totalSteps, verificationStep } from "../SignUp";
 import { IMaskInput } from "react-imask";
+import { totalSteps, verificationStep } from "../../../../constant/SignUp.Constant";
 
 type VerificationState = {
   phoneNumber: string;
@@ -107,8 +107,6 @@ const Verification = ({
   const error =
     (formik.errors.phoneNumber && formik.touched.phoneNumber) ||
     errors.phoneNumber?.length > 0
-
-  console.log(formik.values.phoneNumber)
 
   //Remove error message when user starts typing again.
   // eslint-disable-next-line

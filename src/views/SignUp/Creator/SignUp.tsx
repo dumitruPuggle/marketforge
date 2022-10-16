@@ -1,10 +1,21 @@
+import { useEffect, useState } from "react";
+import {
+  Redirect,
+  Route,
+  Switch,
+  useRouteMatch,
+} from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
+import {
+  fetchAndActivate,
+  getRemoteConfig,
+  getValue,
+} from "firebase/remote-config";
 import Back from "../../../components/Back/Back";
 import "./SignUp.css";
-import { createContext, useCallback, useEffect, useState } from "react";
-import { Redirect, Route, Switch, useLocation, useRouteMatch } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
 import PersonInfo from "./Steps/PersonInformation";
-import Verification from "./Steps/Verification";
+import PhoneVerification from "./Steps/Verification";
+import EmailVerification from "./Steps/EmailVerification";
 import CodeValidation from "./Steps/CodeValidation";
 import DialogTokenExpired from "../../../components/DialogTokenExpired/DialogTokenExpired";
 import { routes } from "../../../service/internal-routes";
@@ -12,67 +23,65 @@ import TokenExpiration from "../../../service/Auth/Creator/TokenExpiration";
 import PasswordService from "./Steps/CreatePassword";
 import Success from "./Steps/Success";
 import LanguagePopUp from "../../../components/LanguagePopUp/LanguagePopUp";
+import { passwordServiceStep, totalSteps } from "../../../constant/SignUp.Constant";
 
-export const SignUpContext = createContext({});
-export const totalSteps = 4;
-export const personalInfoStep = 0;
-export const verificationStep = 1;
-export const codeValidationStep = 2;
-export const passwordServiceStep = 3;
-export const tempToken = localStorage.getItem("_temptoken") || "";
 
 function SignUp() {
   let { path } = useRouteMatch();
 
-  const [personalInfoToken, setPersonalInfoToken] = useState<string>("");
+  // General information
+  const [personalInfoToken, setPersonalInfoToken] = useState("");
   const personalInfo = useState({
     firstName: "",
     lastName: "",
     email: "",
   });
 
-  const [verificationToken, setVerificationToken] = useState<string>("");
+  // Verification
+  const [emailVerificationToken, setEmailVerificationToken] = useState("");
+  const emailVerification = useState({
+    email: "",
+  });
+
+
+  const [verificationToken, setVerificationToken] = useState("");
   const verification = useState({
     phoneNumber: "",
   });
 
-  const [codeValidationToken, setCodeValidationToken] = useState<string>("");
+  // Validation
+  const [codeValidationToken, setCodeValidationToken] = useState("");
   const codeValidation = useState({
     code: [null, null, null, null, null, null],
-  });  
+  });
 
+  // Password Creation
   const password = useState({
     password: "",
   });
 
-  // const handlePasswordServiceSubmit = async (values: any) => {
-  //   const history = useHistory();
-  //   let { path } = useRouteMatch();
-
-  //   history.push(`${path}/finish-sign-up`);
-  // };
-  //Media queries for responsiveness.
+  // Media queries for responsiveness.
   const Desktop = ({ children }: any) => {
     const isDesktop = useMediaQuery({ minWidth: 992 });
     return isDesktop ? children : null;
   };
 
-  //Warn user before closing the window, if he is not done with the sign up process.
   const isEmpty = (objectLink: object) => {
     return !Object.values(objectLink).some((x: any) => x !== null && x !== "");
   };
 
-  const isPersonalInfoEmpty = isEmpty(personalInfo[0]);
-  const isVerficationEmpty = isEmpty(verification[0]);
-  const [codeValidationSubmitted, setCodeValidationSubmitted] = useState(false)
-  const isPasswordEmpty = isEmpty(password[0]);
+  /* 
+  Truth statements, used to manage the routes
+  Example: If PersonalInfo is completed -> Verification Route will be available.
+  */
+  const isPersonalInfoCompleted = !isEmpty(personalInfo[0]);
+  const isVerficationCompleted = !isEmpty(verification[0] && emailVerification[0]);
+  const [codeValidationSubmitted, setCodeValidationSubmitted] = useState(false);
+  const isPasswordCompleted = !isEmpty(password[0]);
 
+  // Is Session Expired? In case it is, it will push to /
   const [sessionExpiredDialogShown, setSessionExpiredDialogShown] =
     useState<boolean>(false);
-
-  // const getState = (entireState: [any, Function]) => {
-  //   return entireState[0];
-  // };
 
   const resetAllTokens = () => {
     setPersonalInfoToken("");
@@ -80,7 +89,7 @@ function SignUp() {
     setCodeValidationToken("");
   };
 
-  //Used to display to the user that the session has expired.
+  // Mechansim that computes if the SignUp session has been expired.
   const deps = [
     personalInfoToken,
     verificationToken,
@@ -112,10 +121,29 @@ function SignUp() {
         }
     }
   }, deps);
-
+  
+  /*
+   When the session expired, a Dialog will be displayed, this function will reset all user tokens
+   in order to restart SignUp process.
+   */
   const handleDialogRetry = () => {
     resetAllTokens();
-  }; 
+  };
+
+  /*
+  Remote config used to determine which provider will be used (either email or phone)
+  */
+  const remoteConfig = getRemoteConfig();
+  const [authProvider, setAuthProvider] = useState(
+    getValue(remoteConfig, "auth_provider").asString()
+  );
+  
+  // Get remote value for once per render.
+  useEffect(() => {
+    fetchAndActivate(remoteConfig).then(() => {
+      setAuthProvider(getValue(remoteConfig, "auth_provider").asString());
+    });
+  }, []);
   return (
     <div className="row sign-up-row">
       <Back />
@@ -144,16 +172,26 @@ function SignUp() {
                 setToken={setPersonalInfoToken}
               />
             </Route>
-            {!isPersonalInfoEmpty && (
+            {isPersonalInfoCompleted && (
               <Route exact path={`${path}/${routes.SignUpSteps.verification}`}>
-                <Verification
-                  state={verification}
-                  submitToken={personalInfoToken}
-                  setToken={setVerificationToken}
-                />
+                {authProvider === "phone" ? (
+                  <PhoneVerification
+                    state={verification}
+                    submitToken={personalInfoToken}
+                    setToken={setVerificationToken}
+                  />
+                ) : (
+                  authProvider === "email" && (
+                    <EmailVerification
+                      state={emailVerification}
+                      submitToken={emailVerificationToken}
+                      setToken={setEmailVerificationToken}
+                    />
+                  )
+                )}
               </Route>
             )}
-            {(!isVerficationEmpty && !codeValidationSubmitted) && (
+            {!isVerficationCompleted && !codeValidationSubmitted && (
               <Route exact path={`${path}/${routes.SignUpSteps.confirmation}`}>
                 <CodeValidation
                   state={codeValidation}
@@ -178,7 +216,7 @@ function SignUp() {
                 />
               </Route>
             )}
-            {!isPasswordEmpty && (
+            {!isPasswordCompleted && (
               <Route exact path={`${path}/${routes.SignUpSteps.finish}`}>
                 <Success />
               </Route>
