@@ -1,17 +1,20 @@
+import { TextField } from "@mui/material";
+import { useTranslation } from "react-i18next";
+
 function EmailBox({email}: {email: string}) {
+  const {t} = useTranslation()
   return (
     <div style={{ position: "relative" }}>
-      <div></div>
-      <input
-        className="p-5 transparent-input"
-        style={{
-          fontSize: 19,
-          textAlign: 'center',
-          width: '100%',
-          fontWeight: 500,
-          backgroundColor: "#f7f7f7",
-          fontFamily: "IBM Plex Mono, monospace",
-        }}
+      <TextField
+        // helperText={formik.errors.email}
+        id="demo-helper-text-misaligned"
+        label={t("email")}
+        name="email"
+        type="email"
+        className="w-100 mt-2 mb-2"
+        // error={emailError}
+        // onChange={formik.handleChange}
+        // onBlur={formik.handleBlur}
         defaultValue={email}
       />
       <small

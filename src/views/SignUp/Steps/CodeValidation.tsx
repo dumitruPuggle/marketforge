@@ -9,10 +9,10 @@ import { useHistory } from "react-router-dom";
 import Timer from "../../../components/Timer/Timer";
 import jwtDecode from "jwt-decode";
 import { useState } from "react";
-import Error from "../../../service/Auth/Creator/ErrorHandler";
+import Error from "../../../service/Auth/SignUp/ErrorHandler";
 import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
-import { SessionThree } from "../../../service/Auth/Creator/SessionThree.Service";
+import { SessionThree } from "../../../service/Auth/SignUp/SessionThree.Service";
 import { codeValidationStep, totalSteps } from "../../../constant/SignUp.Constant";
 
 type CodeVerificationState = {

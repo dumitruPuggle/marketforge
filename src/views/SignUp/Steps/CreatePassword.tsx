@@ -9,8 +9,8 @@ import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import Indicator from "../../../components/Indicator/Indicator";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
 import StrengthBox from "../../../components/StrengthBox/StrengthBox";
-import { SessionFour } from "../../../service/Auth/Creator/SessionFour.Service";
-import Error from "../../../service/Auth/Creator/ErrorHandler";
+import { SessionFour } from "../../../service/Auth/SignUp/SessionFour.Service";
+import Error from "../../../service/Auth/SignUp/ErrorHandler";
 import { routes } from "../../../service/internal-routes";
 
 interface IPasswordServiceProps {
