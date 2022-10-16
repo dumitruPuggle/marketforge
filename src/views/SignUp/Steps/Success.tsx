@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Prompt } from "react-router-dom";
-import successIcon from "../../../../assets/success.svg";
-import NativeButtonPillow from "../../../../components/Buttons/NativeButtonPillow";
-import { routes } from "../../../../service/internal-routes";
+import successIcon from "../../../assets/success.svg";
+import NativeButtonPillow from "../../../components/Buttons/NativeButtonPillow";
+import { routes } from "../../../service/internal-routes";
 function Success() {
   const { t } = useTranslation();
   const handleSetupAccount = () => {

@@ -4,17 +4,17 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
-import NativeButton from "../../../../components/Buttons/NativeButton";
-import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
-import Indicator from "../../../../components/Indicator/Indicator";
-import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
-import { defaults } from "../../../../defaults";
-import { SessionTwo } from "../../../../service/Auth/Creator/SessionTwo.Service";
-import Error from "../../../../service/Auth/Creator/ErrorHandler";
-import { routes } from "../../../../service/internal-routes";
-import { lang } from "../../../../translation/utils";
+import NativeButton from "../../../components/Buttons/NativeButton";
+import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
+import Indicator from "../../../components/Indicator/Indicator";
+import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
+import { defaults } from "../../../defaults";
+import { SessionTwo } from "../../../service/Auth/Creator/SessionTwo.Service";
+import Error from "../../../service/Auth/Creator/ErrorHandler";
+import { routes } from "../../../service/internal-routes";
+import { lang } from "../../../translation/utils";
 import { IMaskInput } from "react-imask";
-import { totalSteps, verificationStep } from "../../../../constant/SignUp.Constant";
+import { totalSteps, verificationStep } from "../../../constant/SignUp.Constant";
 
 type VerificationState = {
   phoneNumber: string;

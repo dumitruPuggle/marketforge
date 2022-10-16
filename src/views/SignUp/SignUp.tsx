@@ -11,19 +11,19 @@ import {
   getRemoteConfig,
   getValue,
 } from "firebase/remote-config";
-import Back from "../../../components/Back/Back";
+import Back from "../../components/Back/Back";
 import "./SignUp.css";
 import PersonInfo from "./Steps/PersonInformation";
 import PhoneVerification from "./Steps/Verification";
 import EmailVerification from "./Steps/EmailVerification";
 import CodeValidation from "./Steps/CodeValidation";
-import DialogTokenExpired from "../../../components/DialogTokenExpired/DialogTokenExpired";
-import { routes } from "../../../service/internal-routes";
-import TokenExpiration from "../../../service/Auth/Creator/TokenExpiration";
+import DialogTokenExpired from "../../components/DialogTokenExpired/DialogTokenExpired";
+import { routes } from "../../service/internal-routes";
+import TokenExpiration from "../../service/Auth/Creator/TokenExpiration";
 import PasswordService from "./Steps/CreatePassword";
 import Success from "./Steps/Success";
-import LanguagePopUp from "../../../components/LanguagePopUp/LanguagePopUp";
-import { passwordServiceStep, totalSteps } from "../../../constant/SignUp.Constant";
+import LanguagePopUp from "../../components/LanguagePopUp/LanguagePopUp";
+import { passwordServiceStep, totalSteps } from "../../constant/SignUp.Constant";
 
 
 function SignUp() {

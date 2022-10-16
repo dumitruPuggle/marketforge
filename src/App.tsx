@@ -3,7 +3,7 @@ import './App.css'
 import { getAnalytics } from "firebase/analytics";
 import { getRemoteConfig } from "firebase/remote-config";
 import { routes } from "./service/internal-routes";
-import SignUp from "./views/SignUp/Creator/SignUp";
+import SignUp from "./views/SignUp/SignUp";
 import Home from "./views/Home/Home";
 import DashboardLayout from "./components/DashboardLayout/DashboardLayout";
 import { useEffect, useState } from "react";
