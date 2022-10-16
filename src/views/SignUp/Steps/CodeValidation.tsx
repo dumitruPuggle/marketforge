@@ -1,19 +1,19 @@
 import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
 import * as Yup from "yup";
-import NativeButton from "../../../../components/Buttons/NativeButton";
-import CodeInput from "../../../../components/CodeInput/CodeInput";
-import Indicator from "../../../../components/Indicator/Indicator";
-import { routes } from "../../../../service/internal-routes";
+import NativeButton from "../../../components/Buttons/NativeButton";
+import CodeInput from "../../../components/CodeInput/CodeInput";
+import Indicator from "../../../components/Indicator/Indicator";
+import { routes } from "../../../service/internal-routes";
 import { useHistory } from "react-router-dom";
-import Timer from "../../../../components/Timer/Timer";
+import Timer from "../../../components/Timer/Timer";
 import jwtDecode from "jwt-decode";
 import { useState } from "react";
-import Error from "../../../../service/Auth/Creator/ErrorHandler";
-import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
-import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
-import { SessionThree } from "../../../../service/Auth/Creator/SessionThree.Service";
-import { codeValidationStep, totalSteps } from "../../../../constant/SignUp.Constant";
+import Error from "../../../service/Auth/Creator/ErrorHandler";
+import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
+import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
+import { SessionThree } from "../../../service/Auth/Creator/SessionThree.Service";
+import { codeValidationStep, totalSteps } from "../../../constant/SignUp.Constant";
 
 type CodeVerificationState = {
   code: Array<any>;

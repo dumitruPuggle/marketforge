@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Prompt, useHistory } from "react-router-dom";
 import * as Yup from "yup";
-import NativeButton from "../../../../components/Buttons/NativeButton";
-import ErrorBubble from "../../../../components/ErrorBubble/ErrorBubble";
-import Indicator from "../../../../components/Indicator/Indicator";
-import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
-import StrengthBox from "../../../../components/StrengthBox/StrengthBox";
-import { SessionFour } from "../../../../service/Auth/Creator/SessionFour.Service";
-import Error from "../../../../service/Auth/Creator/ErrorHandler";
-import { routes } from "../../../../service/internal-routes";
+import NativeButton from "../../../components/Buttons/NativeButton";
+import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
+import Indicator from "../../../components/Indicator/Indicator";
+import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
+import StrengthBox from "../../../components/StrengthBox/StrengthBox";
+import { SessionFour } from "../../../service/Auth/Creator/SessionFour.Service";
+import Error from "../../../service/Auth/Creator/ErrorHandler";
+import { routes } from "../../../service/internal-routes";
 
 interface IPasswordServiceProps {
   state: [object, Function];

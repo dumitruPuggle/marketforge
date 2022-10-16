@@ -1,13 +1,13 @@
 import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
-import NativeButton from "../../../../components/Buttons/NativeButton";
-import EmailBox from "../../../../components/EmailBox/EmailBox";
-import Indicator from "../../../../components/Indicator/Indicator";
-import LoadingForeground from "../../../../components/LoadingForeground/LoadingForeground";
+import NativeButton from "../../../components/Buttons/NativeButton";
+import EmailBox from "../../../components/EmailBox/EmailBox";
+import Indicator from "../../../components/Indicator/Indicator";
+import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
 import { useHistory } from "react-router-dom";
-import { routes } from "../../../../service/internal-routes";
+import { routes } from "../../../service/internal-routes";
 import { useState } from "react";
-import { totalSteps, verificationStep } from "../../../../constant/SignUp.Constant";
+import { totalSteps, verificationStep } from "../../../constant/SignUp.Constant";
 
 type VerificationState = {
   email: string;
