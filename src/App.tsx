@@ -11,6 +11,8 @@ import { SRadar } from "./service/ServerRadar/ServerRadar.Service";
 import { useAtom } from "jotai";
 import {atomWithStorage} from "jotai/utils"
 import RadarDialog from "./components/RadarDialog/RadarDialog";
+import StatsDialog from "./components/StatsDialog/StatsDialog";
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 
 export const useBackupApi = atomWithStorage('useBackupApi', false)
 
@@ -52,6 +54,13 @@ function App() {
     home_image: require("./assets/homepage/under_construction.jpeg"),
     auth_provider: "phone"
   };
+
+  const [statsOpen, setStats] = useState(false);
+
+  const handleStatsDialogClose = () => {
+    setStats(false)
+  }
+
   return (
     <div className="App">
       <Router>
@@ -61,6 +70,7 @@ function App() {
           </Route>
           <Route path={routes.SignUp}>
             <RadarDialog state={[radarDialog, setRadarDialog]} />
+            <StatsDialog isOpen={statsOpen} onClose={handleStatsDialogClose} />
             <SignUp />
           </Route>
           <Route path={routes.SetupAccount}>
