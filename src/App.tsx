@@ -15,6 +15,7 @@ import StatsDialog from "./components/StatsDialog/StatsDialog";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 
 export const useBackupApi = atomWithStorage('useBackupApi', false)
+export const statisticsDialog = atomWithStorage('statsDialogShown', true)
 
 function App() {
   const [, setBackupApi] = useAtom(useBackupApi)
@@ -55,7 +56,7 @@ function App() {
     auth_provider: "phone"
   };
 
-  const [statsOpen, setStats] = useState(false);
+  const [statsShow, setStats] = useAtom(statisticsDialog)
 
   const handleStatsDialogClose = () => {
     setStats(false)
@@ -70,7 +71,7 @@ function App() {
           </Route>
           <Route path={routes.SignUp}>
             <RadarDialog state={[radarDialog, setRadarDialog]} />
-            <StatsDialog isOpen={statsOpen} onClose={handleStatsDialogClose} />
+            <StatsDialog isOpen={!radarDialog && statsShow} onClose={handleStatsDialogClose} />
             <SignUp />
           </Route>
           <Route path={routes.SetupAccount}>
