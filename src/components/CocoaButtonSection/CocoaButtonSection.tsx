@@ -1,9 +1,11 @@
 
+type Variant = "transparent"
 interface ICocoaButtonSection {
 	children: React.ReactNode;
 	className?: string;
-	variant?: string | undefined;
+	variant?: Variant | undefined;
 	center?: boolean;
+  style?: object;
 }
 
 function CocoaButtonSection({
@@ -11,6 +13,7 @@ function CocoaButtonSection({
   variant,
   className = "",
 	center = false,
+  style = {},
   ...props
 }: ICocoaButtonSection) {
   const defaultVariantStyle = {
@@ -25,10 +28,11 @@ function CocoaButtonSection({
   };
 
 	const transparentVariant = {
-
+    position: "relative",
+    zIndex: 0,
 	}
 
-	const calcStyle = () => {
+	const calcStyle = (): any => {
 		if (variant === "transparent"){
 			return transparentVariant;
 		}
@@ -36,7 +40,7 @@ function CocoaButtonSection({
 	}
   return (
     <div
-      style={calcStyle()}
+      style={{...calcStyle(), ...style}}
       className={`${center ? 'flex-column flex-align-center' : ''} ${className}`}
       {...props}
     >

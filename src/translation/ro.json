@@ -43,5 +43,12 @@
   "setupAccount": "Configurați contul",
   "selectPlatform": "Selectați platforma",
   "clickToSelect": "Click pentru a selecta",
-  "send-again": "Trimiteți din nou"
+  "send-again": "Trimiteți din nou",
+  "service-check": "Verificarea postului de service...",
+  "service-check-message": "Ne cerem scuze pentru întârziere, ar trebui să așteptați. Serverul este momentan indisponibil, motorul de căutare încorporat încearcă să găsească cel mai potrivit serviciu.",
+  "stop-searching": "Opriți căutarea",
+  "view-logs": "Vezi logurile",
+  "stop-searching-warning": "Aplicația nu va putea funcționa dacă întrerupeți căutarea",
+  "ok": "OK",
+  "logs-window-description": "Această fereastră este orientată către dezvoltatori. Puteți utiliza jurnalele pentru a obține o vizualizare mai aprofundată a datelor subiacente."
 }

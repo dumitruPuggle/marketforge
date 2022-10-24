@@ -4,14 +4,15 @@ interface ICocoaButton {
   title: string;
   width: number;
   className?: string;
+  style?: object;
   onClick: () => void;
 }
 
-function CocoaButton({ title, width, className, onClick }: ICocoaButton) {
+function CocoaButton({ title, width, className, onClick, style = {} }: ICocoaButton) {
   return (
     <div
       onClick={onClick}
-      style={{ width }}
+      style={{ width, ...style }}
       className={`NSCocoaButton ${className}`}
     >
       <div className="NSCocoaLabel">{title}</div>
