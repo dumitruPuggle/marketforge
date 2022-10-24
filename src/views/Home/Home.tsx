@@ -7,6 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import HundredPercentImage from "../../assets/100-percent-image.png";
 import CocoaButton from "../../components/CocoaButton/CocoaButton";
+import CocoaButtonSection from "../../components/CocoaButtonSection/CocoaButtonSection";
 
 import "./Home.css";
 

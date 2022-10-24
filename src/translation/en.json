@@ -43,5 +43,12 @@
   "setupAccount": "Setup account",
   "selectPlatform": "Select platform",
   "clickToSelect": "Click to select",
-  "send-again": "Send again"
+  "send-again": "Send again",
+  "service-check": "Service check...",
+  "service-check-message": "We apologise for the delay, you should wait. The server is currently down, the inbuilt application engine is trying to find the most suitable service.",
+  "stop-searching": "Stop searching",
+  "view-logs": "View logs",
+  "stop-searching-warning": "The app will not work if you interrupt the search",
+  "ok": "OK",
+  "logs-window-description": "This window is oriented towards developers. You can use the logs to get a more in-depth view of the underlying data."
 }
