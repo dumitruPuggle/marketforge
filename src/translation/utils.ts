@@ -10,3 +10,7 @@ export interface requireToken {
 }
 
 export type lang = "en" | "ro" | "ru";
+
+export type AuthProvider = 'phone_provider' | 'email_provider';
+export type AuthPhoneProvider = 'phone_provider';
+export type AuthEmailProvider = 'email_provider';

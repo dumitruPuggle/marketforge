@@ -1,7 +1,8 @@
-import { lang, requireToken, useLang } from "../../../translation/utils";
+import { lang, requireToken, useLang, AuthPhoneProvider } from "../../../translation/utils";
 import SignUpService from "./SignUp.Service";
 
 interface SessionTwoSubmitProps {
+  provider: AuthPhoneProvider;
   phoneNumber: string;
   lang: lang;
 }

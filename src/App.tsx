@@ -1,12 +1,12 @@
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './App.css'
 import { getAnalytics } from "firebase/analytics";
 import { getRemoteConfig } from "firebase/remote-config";
 import { routes } from "./service/internal-routes";
 import SignUp from "./views/SignUp/SignUp";
-import Home from "./views/Home/Home";
+// import Home from "./views/Home/Home";
 import DashboardLayout from "./components/DashboardLayout/DashboardLayout";
-import { useEffect, useState } from "react";
 import { SRadar } from "./service/ServerRadar/ServerRadar.Service";
 import { useAtom } from "jotai";
 import {atomWithStorage} from "jotai/utils"
@@ -67,7 +67,7 @@ function App() {
       <Router>
         <Switch>
           <Route path={routes.root} exact>
-            <Home />
+            {/* <Home /> */}
           </Route>
           <Route path={routes.SignUp}>
             <RadarDialog state={[radarDialog, setRadarDialog]} />

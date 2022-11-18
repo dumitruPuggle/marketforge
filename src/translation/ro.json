@@ -50,5 +50,6 @@
   "view-logs": "Vezi logurile",
   "stop-searching-warning": "Aplicația nu va putea funcționa dacă întrerupeți căutarea",
   "ok": "OK",
-  "logs-window-description": "Această fereastră este orientată către dezvoltatori. Puteți utiliza jurnalele pentru a obține o vizualizare mai aprofundată a datelor subiacente."
+  "logs-window-description": "Această fereastră este orientată către dezvoltatori. Puteți utiliza jurnalele pentru a obține o vizualizare mai aprofundată a datelor subiacente.",
+  "signup-welcome": "Bun venit pe Fluency!"
 }

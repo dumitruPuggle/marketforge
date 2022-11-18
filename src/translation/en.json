@@ -50,5 +50,6 @@
   "view-logs": "View logs",
   "stop-searching-warning": "The app will not work if you interrupt the search",
   "ok": "OK",
-  "logs-window-description": "This window is oriented towards developers. You can use the logs to get a more in-depth view of the underlying data."
+  "logs-window-description": "This window is oriented towards developers. You can use the logs to get a more in-depth view of the underlying data.",
+  "signup-welcome": "Welcome to Fluency!"
 }
