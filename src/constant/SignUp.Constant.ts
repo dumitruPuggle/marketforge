@@ -4,3 +4,5 @@ export const verificationStep = 1;
 export const codeValidationStep = 2;
 export const passwordServiceStep = 3;
 export const tempToken = localStorage.getItem("_temptoken") || "";
+export const userTypes = ["individual", "organisation"];
+export const defUserType = "individual";

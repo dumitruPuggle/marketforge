@@ -1,5 +1,6 @@
 import { TextField } from "@mui/material";
 import { useFormik } from "formik";
+import i18next from "i18next";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -11,13 +12,19 @@ import { routes } from "../../../service/internal-routes";
 import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
 import { SessionOne } from "../../../service/Auth/SignUp/SessionOne.Service";
-import { personalInfoStep, totalSteps } from "../../../constant/SignUp.Constant";
+import {
+  defUserType,
+  personalInfoStep,
+  totalSteps,
+  userTypes,
+} from "../../../constant/SignUp.Constant";
+import queryString from "query-string";
 
 type PersonalInfoState = {
   firstName: string;
   lastName: string;
   email: string;
-}
+};
 
 interface PersonInfoInterface {
   state: [PersonalInfoState, Function];
@@ -39,6 +46,18 @@ function PersonInfo({ state, setToken }: PersonInfoInterface) {
   const [errors, setErrors] = useState(errorsInitialState);
   const ErrorHandler = new Error(errors, setErrors, errorsInitialState);
 
+  const rawUserSearchParam = queryString.parse(document.location.search)?.u_type?.toString();
+  const sanitizeUserTypeFromParam = (u_type: string | undefined) => {
+    if (!u_type){
+      return defUserType;
+    }
+    if (userTypes.includes(u_type)){
+      return u_type;
+    }
+    return defUserType;
+  }
+  const [userType, setUserType] = useState(sanitizeUserTypeFromParam(rawUserSearchParam));
+
   const formik = useFormik({
     initialValues: {
       firstName: personalInfo.firstName,
@@ -57,7 +76,7 @@ function PersonInfo({ state, setToken }: PersonInfoInterface) {
     onSubmit: async function (values: PersonalInfoState): Promise<void> {
       setPersonalInfo(values);
       try {
-        const { token } = await new SessionOne().submit(values)
+        const { token } = await new SessionOne().submit(values);
         setToken(token);
         history.push(`${routes.SignUp}/${routes.SignUpSteps.verification}`);
         if (ErrorHandler.hasErrors()) {
@@ -87,8 +106,7 @@ function PersonInfo({ state, setToken }: PersonInfoInterface) {
   const lastNameError =
     formik.errors.lastName && formik.touched.lastName ? true : false;
   const emailError =
-    (formik.errors.email && formik.touched.email) ||
-    errors.email.length > 0
+    (formik.errors.email && formik.touched.email) || errors.email.length > 0;
 
   // Remove error message when user starts typing again.
   useEffect(
@@ -98,45 +116,56 @@ function PersonInfo({ state, setToken }: PersonInfoInterface) {
 
   //Reset the token to avoid going through errors
   useEffect(() => setToken(""), []);
+  useEffect(() => {
+    document.title = `${t("signup")} - Fluency`;
+  }, [i18next.language]);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {ErrorHandler.hasErrors() && (
         <ErrorBubble errorList={ErrorHandler.listErrors()} />
       )}
-      {
-        formik.isSubmitting &&
-        <LoadingForeground />
-      }
-      <h4 className="mb-4 form-title">{t("signup")}</h4>
+      {formik.isSubmitting && <LoadingForeground />}
+      <h4 className="form-title">{t("signup-welcome")}</h4>
+      <p className="mb-4">For Individuals</p>
       <Indicator
         className="mb-4"
         value={personalInfoStep}
         counts={totalSteps}
       />
-      <TextField
-        helperText={formik.errors.firstName}
-        id="demo-helper-text-misaligned"
-        label={t("firstName")}
-        name="firstName"
-        className="mb-3"
-        type="name"
-        error={firstNameError}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.firstName}
-      />
-      <TextField
-        helperText={formik.errors.lastName}
-        id="demo-helper-text-misaligned"
-        label={t("lastName")}
-        name="lastName"
-        className="mb-3"
-        type="name"
-        error={lastNameError}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.lastName}
-      />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <TextField
+          helperText={formik.errors.firstName}
+          id="demo-helper-text-misaligned"
+          label={t("firstName")}
+          name="firstName"
+          className="mb-3"
+          type="name"
+          style={{ width: "48.5%" }}
+          error={firstNameError}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.firstName}
+        />
+        <TextField
+          helperText={formik.errors.lastName}
+          id="demo-helper-text-misaligned"
+          label={t("lastName")}
+          name="lastName"
+          className="mb-3"
+          type="name"
+          style={{ width: "48.5%" }}
+          error={lastNameError}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.lastName}
+        />
+      </div>
       <TextField
         helperText={formik.errors.email}
         id="demo-helper-text-misaligned"

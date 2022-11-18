@@ -15,6 +15,7 @@ import { routes } from "../../../service/internal-routes";
 import { lang } from "../../../translation/utils";
 import { IMaskInput } from "react-imask";
 import { totalSteps, verificationStep } from "../../../constant/SignUp.Constant";
+import i18next from "i18next";
 
 type VerificationState = {
   phoneNumber: string;
@@ -83,6 +84,7 @@ const Verification = ({
       try {
         const { token } = await new SessionTwo().submit(
           {
+            provider: "phone_provider",
             phoneNumber: `+3730${values.phoneNumber}`,
             lang: (localStorage.getItem("i18nextLng") || defaults.lang) as lang,
           },
@@ -114,6 +116,9 @@ const Verification = ({
     () => ErrorHandler.setFieldError("phoneNumber", ""),
     [formik.values.phoneNumber]
   );
+  useEffect(() => {
+    document.title = `${t('verification')} - Fluency`
+  }, [i18next.language])
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {ErrorHandler.hasErrors() && (

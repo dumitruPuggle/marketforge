@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Redirect,
-  Route,
-  Switch,
-  useRouteMatch,
-} from "react-router-dom";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import {
   fetchAndActivate,
@@ -23,8 +18,11 @@ import TokenExpiration from "../../service/Auth/SignUp/TokenExpiration";
 import PasswordService from "./Steps/CreatePassword";
 import Success from "./Steps/Success";
 import LanguagePopUp from "../../components/LanguagePopUp/LanguagePopUp";
-import { passwordServiceStep, totalSteps } from "../../constant/SignUp.Constant";
-
+import {
+  passwordServiceStep,
+  totalSteps,
+} from "../../constant/SignUp.Constant";
+import AppIcon from "../../assets/app-icon.png";
 
 function SignUp() {
   let { path } = useRouteMatch();
@@ -42,7 +40,6 @@ function SignUp() {
   const emailVerification = useState({
     email: "",
   });
-
 
   const [verificationToken, setVerificationToken] = useState("");
   const verification = useState({
@@ -75,7 +72,9 @@ function SignUp() {
   Example: If PersonalInfo is completed -> Verification Route will be available.
   */
   const isPersonalInfoCompleted = !isEmpty(personalInfo[0]);
-  const isVerficationCompleted = !isEmpty(verification[0] && emailVerification[0]);
+  const isVerficationCompleted = !isEmpty(
+    verification[0] || emailVerification[0]
+  );
   const [codeValidationSubmitted, setCodeValidationSubmitted] = useState(false);
   const isPasswordCompleted = !isEmpty(password[0]);
 
@@ -87,6 +86,7 @@ function SignUp() {
     setPersonalInfoToken("");
     setVerificationToken("");
     setCodeValidationToken("");
+    setEmailVerificationToken("");
   };
 
   // Mechansim that computes if the SignUp session has been expired.
@@ -98,19 +98,29 @@ function SignUp() {
     personalInfo,
     verification,
     codeValidation,
+    emailVerificationToken,
   ];
   useEffect(() => {
     const currentPath = () => {
-      const pathSplitNumber = routes.SignUpSteps.pathLevelSplit;
-      const pathLevel = window.location.pathname.split("/")[pathSplitNumber];
-      const pathIndex = parseInt(pathLevel) - 2;
-      if (pathIndex >= 0) {
-        return pathIndex;
-      }
-      return 0;
+      // const pathSplitNumber = routes.SignUpSteps.pathLevelSplit;
+      // const pathLevel = window.location.pathname.split("/")[pathSplitNumber];
+      // const pathIndex = parseInt(pathLevel) - 2;
+      // if (pathIndex >= 0) {
+      //   return pathIndex;
+      // }
+      // return 0;
+      // var lastNumber = url.substr(url.lastIndexOf('/') + 1);
+      return 5;
     };
-    const tokens = [personalInfoToken, verificationToken, codeValidationToken];
+    const tokens = [
+      personalInfoToken,
+      verificationToken,
+      codeValidationToken,
+      emailVerificationToken,
+    ];
     const currentToken = tokens[currentPath()];
+
+    console.log(currentPath());
 
     if (currentToken && !sessionExpiredDialogShown) {
       const tokenExpirationHandler = new TokenExpiration(currentToken);
@@ -121,7 +131,7 @@ function SignUp() {
         }
     }
   }, deps);
-  
+
   /*
    When the session expired, a Dialog will be displayed, this function will reset all user tokens
    in order to restart SignUp process.
@@ -137,7 +147,7 @@ function SignUp() {
   const [authProvider, setAuthProvider] = useState(
     getValue(remoteConfig, "auth_provider").asString()
   );
-  
+
   // Get remote value for once per render.
   useEffect(() => {
     fetchAndActivate(remoteConfig).then(() => {
@@ -147,18 +157,27 @@ function SignUp() {
   return (
     <div className="row sign-up-row">
       <Back />
-      <Desktop>
-        <div className="col pt-5 sign-up-left">
+      {/* <Desktop>
+        <div
+          style={{ borderRight: "0.5px solid #4242" }}
+          className="col pt-5 sign-up-left"
+        >
           <LanguagePopUp />
         </div>
-      </Desktop>
+      </Desktop> */}
+      <LanguagePopUp style={{
+        left: 0,
+        right: 0,
+        bottom: 10
+      }}/>
       <div className="col">
-        <div className="form-center mt-5">
+        <div className="form-center mt-5 fade-in-image">
           <DialogTokenExpired
             state={sessionExpiredDialogShown}
             setState={setSessionExpiredDialogShown}
             onRetry={handleDialogRetry}
           />
+          <img alt="" src={AppIcon} style={{width: 100 }} />
           <Switch>
             <Route exact path={`${path}`}>
               <Redirect to={`${path}/${routes.SignUpSteps.root}`} />
@@ -184,7 +203,8 @@ function SignUp() {
                   authProvider === "email" && (
                     <EmailVerification
                       state={emailVerification}
-                      submitToken={emailVerificationToken}
+                      defaultEmail={personalInfo[0].email}
+                      submitToken={personalInfoToken}
                       setToken={setEmailVerificationToken}
                     />
                   )
@@ -195,7 +215,11 @@ function SignUp() {
               <Route exact path={`${path}/${routes.SignUpSteps.confirmation}`}>
                 <CodeValidation
                   state={codeValidation}
-                  submitToken={verificationToken}
+                  submitToken={
+                    authProvider === "phone"
+                      ? verificationToken
+                      : emailVerificationToken
+                  }
                   setToken={setCodeValidationToken}
                   onApproved={() => setCodeValidationSubmitted(true)}
                 />
