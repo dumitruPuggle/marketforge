@@ -12,17 +12,6 @@
   font-weight: 800;
 }
 
-.error-message {
-  color: white;
-  font-weight: 500;
-  background-color: red;
-  padding: 4px;
-  padding-left: 10px;
-  padding-right: 10px;
-  font-size: 13px;
-  border-radius: 5px;
-}
-
 .fade-in-image {
   animation: fadeIn 1.15s;
   -webkit-animation: fadeIn 1.15s;

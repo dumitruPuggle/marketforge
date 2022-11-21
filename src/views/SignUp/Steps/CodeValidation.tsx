@@ -13,7 +13,8 @@ import Error from "../../../service/Auth/SignUp/ErrorHandler";
 import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
 import { SessionThree } from "../../../service/Auth/SignUp/SessionThree.Service";
-import { codeValidationStep, totalSteps } from "../../../constant/SignUp.Constant";
+import { codeValidationStep, indicatorTotalSteps } from "../../../constant/SignUp.Constant";
+import { useAtom } from "jotai";
 
 type CodeVerificationState = {
   code: Array<any>;
@@ -32,6 +33,7 @@ interface CodeVerificationInterface {
 }
 
 function CodeValidation({ state, submitToken, setToken, onApproved }: CodeVerificationInterface) {
+  const [totalSteps,] = useAtom(indicatorTotalSteps);
   const history = useHistory();
   const { t } = useTranslation();
 
@@ -106,10 +108,10 @@ function CodeValidation({ state, submitToken, setToken, onApproved }: CodeVerifi
         />
       }
       <NativeButton className="mt-3" type="submit" title={t("next")} />
-      <hr />
+      {/* <hr />
       <small className="w-100 form-disclaimer">
         {t("disclaimerVerification")}
-      </small>
+      </small> */}
       {submitToken && <Timer endTime={expirationTime()} />}
     </form>
   );

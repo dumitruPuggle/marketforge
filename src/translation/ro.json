@@ -1,5 +1,5 @@
 {
-  "back": "Înapoi",
+  "back": "Mergi înapoi",
   "firstName": "Nume",
   "lastName": "Prenume",
   "email": "Adresă de e-mail",
@@ -51,5 +51,9 @@
   "stop-searching-warning": "Aplicația nu va putea funcționa dacă întrerupeți căutarea",
   "ok": "OK",
   "logs-window-description": "Această fereastră este orientată către dezvoltatori. Puteți utiliza jurnalele pentru a obține o vizualizare mai aprofundată a datelor subiacente.",
-  "signup-welcome": "Bun venit pe Fluency!"
+  "signup-welcome": "Bun venit pe Fluency!",
+  "for-marketers": "Pentru marketeri",
+  "for-entrepreneurs": "Pentru antreprenori",
+  "for-agencies": "Pentru agenții",
+  "for-influencers": "Pentru influenceri"
 }

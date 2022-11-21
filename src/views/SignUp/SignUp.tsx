@@ -20,11 +20,17 @@ import Success from "./Steps/Success";
 import LanguagePopUp from "../../components/LanguagePopUp/LanguagePopUp";
 import {
   passwordServiceStep,
-  totalSteps,
+  indicatorTotalSteps,
+  defUserType,
+  userTypes,
+  userTypesIndicators,
 } from "../../constant/SignUp.Constant";
 import AppIcon from "../../assets/app-icon.png";
+import queryString from "query-string";
+import { useAtom } from "jotai";
 
 function SignUp() {
+  const [totalSteps, setIndicatorTotalSteps] = useAtom(indicatorTotalSteps);
   let { path } = useRouteMatch();
 
   // General information
@@ -41,27 +47,29 @@ function SignUp() {
     email: "",
   });
 
+  
   const [verificationToken, setVerificationToken] = useState("");
   const verification = useState({
     phoneNumber: "",
   });
-
+  
   // Validation
   const [codeValidationToken, setCodeValidationToken] = useState("");
   const codeValidation = useState({
     code: [null, null, null, null, null, null],
   });
-
+  
+  console.log(codeValidationToken)
   // Password Creation
   const password = useState({
     password: "",
   });
-
+  
   // Media queries for responsiveness.
-  const Desktop = ({ children }: any) => {
-    const isDesktop = useMediaQuery({ minWidth: 992 });
-    return isDesktop ? children : null;
-  };
+  // const Desktop = ({ children }: any) => {
+  //   const isDesktop = useMediaQuery({ minWidth: 992 });
+  //   return isDesktop ? children : null;
+  // };
 
   const isEmpty = (objectLink: object) => {
     return !Object.values(objectLink).some((x: any) => x !== null && x !== "");
@@ -72,9 +80,7 @@ function SignUp() {
   Example: If PersonalInfo is completed -> Verification Route will be available.
   */
   const isPersonalInfoCompleted = !isEmpty(personalInfo[0]);
-  const isVerficationCompleted = !isEmpty(
-    verification[0] || emailVerification[0]
-  );
+  const isVerficationCompleted = emailVerification[0].email.length > 0 || verification[0].phoneNumber.length > 0
   const [codeValidationSubmitted, setCodeValidationSubmitted] = useState(false);
   const isPasswordCompleted = !isEmpty(password[0]);
 
@@ -120,8 +126,6 @@ function SignUp() {
     ];
     const currentToken = tokens[currentPath()];
 
-    console.log(currentPath());
-
     if (currentToken && !sessionExpiredDialogShown) {
       const tokenExpirationHandler = new TokenExpiration(currentToken);
       const expirationDate = tokenExpirationHandler.getExpirationDate();
@@ -154,6 +158,26 @@ function SignUp() {
       setAuthProvider(getValue(remoteConfig, "auth_provider").asString());
     });
   }, []);
+
+  // Process User type
+  const rawUserSearchParam = queryString.parse(document.location.search)?.u_type?.toString();
+  const sanitizeUserTypeFromParam = (u_type: string | undefined) => {
+    if (!u_type){
+      return defUserType;
+    }
+    if (userTypes.includes(u_type)){
+      return u_type;
+    }
+    return defUserType;
+  }
+
+  // Implement changes on the sessions based on each individual user-type
+  const [userType, setUserType] = useState(sanitizeUserTypeFromParam(rawUserSearchParam));
+  useEffect(() => {
+    setIndicatorTotalSteps(userTypesIndicators[userTypes.indexOf(userType)])
+  }, [userType])
+  
+  const isMobile = useMediaQuery({ query: '(max-width: 500px)' })
   return (
     <div className="row sign-up-row">
       <Back />
@@ -166,9 +190,17 @@ function SignUp() {
         </div>
       </Desktop> */}
       <LanguagePopUp style={{
-        left: 0,
         right: 0,
-        bottom: 10
+        bottom: 10,
+        left: 0,
+        ...(isMobile && {
+          top: 45,
+          paddingLeft: 15,
+          bottom: undefined,
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'flex-start'
+        })
       }}/>
       <div className="col">
         <div className="form-center mt-5 fade-in-image">
@@ -177,7 +209,7 @@ function SignUp() {
             setState={setSessionExpiredDialogShown}
             onRetry={handleDialogRetry}
           />
-          <img alt="" src={AppIcon} style={{width: 100 }} />
+          <img draggable={false} alt="" src={AppIcon} style={{width: 100 }} />
           <Switch>
             <Route exact path={`${path}`}>
               <Redirect to={`${path}/${routes.SignUpSteps.root}`} />
@@ -187,6 +219,8 @@ function SignUp() {
               path={`${path}/${routes.SignUpSteps.personalInformation}`}
             >
               <PersonInfo
+                userType={userType}
+                changeUserType={setUserType}
                 state={personalInfo}
                 setToken={setPersonalInfoToken}
               />
@@ -211,7 +245,7 @@ function SignUp() {
                 )}
               </Route>
             )}
-            {!isVerficationCompleted && !codeValidationSubmitted && (
+            {isVerficationCompleted && !codeValidationSubmitted && (
               <Route exact path={`${path}/${routes.SignUpSteps.confirmation}`}>
                 <CodeValidation
                   state={codeValidation}

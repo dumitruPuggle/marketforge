@@ -118,10 +118,10 @@ function PasswordService({
         value={formik.values.password}
       />
       <NativeButton className="mt-3" type="submit" title={t("createAccount")} />
-      <hr />
+      {/* <hr />
       <small className="w-100 form-disclaimer">
         {t("disclaimerVerification")}
-      </small>
+      </small> */}
     </form>
   );
 }

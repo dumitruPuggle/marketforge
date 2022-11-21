@@ -8,7 +8,7 @@ function Back(){
     return(
         <div className="back-button">
             <div onClick={() => history.goBack()} className='back-inner'>
-                <img className="mr-2 mb-0" alt="" src={back} />
+                <img className="mr-3 mb-0" alt="" src={back} />
                 <small className='back-text'>{t('back')}</small>
             </div>
         </div>

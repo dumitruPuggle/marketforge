@@ -1,5 +1,5 @@
 {
-  "back": "Back",
+  "back": "Go back",
   "firstName": "First name",
   "lastName": "Last name",
   "email": "E-mail address",
@@ -51,5 +51,9 @@
   "stop-searching-warning": "The app will not work if you interrupt the search",
   "ok": "OK",
   "logs-window-description": "This window is oriented towards developers. You can use the logs to get a more in-depth view of the underlying data.",
-  "signup-welcome": "Welcome to Fluency!"
+  "signup-welcome": "Welcome to Fluency!",
+  "for-marketers": "For marketers",
+  "for-entrepreneurs": "For entrepreneurs",
+  "for-agencies": "For agencies",
+  "for-influencers": "For influencers"
 }

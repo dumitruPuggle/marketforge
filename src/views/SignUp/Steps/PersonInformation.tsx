@@ -13,12 +13,13 @@ import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
 import { SessionOne } from "../../../service/Auth/SignUp/SessionOne.Service";
 import {
-  defUserType,
   personalInfoStep,
-  totalSteps,
+  indicatorTotalSteps,
   userTypes,
 } from "../../../constant/SignUp.Constant";
-import queryString from "query-string";
+import { UserTypeInput } from "../../../components/SignUpUserTypeInput/UserTypeInput";
+import { useAtom } from "jotai";
+import { emailVerificationSubmitted } from "../../../constant/SignUp.Constant";
 
 type PersonalInfoState = {
   firstName: string;
@@ -29,9 +30,17 @@ type PersonalInfoState = {
 interface PersonInfoInterface {
   state: [PersonalInfoState, Function];
   setToken: Function;
+  userType: string;
+  changeUserType: Function;
 }
 
-function PersonInfo({ state, setToken }: PersonInfoInterface) {
+function PersonInfo({
+  state,
+  setToken,
+  userType,
+  changeUserType,
+}: PersonInfoInterface) {
+  const [totalSteps] = useAtom(indicatorTotalSteps);
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -45,18 +54,6 @@ function PersonInfo({ state, setToken }: PersonInfoInterface) {
   };
   const [errors, setErrors] = useState(errorsInitialState);
   const ErrorHandler = new Error(errors, setErrors, errorsInitialState);
-
-  const rawUserSearchParam = queryString.parse(document.location.search)?.u_type?.toString();
-  const sanitizeUserTypeFromParam = (u_type: string | undefined) => {
-    if (!u_type){
-      return defUserType;
-    }
-    if (userTypes.includes(u_type)){
-      return u_type;
-    }
-    return defUserType;
-  }
-  const [userType, setUserType] = useState(sanitizeUserTypeFromParam(rawUserSearchParam));
 
   const formik = useFormik({
     initialValues: {
@@ -76,7 +73,10 @@ function PersonInfo({ state, setToken }: PersonInfoInterface) {
     onSubmit: async function (values: PersonalInfoState): Promise<void> {
       setPersonalInfo(values);
       try {
-        const { token } = await new SessionOne().submit(values);
+        const { token } = await new SessionOne().submit({
+          userType,
+          ...values,
+        });
         setToken(token);
         history.push(`${routes.SignUp}/${routes.SignUpSteps.verification}`);
         if (ErrorHandler.hasErrors()) {
@@ -119,6 +119,16 @@ function PersonInfo({ state, setToken }: PersonInfoInterface) {
   useEffect(() => {
     document.title = `${t("signup")} - Fluency`;
   }, [i18next.language]);
+
+  const handleUserTypeSelect = (userType: string) => {
+    changeUserType(userType);
+  };
+
+  // Reset email state
+  const [, setEmailVerificationSubmitted] = useAtom(emailVerificationSubmitted);
+  useEffect(() => {
+    setEmailVerificationSubmitted(false);
+  }, []);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {ErrorHandler.hasErrors() && (
@@ -126,7 +136,12 @@ function PersonInfo({ state, setToken }: PersonInfoInterface) {
       )}
       {formik.isSubmitting && <LoadingForeground />}
       <h4 className="form-title">{t("signup-welcome")}</h4>
-      <p className="mb-4">For Individuals</p>
+      <UserTypeInput
+        className="mb-4"
+        userType={userType}
+        list={userTypes}
+        onSelect={handleUserTypeSelect}
+      />
       <Indicator
         className="mb-4"
         value={personalInfoStep}
@@ -179,10 +194,10 @@ function PersonInfo({ state, setToken }: PersonInfoInterface) {
         value={formik.values.email}
       />
       <NativeButton className="mt-3" type="submit" title={t("next")} />
-      <hr />
+      {/* <hr />
       <small className="w-100 form-disclaimer">
         {t("disclaimerPersonalInfo")}
-      </small>
+      </small> */}
     </form>
   );
 }

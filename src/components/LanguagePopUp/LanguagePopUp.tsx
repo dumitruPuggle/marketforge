@@ -49,7 +49,7 @@ function LanguagePopUp({style}: ILanguagePopUp) {
         isOpen={dialog}
         onClose={() => setDialog(false)}
         title={t("chooseLanguage")}
-		    style={{width: 350}}
+		    style={{width: 320}}
       >
         <div className="lang-list">
           {languages.map(({ name, code, icon, hyphenCase }) => (

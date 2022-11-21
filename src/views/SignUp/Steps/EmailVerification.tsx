@@ -8,11 +8,13 @@ import LoadingForeground from "../../../components/LoadingForeground/LoadingFore
 import { useHistory } from "react-router-dom";
 import { routes } from "../../../service/internal-routes";
 import { defaults } from "../../../defaults";
-import { totalSteps, verificationStep } from "../../../constant/SignUp.Constant";
+import { indicatorTotalSteps, verificationStep } from "../../../constant/SignUp.Constant";
 import { SessionTwoEmail } from "../../../service/Auth/SignUp/SessionTwo.Email.Service";
 import Error from "../../../service/Auth/SignUp/ErrorHandler";
 import { lang } from "../../../translation/utils";
 import i18next from "i18next";
+import { useAtom } from "jotai";
+import { emailVerificationSubmitted } from "../../../constant/SignUp.Constant";
 
 type VerificationState = {
   email: string;
@@ -34,6 +36,8 @@ function EmailVerification({
   setToken,
   defaultEmail
 }: VerificationInterface) {
+  const [totalSteps,] = useAtom(indicatorTotalSteps);
+  const [formSubmitted, setSubmitted] = useAtom(emailVerificationSubmitted)
 	const history = useHistory();
   const { t } = useTranslation();
 	const [verification, setVerification] = state;
@@ -80,8 +84,10 @@ function EmailVerification({
   });
   useEffect(() => {
     // Automatically submit form, if not submitted
-    // if ()
-    // formik.handleSubmit()
+    if (!formSubmitted){
+      formik.handleSubmit()
+      setSubmitted(true)
+    }
   }, [])
   useEffect(() => {
     document.title = `${t('verification')} - Fluency`
@@ -111,10 +117,10 @@ function EmailVerification({
         />
       </div>
       <NativeButton className="mt-3" type="submit" title={t("next")} />
-      <hr />
+      {/* <hr />
       <small className="w-100 form-disclaimer">
         {t("disclaimerVerification")}
-      </small>
+      </small> */}
     </form>
   );
 }
