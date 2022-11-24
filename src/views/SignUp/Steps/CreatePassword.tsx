@@ -2,6 +2,7 @@ import { TextField } from "@mui/material";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Prompt, useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import NativeButton from "../../../components/Buttons/NativeButton";
@@ -12,13 +13,18 @@ import StrengthBox from "../../../components/StrengthBox/StrengthBox";
 import { SessionFour } from "../../../service/Auth/SignUp/SessionFour.Service";
 import Error from "../../../service/Auth/SignUp/ErrorHandler";
 import { routes } from "../../../service/internal-routes";
+import { version } from "../../../constant/version";
+import { setDoc, doc, getFirestore } from "firebase/firestore";
 
 interface IPasswordServiceProps {
   state: [object, Function];
   submitToken: string;
-  indicator?: {
+  indicator: {
     value: number;
     counts: number;
+  };
+  otherState: {
+    email: string;
   };
 }
 
@@ -26,6 +32,7 @@ function PasswordService({
   indicator,
   state,
   submitToken,
+  otherState,
 }: IPasswordServiceProps) {
   const history = useHistory();
   const { t } = useTranslation();
@@ -46,13 +53,38 @@ function PasswordService({
     validationSchema: Yup.object({}),
     onSubmit: async function (values) {
       setState({ ...passwordState, password: values.password });
+      const appVersion = {
+        version,
+      };
+      const db = getFirestore();
       try {
-        const {token} = await new SessionFour().submit(
+        await new SessionFour().submit(
           { password: values.password },
           { _temptoken: submitToken }
         );
-        localStorage.setItem("authToken", token);
-        history.push(`${routes.SignUp}/${routes.SignUpSteps.finish}`);
+        // Sign In using Firebase
+        const auth = getAuth();
+        await signInWithEmailAndPassword(
+          auth,
+          otherState.email,
+          values.password
+        );
+
+        // Include app version
+        const uid = auth?.currentUser?.uid;
+        try {
+          await setDoc(doc(db, `/users/${uid}/other-data/app`), {
+            ...appVersion,
+          });
+        } catch (e) {
+          console.log(e);
+          ErrorHandler.setFieldError("*", t("unknownError"));
+        }
+        if (indicator.counts === 5) {
+          history.push(`${routes.SignUp}/${routes.SignUpSteps.optionalQuiz}`);
+        } else {
+          history.push(`${routes.SignUp}/${routes.SignUpSteps.finish}`);
+        }
       } catch (e: any) {
         if (e.message === "Network Error") {
           ErrorHandler.setFieldError("*", t("networkError"));
@@ -73,10 +105,13 @@ function PasswordService({
     <form className="form-global" onSubmit={formik.handleSubmit}>
       <Prompt
         message={(location, action) => {
-          if (location.pathname.endsWith("finish")){
+          if (location.pathname.endsWith("finish")) {
             return true;
           }
-          return false
+          if (location.pathname.endsWith("5")) {
+            return true;
+          }
+          return false;
           // return location.pathname.endsWith("finish")
           //   ? true
           //   : `${t("areYouSureToCancel")}`;

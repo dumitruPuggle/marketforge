@@ -20,6 +20,9 @@ import {
 import { UserTypeInput } from "../../../components/SignUpUserTypeInput/UserTypeInput";
 import { useAtom } from "jotai";
 import { emailVerificationSubmitted } from "../../../constant/SignUp.Constant";
+import AppleSignUp from '../../../assets/apple-id-sign-up-with_2x.png'
+import GoogleSignUp from '../../../assets/google-sign-up-with_2x.png'
+import { codeValidationExpire } from "./CodeValidation";
 
 type PersonalInfoState = {
   firstName: string;
@@ -38,7 +41,7 @@ function PersonInfo({
   state,
   setToken,
   userType,
-  changeUserType,
+  changeUserType
 }: PersonInfoInterface) {
   const [totalSteps] = useAtom(indicatorTotalSteps);
   const { t } = useTranslation();
@@ -194,10 +197,31 @@ function PersonInfo({
         value={formik.values.email}
       />
       <NativeButton className="mt-3" type="submit" title={t("next")} />
-      {/* <hr />
-      <small className="w-100 form-disclaimer">
-        {t("disclaimerPersonalInfo")}
-      </small> */}
+      <hr />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <div className="auth-provider-apple">
+          <img
+            draggable={false}
+            style={{ width: "100%" }}
+            alt=""
+            src={GoogleSignUp}
+          />
+        </div>
+        <div style={{ fontWeight: 700 }} className="auth-provider-apple">
+          <img
+            draggable={false}
+            style={{ width: "100%" }}
+            alt=""
+            src={AppleSignUp}
+          />
+        </div>
+      </div>
     </form>
   );
 }

@@ -7,13 +7,11 @@
   /* background-color: rgba(236, 236, 236, 0.164); */
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
-  color: #3578e5;
-  cursor: pointer;
   font-weight: 500;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   user-select: none;
   margin: 0px;
   z-index: 10;
@@ -33,6 +31,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .back-inner:hover {
@@ -43,4 +42,10 @@
 .back-inner:active {
   transition: 0s linear;
   opacity: 0.35;
+}
+
+.back-inner-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }

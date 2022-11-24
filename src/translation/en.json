@@ -55,5 +55,9 @@
   "for-marketers": "For marketers",
   "for-entrepreneurs": "For entrepreneurs",
   "for-agencies": "For agencies",
-  "for-influencers": "For influencers"
+  "for-influencers": "For influencers",
+  "tell-us-a-bit-more-about-you": "Tell us a bit more about you",
+  "organisation-name-optional": "Organization name (optional)",
+  "number-of-employees-optional": "Number of employees (optional)",
+  "you-can-skip-this-section": "You can skip this section"
 }

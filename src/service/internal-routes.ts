@@ -7,6 +7,7 @@ export const routes = {
     verification: "2",
     confirmation: "3",
     passwordService: "4",
+    optionalQuiz: "5",
     finish: "finish",
     pathLevelSplit: 4,
   },

@@ -13,7 +13,7 @@
 }
 
 .fade-in-image {
-  animation: fadeIn 1.15s;
+  animation: fadeIn 0.8s;
   -webkit-animation: fadeIn 1.15s;
   -moz-animation: fadeIn 1.15s;
   -o-animation: fadeIn 1.15s;
@@ -22,10 +22,10 @@
 
 @keyframes fadeIn {
   0% {
-    opacity: 0;
+    filter: blur(30px);
   }
   100% {
-    opacity: 1;
+    filter: blur(0px);
   }
 }
 
@@ -63,4 +63,16 @@
   100% {
     opacity: 1;
   }
+}
+
+.auth-provider-apple {
+  width: 48.5%;
+  background-color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.auth-provider-apple:active {
+  opacity: 0.8;
+  transition: 0s linear;
 }

@@ -3,6 +3,8 @@ import { Prompt } from "react-router-dom";
 import successIcon from "../../../assets/success.svg";
 import NativeButtonPillow from "../../../components/Buttons/NativeButtonPillow";
 import { routes } from "../../../service/internal-routes";
+import '../Success.css'
+
 function Success() {
   const { t } = useTranslation();
   const handleSetupAccount = () => {
@@ -17,13 +19,13 @@ function Success() {
       />
       <img draggable={false} className="mb-4" src={successIcon} alt="success" />
       <div>
-        <h3>{t("voila")}</h3>
+        {/* <h3>{t("voila")}</h3> */}
         <small>{t("accountHasBeenCreated")}</small>
       </div>
       <NativeButtonPillow
         onClick={handleSetupAccount}
-        className="mt-4"
-        style={{ backgroundColor: "black" }}
+        className="mt-4 fade-in-btn"
+        style={{ backgroundColor: 'black', color: 'black' }}
         title={t("setupAccount")}
       />
     </div>
