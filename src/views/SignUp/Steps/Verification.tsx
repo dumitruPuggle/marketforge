@@ -14,8 +14,9 @@ import Error from "../../../service/Auth/SignUp/ErrorHandler";
 import { routes } from "../../../service/internal-routes";
 import { lang } from "../../../translation/utils";
 import { IMaskInput } from "react-imask";
-import { totalSteps, verificationStep } from "../../../constant/SignUp.Constant";
+import { indicatorTotalSteps, verificationStep } from "../../../constant/SignUp.Constant";
 import i18next from "i18next";
+import { useAtom } from "jotai";
 
 type VerificationState = {
   phoneNumber: string;
@@ -52,6 +53,7 @@ const Verification = ({
   submitToken,
   setToken,
 }: VerificationInterface) => {
+  const [totalSteps,] = useAtom(indicatorTotalSteps);
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -152,10 +154,10 @@ const Verification = ({
         }}
       />
       <NativeButton className="mt-3" type="submit" title={t("next")} />
-      <hr />
+      {/* <hr />
       <small className="w-100 form-disclaimer">
         {t("disclaimerVerification")}
-      </small>
+      </small> */}
     </form>
   );
 };

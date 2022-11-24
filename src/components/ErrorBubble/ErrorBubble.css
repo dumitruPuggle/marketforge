@@ -1,0 +1,29 @@
+.error-message {
+  position: relative;
+  color: red;
+  font-weight: 500;
+  background-color: rgb(255, 239, 239);
+  padding: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 14px;
+  border-radius: 20px;
+  width: 100%;
+}
+
+.error-message-close {
+  position: absolute;
+  right: 0;
+  top: -10px;
+  background-color: white;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  box-shadow: 0 0.8px 0.85px 0.82px rgba(0, 0, 0, 0.164);
+  opacity: 1;
+}
+
+.error-message-close:active {
+  opacity: 0.5;
+}

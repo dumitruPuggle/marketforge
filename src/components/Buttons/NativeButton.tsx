@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import { accentColor } from "../../constant/colors";
 
 const NativeButton = ({title, ...props}: any) => {
     return (
@@ -8,7 +9,7 @@ const NativeButton = ({title, ...props}: any) => {
         disableElevation
         style={{
           ...props.style,
-          backgroundColor: props?.style?.backgroundColor ? props?.style?.backgroundColor : '#007AFF',
+          backgroundColor: props?.style?.backgroundColor ? props?.style?.backgroundColor : accentColor,
           padding: '10px',
           borderRadius: '10px'
         }}

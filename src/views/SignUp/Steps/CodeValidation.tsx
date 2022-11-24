@@ -13,7 +13,11 @@ import Error from "../../../service/Auth/SignUp/ErrorHandler";
 import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
 import { SessionThree } from "../../../service/Auth/SignUp/SessionThree.Service";
-import { codeValidationStep, totalSteps } from "../../../constant/SignUp.Constant";
+import { codeValidationStep, indicatorTotalSteps } from "../../../constant/SignUp.Constant";
+import { atom, useAtom } from "jotai";
+import DialogTokenExpired from "../../../components/DialogTokenExpired/DialogTokenExpired";
+
+export const codeValidationExpire = atom(false);
 
 type CodeVerificationState = {
   code: Array<any>;
@@ -29,11 +33,15 @@ interface CodeVerificationInterface {
   submitToken: string;
   setToken: React.Dispatch<React.SetStateAction<string>>;
   onApproved: () => void;
+  onDialogRetryClick: () => void;
 }
 
-function CodeValidation({ state, submitToken, setToken, onApproved }: CodeVerificationInterface) {
+function CodeValidation({ state, submitToken, setToken, onApproved, onDialogRetryClick }: CodeVerificationInterface) {
+  const [totalSteps,] = useAtom(indicatorTotalSteps);
   const history = useHistory();
   const { t } = useTranslation();
+
+  const [codeValidationExpired, setExpired] = useAtom(codeValidationExpire);
 
   const [codeValidation] = state;
 
@@ -93,6 +101,11 @@ function CodeValidation({ state, submitToken, setToken, onApproved }: CodeVerifi
         formik.isSubmitting &&
         <LoadingForeground />
       }
+      <DialogTokenExpired
+        state={codeValidationExpired}
+        setState={setExpired}
+        onRetry={() => onDialogRetryClick()}
+      />
       <h4 className="mb-4 form-title">{t("verification")}</h4>
       <Indicator
         className="mb-4"
@@ -106,11 +119,13 @@ function CodeValidation({ state, submitToken, setToken, onApproved }: CodeVerifi
         />
       }
       <NativeButton className="mt-3" type="submit" title={t("next")} />
-      <hr />
+      {/* <hr />
       <small className="w-100 form-disclaimer">
         {t("disclaimerVerification")}
-      </small>
-      {submitToken && <Timer endTime={expirationTime()} />}
+      </small> */}
+      {submitToken && <Timer onExpire={() => {
+        setExpired(true);
+      }} endTime={expirationTime()} />}
     </form>
   );
 }

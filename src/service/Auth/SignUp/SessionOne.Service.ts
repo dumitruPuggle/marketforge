@@ -1,6 +1,7 @@
 import SignUpService from "./SignUp.Service";
 
 interface SessionOneSubmitProps {
+  userType: string;
   email: string;
   firstName: string;
   lastName: string;

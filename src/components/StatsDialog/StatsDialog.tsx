@@ -15,7 +15,7 @@ function StatsDialog({ isOpen, onClose }: IStatsDialog) {
       canOutsideClickClose={false}
       isCloseButtonShown={false}
 			hasBackdrop={false}
-      style={{width: 400}}
+      style={{width: 320}}
       title={"Statistics Usage"}
     >
       <div className={Classes.DIALOG_BODY}>

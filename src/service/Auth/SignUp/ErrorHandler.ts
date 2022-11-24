@@ -5,12 +5,21 @@ import { Dispatch, SetStateAction } from "react";
  * @date 2022-05-20
  */
 
-class Error <T extends object> {
+export type errorTypeItem = {
+  message: string;
+  id: number;
+};
+
+class Error<T extends object> {
   protected errors;
   protected setErrors;
   protected initialErrors;
 
-  constructor(errors: T, setErrors: Dispatch<SetStateAction<any>>, initialErrors: T) {
+  constructor(
+    errors: T,
+    setErrors: Dispatch<SetStateAction<any>>,
+    initialErrors: T
+  ) {
     this.errors = errors;
     this.setErrors = setErrors;
     this.initialErrors = initialErrors;
@@ -32,8 +41,15 @@ class Error <T extends object> {
     this.setErrors(this.initialErrors);
   }
 
-  public listErrors(): string[] {
-    return Object.values(this.errors).filter((key) => key !== "");
+  public listErrors(): errorTypeItem[] {
+    const errors = Object.values(this.errors).filter((key) => key !== "");
+    const errorOrder = errors.map((error: string, index) => {
+      return {
+        id: Date.now() * 1000 + index,
+        message: error,
+      };
+    });
+    return errorOrder;
   }
 }
 

@@ -1,0 +1,19 @@
+.user-type-input-selector {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.select-user-type {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  user-select: none;
+  outline-style: none;
+  color: black;
+  border-radius: 10px;
+  background-color: rgb(240, 246, 255);
+}
+
+.select-user-type:focus {
+  outline: none;
+}
