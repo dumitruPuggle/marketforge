@@ -59,5 +59,7 @@
   "tell-us-a-bit-more-about-you": "Расскажите нам немного о себе",
   "organisation-name-optional": "Название организации (необязательно)",
   "number-of-employees-optional": "Количество сотрудников (необязательно)",
-  "you-can-skip-this-section": "Вы можете пропустить этот раздел"
+  "you-can-skip-this-section": "Вы можете пропустить этот раздел",
+  "languageIsYourDefaultLanguage": "Русский - это ваш язык по умолчанию.",
+  "youSelectedManuallyLang": "Вы выбрали русский язык вручную"
 }

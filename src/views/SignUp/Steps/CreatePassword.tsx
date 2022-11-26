@@ -105,10 +105,10 @@ function PasswordService({
     <form className="form-global" onSubmit={formik.handleSubmit}>
       <Prompt
         message={(location, action) => {
-          if (location.pathname.endsWith("finish")) {
+          if (location.pathname.endsWith(routes.SignUpSteps.finish)) {
             return true;
           }
-          if (location.pathname.endsWith("5")) {
+          if (location.pathname.endsWith(routes.SignUpSteps.optionalQuiz)) {
             return true;
           }
           return false;

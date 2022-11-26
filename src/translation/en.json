@@ -59,5 +59,7 @@
   "tell-us-a-bit-more-about-you": "Tell us a bit more about you",
   "organisation-name-optional": "Organization name (optional)",
   "number-of-employees-optional": "Number of employees (optional)",
-  "you-can-skip-this-section": "You can skip this section"
+  "you-can-skip-this-section": "You can skip this section",
+  "languageIsYourDefaultLanguage": "English is your default language.",
+  "youSelectedManuallyLang": "You manually selected English"
 }

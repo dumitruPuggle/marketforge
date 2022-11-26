@@ -59,5 +59,7 @@
   "tell-us-a-bit-more-about-you": "Spune-ne un pic mai mult despre tine",
   "organisation-name-optional": "Numele organizației (opțional)",
   "number-of-employees-optional": "Numărul de angajați (opțional)",
-  "you-can-skip-this-section": "Puteți omite această secțiune"
+  "you-can-skip-this-section": "Puteți omite această secțiune",
+  "languageIsYourDefaultLanguage": "Limba română este limba dvs. implicită",
+  "youSelectedManuallyLang": "Ați selectat manual limba română"
 }

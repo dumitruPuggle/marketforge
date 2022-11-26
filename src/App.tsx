@@ -7,7 +7,7 @@ import { routes } from "./service/internal-routes";
 import SignUp from "./views/SignUp/SignUp";
 // import Home from "./views/Home/Home";
 import DashboardLayout from "./components/DashboardLayout/DashboardLayout";
-import { SRadar } from "./service/ServerRadar/ServerRadar.Service";
+// import { SRadar } from "./service/ServerRadar/ServerRadar.Service";
 import { useAtom } from "jotai";
 import {atomWithStorage} from "jotai/utils"
 // import RadarDialog from "./components/RadarDialog/RadarDialog";
@@ -62,7 +62,6 @@ function App() {
   const handleStatsDialogClose = () => {
     setStats(false)
   }
-
   return (
     <div className="App">
       <Router>

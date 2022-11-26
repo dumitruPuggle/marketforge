@@ -31,18 +31,35 @@ export default function DialogTokenExpired({
     <Dialog
       isOpen={state}
       onClose={() => setState(false)}
-      title={t("sessionExpired")}
       canOutsideClickClose={false}
       canEscapeKeyClose={false}
+      style={{
+        width: 320,
+        backdropFilter: "blur(10px)",
+        background: "rgba(255, 255, 255, 0.8)",
+        userSelect: "none",
+        borderRadius: 20,
+        WebkitBackdropFilter: 'blur(10px)',
+        paddingBottom: 0
+      }}
     >
-      <div className={Classes.DIALOG_BODY}>
-        <pre className="mb-0">{t("sessionExpiredMessage")}</pre>
-      </div>
-      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}} className={Classes.DIALOG_FOOTER}>
-        <Button onClick={() => handleRetryButton()} autoFocus>
-          {t("retry")}
-        </Button>
-      </div>
+      <div
+          style={{
+            background: "transparent",
+            boxShadow: "none",
+          }}
+          className={`${Classes.DIALOG_HEADER} dialog-title-header`}
+        >
+          <h5>{t("sessionExpired")}</h5>
+          <small>{t("sessionExpiredMessage")}</small>
+          <button
+            style={{ fontSize: 18 }}
+            className="w-100 mt-3 outline-button"
+            onClick={() => handleRetryButton()}
+          >
+            {t('retry')}
+          </button>
+        </div>
     </Dialog>
   );
 }

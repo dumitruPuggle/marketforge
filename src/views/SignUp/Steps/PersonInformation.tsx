@@ -22,7 +22,6 @@ import { useAtom } from "jotai";
 import { emailVerificationSubmitted } from "../../../constant/SignUp.Constant";
 import AppleSignUp from '../../../assets/apple-id-sign-up-with_2x.png'
 import GoogleSignUp from '../../../assets/google-sign-up-with_2x.png'
-import { codeValidationExpire } from "./CodeValidation";
 
 type PersonalInfoState = {
   firstName: string;
@@ -35,13 +34,17 @@ interface PersonInfoInterface {
   setToken: Function;
   userType: string;
   changeUserType: Function;
+  onGoogleProviderClick: Function;
+  onAppleProviderClick: Function;
 }
 
 function PersonInfo({
   state,
   setToken,
   userType,
-  changeUserType
+  changeUserType,
+  onGoogleProviderClick,
+  onAppleProviderClick
 }: PersonInfoInterface) {
   const [totalSteps] = useAtom(indicatorTotalSteps);
   const { t } = useTranslation();
@@ -59,6 +62,7 @@ function PersonInfo({
   const ErrorHandler = new Error(errors, setErrors, errorsInitialState);
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       firstName: personalInfo.firstName,
       lastName: personalInfo.lastName,
@@ -210,6 +214,7 @@ function PersonInfo({
             draggable={false}
             style={{ width: "100%" }}
             alt=""
+            onClick={() => onGoogleProviderClick()}
             src={GoogleSignUp}
           />
         </div>
@@ -218,6 +223,7 @@ function PersonInfo({
             draggable={false}
             style={{ width: "100%" }}
             alt=""
+            onClick={() => onAppleProviderClick()}
             src={AppleSignUp}
           />
         </div>

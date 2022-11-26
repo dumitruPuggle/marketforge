@@ -11,7 +11,7 @@ import "./SignUp.css";
 import PersonInfo from "./Steps/PersonInformation";
 import PhoneVerification from "./Steps/Verification";
 import EmailVerification from "./Steps/EmailVerification";
-import CodeValidation, { codeValidationExpire } from "./Steps/CodeValidation";
+import CodeValidation from "./Steps/CodeValidation";
 import { routes } from "../../service/internal-routes";
 import PasswordService from "./Steps/CreatePassword";
 import Success from "./Steps/Success";
@@ -25,11 +25,17 @@ import {
 } from "../../constant/SignUp.Constant";
 import AppIcon from "../../assets/app-icon.png";
 import queryString from "query-string";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import OptionalQuiz from "./Steps/OptionalQuiz";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import i18next from "i18next";
+
+export const currentSignUpProvider = atom('built-in');
 
 function SignUp() {
   const [totalSteps, setIndicatorTotalSteps] = useAtom(indicatorTotalSteps);
+  const [signUpProvider, setSignUpProvider] = useAtom(currentSignUpProvider);
+
   let { path } = useRouteMatch();
 
   // General information
@@ -129,17 +135,25 @@ function SignUp() {
     setIndicatorTotalSteps(userTypesIndicators[userTypes.indexOf(userType)]);
   }, [userType]);
 
-  const isMobile = useMediaQuery({ query: "(max-width: 500px)" });
   return (
     <div className="row sign-up-row">
-      <Back right={
-        <>
-          <LanguagePopUp style={{position: 'static', inset: 'none', padding: 3}} />
-        </>
-      }/>
+      <Back
+        right={
+          <>
+            <LanguagePopUp
+              style={{ position: "static", inset: "none", padding: 3 }}
+            />
+          </>
+        }
+      />
       <div className="col">
         <div className="form-center mt-5">
-          <img draggable={false} alt="" src={AppIcon} style={{ width: 100 }} />
+          <img
+            draggable={false}
+            alt=""
+            src={AppIcon}
+            style={{ width: 100, height: 100 }}
+          />
           <div className="fade-in-image">
             <Switch>
               <Route exact path={`${path}`}>
@@ -154,6 +168,50 @@ function SignUp() {
                   changeUserType={setUserType}
                   state={personalInfo}
                   setToken={setPersonalInfoToken}
+                  onGoogleProviderClick={() => {
+                    const auth = getAuth();
+                    auth.languageCode = i18next.language;
+
+                    const provider = new GoogleAuthProvider();
+                    signInWithPopup(auth, provider)
+                      .then((result) => {
+                        // This gives you a Google Access Token. You can use it to access the Google API.
+                        const credential =
+                          GoogleAuthProvider.credentialFromResult(result);
+
+                        // const token = credential?.accessToken;
+                        // The signed-in user info.
+                        const user = result.user;
+                        const firstNameSplit = user.displayName?.split(' ')[0];
+                        const lastNameSplit = user.displayName?.split(' ')[1]
+                        
+                        personalInfo[1]((prev) => ({
+                          email: user.email ? user.email : prev.email,
+                          firstName: firstNameSplit ? firstNameSplit : prev.firstName,
+                          lastName: lastNameSplit ? lastNameSplit : prev.lastName
+                        }))
+
+                        console.log(user)
+
+                        console.log(personalInfo)
+
+                        // ...
+                      })
+                      .catch((error) => {
+                        // Handle Errors here.
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        // The email of the user's account used.
+                        const email = error.customData.email;
+                        // The AuthCredential type that was used.
+                        const credential =
+                          GoogleAuthProvider.credentialFromError(error);
+                        // ...
+                      });
+                  }}
+                  onAppleProviderClick={() => {
+                    alert("apple clicked");
+                  }}
                 />
               </Route>
               {isPersonalInfoCompleted && (
