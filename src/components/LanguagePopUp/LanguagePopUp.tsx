@@ -54,7 +54,7 @@ function LanguagePopUp({ style }: ILanguagePopUp) {
   const handleLangClick = (lang: string) => {
     setUserProperties(analytics, { language: lang });
     i18n.changeLanguage(lang);
-    setDialog(false);
+    // setDialog(false);
     setUserChangedLanguage(true);
   };
 
