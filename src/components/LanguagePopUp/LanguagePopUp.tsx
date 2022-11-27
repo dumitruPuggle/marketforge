@@ -58,40 +58,6 @@ function LanguagePopUp({ style }: ILanguagePopUp) {
     setUserChangedLanguage(true);
   };
 
-  const [indexState, setIndexState] = useState(
-    languages.findIndex((item) => item.code === i18next.language)
-  );
-
-  useEffect(() => {
-    try {
-      const language = languages[indexState].code;
-      if (language) {
-        i18next.changeLanguage(language);
-        setUserChangedLanguage(true);
-      }
-    } catch (e) {}
-  }, [indexState]);
-
-  const handleKeyDown = (event: any) => {
-    switch (event.keyCode) {
-      case 40:
-        setIndexState((prev) =>
-          prev <= languages.length - 2 ? prev + 1 : prev
-        );
-        break;
-      case 38:
-        setIndexState((prev) => (prev >= 1 ? prev - 1 : prev));
-        break;
-    }
-  };
-
-  useEffect(() => {
-    const onKeyDown: any = document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, []);
   return (
     <>
       <Dialog

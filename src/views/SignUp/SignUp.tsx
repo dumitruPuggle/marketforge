@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
 import {
   fetchAndActivate,
   getRemoteConfig,
