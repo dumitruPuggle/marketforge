@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { setDoc, doc, getFirestore } from "firebase/firestore";
 import { Prompt, useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import NativeButton from "../../../components/Buttons/NativeButton";
@@ -14,7 +15,6 @@ import { SessionFour } from "../../../service/Auth/SignUp/SessionFour.Service";
 import Error from "../../../service/Auth/SignUp/ErrorHandler";
 import { routes } from "../../../service/internal-routes";
 import { version } from "../../../constant/version";
-import { setDoc, doc, getFirestore } from "firebase/firestore";
 
 interface IPasswordServiceProps {
   state: [object, Function];
@@ -50,7 +50,12 @@ function PasswordService({
     initialValues: {
       password: "",
     },
-    validationSchema: Yup.object({}),
+    validationSchema: Yup.object({
+      password: Yup.string()
+        .required(t("required"))
+        .min(8, t("passwordTooShort"))
+        .max(100, t("passwordTooLong")),
+    }),
     onSubmit: async function (values) {
       setState({ ...passwordState, password: values.password });
       const appVersion = {
@@ -86,8 +91,11 @@ function PasswordService({
           history.push(`${routes.SignUp}/${routes.SignUpSteps.finish}`);
         }
       } catch (e: any) {
+        const message = e.response?.data?.message;
         if (e.message === "Network Error") {
           ErrorHandler.setFieldError("*", t("networkError"));
+        } else if (message === "Token expired") {
+          window.location.reload()
         } else {
           ErrorHandler.setFieldError("password", e.response.data.message);
         }
