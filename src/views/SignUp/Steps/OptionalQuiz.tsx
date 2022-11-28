@@ -19,10 +19,9 @@ import {
 } from "../../../constant/SignUp.Constant";
 import { useAtom } from "jotai";
 import { getAuth } from "firebase/auth";
-import { doc, updateDoc, getFirestore } from "firebase/firestore";
+import { doc, setDoc, getFirestore } from "firebase/firestore";
 import { routes } from "../../../service/internal-routes";
 import { useHistory } from "react-router-dom";
-import { version } from "../../../constant/version";
 
 type OptionalQuizState = {
   companyName: string;
@@ -64,11 +63,11 @@ function OptionalQuiz({ state, setToken }: OptionalQuizInterface) {
         values.numberOfEmployees.toString.length === 0;
       try {
         if (valuesAreEmpty) {
-          await updateDoc(doc(db, `/users/${uid}/`), {
+          await setDoc(doc(db, `/users/${uid}/other-data/optional-quiz`), {
             skipped_optional_data_section: true
           });
         } else {
-          await updateDoc(doc(db, `/users/${uid}/`), {
+          await setDoc(doc(db, `/users/${uid}/other-data/optional-quiz`), {
             company_name: values.companyName,
             number_of_employees: values.numberOfEmployees,
             skipped_optional_data_section: false,

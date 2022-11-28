@@ -84,7 +84,6 @@ function CodeValidation({ state, submitToken, setToken, onApproved, onDialogRetr
           ErrorHandler.setFieldError("code", t("invalidCode"));
         } else if (message === "Token expired") {
           ErrorHandler.setFieldError("*", t("sessionExpired"));
-          history.push('?token=expired');
         }
       }
     },

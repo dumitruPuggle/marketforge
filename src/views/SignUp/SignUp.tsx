@@ -29,11 +29,13 @@ import OptionalQuiz from "./Steps/OptionalQuiz";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import i18next from "i18next";
 
-export const currentSignUpProvider = atom('built-in');
+export const verifyExistingAccountAtom = atom(false);
 
 function SignUp() {
   const [totalSteps, setIndicatorTotalSteps] = useAtom(indicatorTotalSteps);
-  const [signUpProvider, setSignUpProvider] = useAtom(currentSignUpProvider);
+  const [, setVerifyExistingAccount] = useAtom(
+    verifyExistingAccountAtom
+  );
 
   let { path } = useRouteMatch();
 
@@ -167,34 +169,28 @@ function SignUp() {
                   changeUserType={setUserType}
                   state={personalInfo}
                   setToken={setPersonalInfoToken}
-                  onGoogleProviderClick={() => {
+                  onGoogleProviderClick={(submit) => {
                     const auth = getAuth();
                     auth.languageCode = i18next.language;
 
                     const provider = new GoogleAuthProvider();
                     signInWithPopup(auth, provider)
                       .then((result) => {
-                        // This gives you a Google Access Token. You can use it to access the Google API.
-                        const credential =
-                          GoogleAuthProvider.credentialFromResult(result);
-
-                        // const token = credential?.accessToken;
-                        // The signed-in user info.
+                        setVerifyExistingAccount(true);
                         const user = result.user;
-                        const firstNameSplit = user.displayName?.split(' ')[0];
-                        const lastNameSplit = user.displayName?.split(' ')[1]
-                        
+                        const firstNameSplit = user.displayName?.split(" ")[0];
+                        const lastNameSplit = user.displayName?.split(" ")[1];
+
                         personalInfo[1]((prev) => ({
                           email: user.email ? user.email : prev.email,
-                          firstName: firstNameSplit ? firstNameSplit : prev.firstName,
-                          lastName: lastNameSplit ? lastNameSplit : prev.lastName
-                        }))
-
-                        console.log(user)
-
-                        console.log(personalInfo)
-
-                        // ...
+                          firstName: firstNameSplit
+                            ? firstNameSplit
+                            : prev.firstName,
+                          lastName: lastNameSplit
+                            ? lastNameSplit
+                            : prev.lastName,
+                        }));
+                        submit();
                       })
                       .catch((error) => {
                         // Handle Errors here.

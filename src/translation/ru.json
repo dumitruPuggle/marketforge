@@ -61,5 +61,7 @@
   "number-of-employees-optional": "Количество сотрудников (необязательно)",
   "you-can-skip-this-section": "Вы можете пропустить этот раздел",
   "languageIsYourDefaultLanguage": "Русский - это ваш язык по умолчанию.",
-  "youSelectedManuallyLang": "Вы выбрали русский язык вручную"
+  "youSelectedManuallyLang": "Вы выбрали русский язык вручную",
+  "passwordTooShort": "Ваш пароль слишком короткий",
+  "passwordTooLong": "Ваш пароль слишком длинный"
 }

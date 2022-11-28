@@ -22,6 +22,7 @@ import { useAtom } from "jotai";
 import { emailVerificationSubmitted } from "../../../constant/SignUp.Constant";
 import AppleSignUp from '../../../assets/apple-id-sign-up-with_2x.png'
 import GoogleSignUp from '../../../assets/google-sign-up-with_2x.png'
+import { verifyExistingAccountAtom } from "../SignUp";
 
 type PersonalInfoState = {
   firstName: string;
@@ -34,7 +35,7 @@ interface PersonInfoInterface {
   setToken: Function;
   userType: string;
   changeUserType: Function;
-  onGoogleProviderClick: Function;
+  onGoogleProviderClick: (submit: Function) => void;
   onAppleProviderClick: Function;
 }
 
@@ -46,6 +47,7 @@ function PersonInfo({
   onGoogleProviderClick,
   onAppleProviderClick
 }: PersonInfoInterface) {
+  const [verifyExistingAccount,] = useAtom(verifyExistingAccountAtom)
   const [totalSteps] = useAtom(indicatorTotalSteps);
   const { t } = useTranslation();
   const history = useHistory();
@@ -81,8 +83,9 @@ function PersonInfo({
       setPersonalInfo(values);
       try {
         const { token } = await new SessionOne().submit({
+          verifyExistingAccount,
           userType,
-          ...values,
+          ...values
         });
         setToken(token);
         history.push(`${routes.SignUp}/${routes.SignUpSteps.verification}`);
@@ -214,7 +217,7 @@ function PersonInfo({
             draggable={false}
             style={{ width: "100%" }}
             alt=""
-            onClick={() => onGoogleProviderClick()}
+            onClick={() => onGoogleProviderClick(formik.handleSubmit)}
             src={GoogleSignUp}
           />
         </div>
@@ -223,7 +226,7 @@ function PersonInfo({
             draggable={false}
             style={{ width: "100%" }}
             alt=""
-            onClick={() => onAppleProviderClick()}
+            onClick={() => onAppleProviderClick(formik.handleSubmit)}
             src={AppleSignUp}
           />
         </div>
