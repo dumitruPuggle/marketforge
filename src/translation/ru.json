@@ -63,5 +63,6 @@
   "languageIsYourDefaultLanguage": "Русский - это ваш язык по умолчанию.",
   "youSelectedManuallyLang": "Вы выбрали русский язык вручную",
   "passwordTooShort": "Ваш пароль слишком короткий",
-  "passwordTooLong": "Ваш пароль слишком длинный"
+  "passwordTooLong": "Ваш пароль слишком длинный",
+  "createAccountUsingGoogle": "Зарегистрируйтесь с помощью Google"
 }

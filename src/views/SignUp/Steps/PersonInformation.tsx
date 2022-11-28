@@ -12,6 +12,7 @@ import { routes } from "../../../service/internal-routes";
 import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
 import { SessionOne } from "../../../service/Auth/SignUp/SessionOne.Service";
+import { verifyExistingAccountAtom } from "../SignUp";
 import {
   personalInfoStep,
   indicatorTotalSteps,
@@ -20,9 +21,9 @@ import {
 import { UserTypeInput } from "../../../components/SignUpUserTypeInput/UserTypeInput";
 import { useAtom } from "jotai";
 import { emailVerificationSubmitted } from "../../../constant/SignUp.Constant";
-import AppleSignUp from '../../../assets/apple-id-sign-up-with_2x.png'
-import GoogleSignUp from '../../../assets/google-sign-up-with_2x.png'
-import { verifyExistingAccountAtom } from "../SignUp";
+// import AppleSignUp from '../../../assets/apple-id-sign-up-with_2x.png'
+// import GoogleSignUp from '../../../assets/google-sign-up-with_2x.png'
+import GoogleIcon from "../../../assets/google-small-logo.svg";
 
 type PersonalInfoState = {
   firstName: string;
@@ -45,9 +46,9 @@ function PersonInfo({
   userType,
   changeUserType,
   onGoogleProviderClick,
-  onAppleProviderClick
+  onAppleProviderClick,
 }: PersonInfoInterface) {
-  const [verifyExistingAccount,] = useAtom(verifyExistingAccountAtom)
+  const [verifyExistingAccount] = useAtom(verifyExistingAccountAtom);
   const [totalSteps] = useAtom(indicatorTotalSteps);
   const { t } = useTranslation();
   const history = useHistory();
@@ -85,7 +86,7 @@ function PersonInfo({
         const { token } = await new SessionOne().submit({
           verifyExistingAccount,
           userType,
-          ...values
+          ...values,
         });
         setToken(token);
         history.push(`${routes.SignUp}/${routes.SignUpSteps.verification}`);
@@ -212,16 +213,22 @@ function PersonInfo({
           justifyContent: "space-between",
         }}
       >
-        <div className="auth-provider-apple">
-          <img
-            draggable={false}
-            style={{ width: "100%" }}
-            alt=""
-            onClick={() => onGoogleProviderClick(formik.handleSubmit)}
-            src={GoogleSignUp}
+        <div
+          onClick={() => onGoogleProviderClick(formik.handleSubmit)}
+          className="auth-provider mt-3"
+        >
+          <img src={GoogleIcon} className="auth-provider-icon" />
+          <NativeButton
+            style={{
+              backgroundColor: "white",
+              color: "black",
+              border: "1px solid #BDBDBD",
+            }}
+            className="w-100"
+            title={t('createAccountUsingGoogle')}
           />
         </div>
-        <div style={{ fontWeight: 700 }} className="auth-provider-apple">
+        {/* <div style={{ fontWeight: 700 }} className="auth-provider-apple">
           <img
             draggable={false}
             style={{ width: "100%" }}
@@ -229,7 +236,7 @@ function PersonInfo({
             onClick={() => onAppleProviderClick(formik.handleSubmit)}
             src={AppleSignUp}
           />
-        </div>
+        </div> */}
       </div>
     </form>
   );

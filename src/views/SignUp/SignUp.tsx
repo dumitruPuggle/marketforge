@@ -26,7 +26,7 @@ import AppIcon from "../../assets/app-icon.png";
 import queryString from "query-string";
 import { atom, useAtom } from "jotai";
 import OptionalQuiz from "./Steps/OptionalQuiz";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup } from "firebase/auth";
 import i18next from "i18next";
 
 export const verifyExistingAccountAtom = atom(false);
@@ -205,7 +205,40 @@ function SignUp() {
                       });
                   }}
                   onAppleProviderClick={() => {
-                    alert("apple clicked");
+                    const auth = getAuth();
+                    auth.languageCode = i18next.language;
+
+                    const provider = new OAuthProvider('apple.com');
+
+                    signInWithPopup(auth, provider)
+                      .then((result) => {
+                        setVerifyExistingAccount(true);
+                        const user = result.user;
+                        const firstNameSplit = user.displayName?.split(" ")[0];
+                        const lastNameSplit = user.displayName?.split(" ")[1];
+
+                        personalInfo[1]((prev) => ({
+                          email: user.email ? user.email : prev.email,
+                          firstName: firstNameSplit
+                            ? firstNameSplit
+                            : prev.firstName,
+                          lastName: lastNameSplit
+                            ? lastNameSplit
+                            : prev.lastName,
+                        }));
+                        // submit();
+                      })
+                      .catch((error) => {
+                        // // Handle Errors here.
+                        // const errorCode = error.code;
+                        // const errorMessage = error.message;
+                        // // The email of the user's account used.
+                        // const email = error.customData.email;
+                        // // The AuthCredential type that was used.
+                        // const credential =
+                        //   GoogleAuthProvider.credentialFromError(error);
+                        // // ...
+                      });
                   }}
                 />
               </Route>

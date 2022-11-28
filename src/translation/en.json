@@ -63,5 +63,6 @@
   "languageIsYourDefaultLanguage": "English is your default language.",
   "youSelectedManuallyLang": "You manually selected English",
   "passwordTooShort": "Your password is too short",
-  "passwordTooLong": "Your password is too long"
+  "passwordTooLong": "Your password is too long",
+  "createAccountUsingGoogle": "Sign up with Google"
 }

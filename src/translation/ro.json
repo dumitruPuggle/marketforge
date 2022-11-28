@@ -63,5 +63,6 @@
   "languageIsYourDefaultLanguage": "Limba română este limba dvs. implicită",
   "youSelectedManuallyLang": "Ați selectat manual limba română",
   "passwordTooShort": "Parola ta este prea scurtă",
-  "passwordTooLong": "Parola ta este prea lungă"
+  "passwordTooLong": "Parola ta este prea lungă",
+  "createAccountUsingGoogle": " Înregistrează-te cu Google"
 }
