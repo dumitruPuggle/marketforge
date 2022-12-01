@@ -87,8 +87,7 @@ const Verification = ({
         const { token } = await new SessionTwo().submit(
           {
             provider: "phone_provider",
-            phoneNumber: `+3730${values.phoneNumber}`,
-            lang: (localStorage.getItem("i18nextLng") || defaults.lang) as lang,
+            phoneNumber: `+3730${values.phoneNumber}`
           },
           {
             _temptoken: submitToken,

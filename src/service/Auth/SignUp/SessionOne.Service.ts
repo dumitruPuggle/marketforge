@@ -1,6 +1,7 @@
 import SignUpService from "./SignUp.Service";
 
 interface SessionOneSubmitProps {
+  lang: string;
   userType: string;
   verifyExistingAccount: boolean;
   email: string;

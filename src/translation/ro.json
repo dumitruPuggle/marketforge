@@ -64,5 +64,6 @@
   "youSelectedManuallyLang": "Ați selectat manual limba română",
   "passwordTooShort": "Parola ta este prea scurtă",
   "passwordTooLong": "Parola ta este prea lungă",
-  "createAccountUsingGoogle": " Înregistrează-te cu Google"
+  "createAccountUsingGoogle": " Înregistrează-te cu Google",
+  "thisAccountHasBeenAlreadyCreated": "Acest cont a fost deja creat"
 }

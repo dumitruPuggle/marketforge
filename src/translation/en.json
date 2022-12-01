@@ -64,5 +64,6 @@
   "youSelectedManuallyLang": "You manually selected English",
   "passwordTooShort": "Your password is too short",
   "passwordTooLong": "Your password is too long",
-  "createAccountUsingGoogle": "Sign up with Google"
+  "createAccountUsingGoogle": "Sign up with Google",
+  "thisAccountHasBeenAlreadyCreated": "This account is already created"
 }

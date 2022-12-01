@@ -64,5 +64,6 @@
   "youSelectedManuallyLang": "Вы выбрали русский язык вручную",
   "passwordTooShort": "Ваш пароль слишком короткий",
   "passwordTooLong": "Ваш пароль слишком длинный",
-  "createAccountUsingGoogle": "Зарегистрируйтесь с помощью Google"
+  "createAccountUsingGoogle": "Зарегистрируйтесь с помощью Google",
+  "thisAccountHasBeenAlreadyCreated": "Этот аккаунт уже создан"
 }

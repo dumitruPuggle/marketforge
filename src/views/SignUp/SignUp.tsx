@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import {
+  Redirect,
+  Route,
+  Switch,
+  useLocation,
+  useRouteMatch,
+} from "react-router-dom";
 import {
   fetchAndActivate,
   getRemoteConfig,
@@ -26,16 +32,21 @@ import AppIcon from "../../assets/app-icon.png";
 import queryString from "query-string";
 import { atom, useAtom } from "jotai";
 import OptionalQuiz from "./Steps/OptionalQuiz";
-import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 import i18next from "i18next";
 
 export const verifyExistingAccountAtom = atom(false);
+export const backgroundBlurred = atom(false);
 
 function SignUp() {
+  const location = useLocation();
   const [totalSteps, setIndicatorTotalSteps] = useAtom(indicatorTotalSteps);
-  const [, setVerifyExistingAccount] = useAtom(
-    verifyExistingAccountAtom
-  );
+  const [, setVerifyExistingAccount] = useAtom(verifyExistingAccountAtom);
+  const [isBlurred, setBackgroundBlurred] = useAtom(backgroundBlurred);
 
   let { path } = useRouteMatch();
 
@@ -136,18 +147,39 @@ function SignUp() {
     setIndicatorTotalSteps(userTypesIndicators[userTypes.indexOf(userType)]);
   }, [userType]);
 
+  const [showLangPopUp, setShowLangPopUp] = useState(true);
+
+  useEffect(() => {
+    if (!location.pathname.endsWith(routes.SignUpSteps.personalInformation)) {
+      setShowLangPopUp(false);
+    } else {
+      setShowLangPopUp(true);
+    }
+  }, [location.pathname]);
   return (
     <div className="row sign-up-row">
       <Back
         right={
           <>
             <LanguagePopUp
-              style={{ position: "static", inset: "none", padding: 3 }}
+              style={{
+                opacity: showLangPopUp ? 1 : 0,
+                position: "static",
+                inset: "none",
+                padding: 3,
+                transition: "200ms linear"
+              }}
             />
           </>
         }
       />
-      <div className="col">
+      <div
+        style={{
+          filter: isBlurred ? "blur(30px)" : "blur(0px)",
+          transition: "200ms linear",
+        }}
+        className="col"
+      >
         <div className="form-center mt-5">
           <img
             draggable={false}
@@ -169,7 +201,9 @@ function SignUp() {
                   changeUserType={setUserType}
                   state={personalInfo}
                   setToken={setPersonalInfoToken}
-                  onGoogleProviderClick={(submit) => {
+                  onGoogleProviderClick={async (submit) => {
+                    setBackgroundBlurred(true);
+
                     const auth = getAuth();
                     auth.languageCode = i18next.language;
 
@@ -191,44 +225,13 @@ function SignUp() {
                             : prev.lastName,
                         }));
                         submit();
+                        setTimeout(() => {
+                          setBackgroundBlurred(false);
+                        }, 1000);
                       })
                       .catch((error) => {
-                        // Handle Errors here.
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        // The email of the user's account used.
-                        const email = error.customData.email;
-                        // The AuthCredential type that was used.
-                        const credential =
-                          GoogleAuthProvider.credentialFromError(error);
-                        // ...
-                      });
-                  }}
-                  onAppleProviderClick={() => {
-                    const auth = getAuth();
-                    auth.languageCode = i18next.language;
-
-                    const provider = new OAuthProvider('apple.com');
-
-                    signInWithPopup(auth, provider)
-                      .then((result) => {
-                        setVerifyExistingAccount(true);
-                        const user = result.user;
-                        const firstNameSplit = user.displayName?.split(" ")[0];
-                        const lastNameSplit = user.displayName?.split(" ")[1];
-
-                        personalInfo[1]((prev) => ({
-                          email: user.email ? user.email : prev.email,
-                          firstName: firstNameSplit
-                            ? firstNameSplit
-                            : prev.firstName,
-                          lastName: lastNameSplit
-                            ? lastNameSplit
-                            : prev.lastName,
-                        }));
-                        // submit();
-                      })
-                      .catch((error) => {
+                        setBackgroundBlurred(false);
+                        setVerifyExistingAccount(false);
                         // // Handle Errors here.
                         // const errorCode = error.code;
                         // const errorMessage = error.message;

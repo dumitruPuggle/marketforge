@@ -1,20 +1,22 @@
-import { lang, requireToken, useLang, AuthEmailProvider } from "../../../translation/utils";
+import { requireToken, AuthEmailProvider } from "../../../translation/utils";
 import SignUpService from "./SignUp.Service";
 
 interface SessionTwoSubmitProps {
   provider: AuthEmailProvider;
   email: string;
-  lang: lang;
 }
 
 class SessionTwoEmail extends SignUpService {
   constructor() {
-	super();
+    super();
   }
-  public submit = async (body: SessionTwoSubmitProps, { _temptoken }: requireToken) => {
-	return this.api
-	  .post("signup/2", body, { headers: { _temptoken, lang: useLang() } })
-	  .then(({ data }) => data);
+  public submit = async (
+    body: SessionTwoSubmitProps,
+    { _temptoken }: requireToken
+  ) => {
+    return this.api
+      .post("signup/2", body, { headers: { _temptoken } })
+      .then(({ data }) => data);
   };
 }
 

@@ -37,7 +37,6 @@ interface PersonInfoInterface {
   userType: string;
   changeUserType: Function;
   onGoogleProviderClick: (submit: Function) => void;
-  onAppleProviderClick: Function;
 }
 
 function PersonInfo({
@@ -45,10 +44,9 @@ function PersonInfo({
   setToken,
   userType,
   changeUserType,
-  onGoogleProviderClick,
-  onAppleProviderClick,
+  onGoogleProviderClick
 }: PersonInfoInterface) {
-  const [verifyExistingAccount] = useAtom(verifyExistingAccountAtom);
+  const [verifyExistingAccount, setVerifyExistingAccount] = useAtom(verifyExistingAccountAtom);
   const [totalSteps] = useAtom(indicatorTotalSteps);
   const { t } = useTranslation();
   const history = useHistory();
@@ -86,6 +84,7 @@ function PersonInfo({
         const { token } = await new SessionOne().submit({
           verifyExistingAccount,
           userType,
+          lang: i18next.language,
           ...values,
         });
         setToken(token);
@@ -94,19 +93,14 @@ function PersonInfo({
           ErrorHandler.resetAllErrors();
         }
       } catch (e: any) {
-        const userExists = e?.response?.data?.message === "User already exists";
+        setVerifyExistingAccount(false);
+        const message = e?.response?.data?.message;
         if (e.message === "Network Error") {
           ErrorHandler.setFieldError("*", t("networkError"));
-        } else if (userExists && e.response.status === 403) {
-          ErrorHandler.setFieldError("email", t("emailAlreadyExists"));
-        } else if (
-          e.response?.status === 403 &&
-          e.response.data?.field === "email" &&
-          !userExists
-        ) {
-          ErrorHandler.setFieldError("email", t("invalidEmail"));
+        } else if (message.includes('204')) {
+          ErrorHandler.setFieldError("email", t('thisAccountHasBeenAlreadyCreated'))
         } else {
-          ErrorHandler.setFieldError("*", t("unknownError"));
+          ErrorHandler.setFieldError("*", message);
         }
       }
     },
@@ -215,9 +209,13 @@ function PersonInfo({
       >
         <div
           onClick={() => onGoogleProviderClick(formik.handleSubmit)}
-          className="auth-provider mt-3"
+          className="auth-provider"
         >
-          <img src={GoogleIcon} className="auth-provider-icon" />
+          <img
+            draggable={false}
+            src={GoogleIcon}
+            className="auth-provider-icon"
+          />
           <NativeButton
             style={{
               backgroundColor: "white",
@@ -225,7 +223,7 @@ function PersonInfo({
               border: "1px solid #BDBDBD",
             }}
             className="w-100"
-            title={t('createAccountUsingGoogle')}
+            title={t("createAccountUsingGoogle")}
           />
         </div>
         {/* <div style={{ fontWeight: 700 }} className="auth-provider-apple">

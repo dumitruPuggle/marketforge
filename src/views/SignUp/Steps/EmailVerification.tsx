@@ -61,8 +61,7 @@ function EmailVerification({
         const { token } = await new SessionTwoEmail().submit(
           {
             provider: "email_provider",
-            email: values.email,
-            lang: (localStorage.getItem("i18nextLng") || defaults.lang) as lang,
+            email: values.email
           },
           {
             _temptoken: submitToken,
