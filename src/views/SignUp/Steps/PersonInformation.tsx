@@ -44,9 +44,11 @@ function PersonInfo({
   setToken,
   userType,
   changeUserType,
-  onGoogleProviderClick
+  onGoogleProviderClick,
 }: PersonInfoInterface) {
-  const [verifyExistingAccount, setVerifyExistingAccount] = useAtom(verifyExistingAccountAtom);
+  const [verifyExistingAccount, setVerifyExistingAccount] = useAtom(
+    verifyExistingAccountAtom
+  );
   const [totalSteps] = useAtom(indicatorTotalSteps);
   const { t } = useTranslation();
   const history = useHistory();
@@ -97,8 +99,11 @@ function PersonInfo({
         const message = e?.response?.data?.message;
         if (e.message === "Network Error") {
           ErrorHandler.setFieldError("*", t("networkError"));
-        } else if (message.includes('204')) {
-          ErrorHandler.setFieldError("email", t('thisAccountHasBeenAlreadyCreated'))
+        } else if (message.includes("204")) {
+          ErrorHandler.setFieldError(
+            "email",
+            t("thisAccountHasBeenAlreadyCreated")
+          );
         } else {
           ErrorHandler.setFieldError("*", message);
         }
@@ -208,6 +213,7 @@ function PersonInfo({
         }}
       >
         <div
+          draggable={false}
           onClick={() => onGoogleProviderClick(formik.handleSubmit)}
           className="auth-provider"
         >
@@ -216,7 +222,10 @@ function PersonInfo({
             src={GoogleIcon}
             className="auth-provider-icon"
           />
-          <NativeButton
+          <small className="mt-2 auth-provider-description">
+            {t("createAccountUsingGoogle")}
+          </small>
+          {/* <NativeButton
             style={{
               backgroundColor: "white",
               color: "black",
@@ -224,7 +233,7 @@ function PersonInfo({
             }}
             className="w-100"
             title={t("createAccountUsingGoogle")}
-          />
+          /> */}
         </div>
         {/* <div style={{ fontWeight: 700 }} className="auth-provider-apple">
           <img
