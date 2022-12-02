@@ -147,6 +147,7 @@ function PersonInfo({
       {formik.isSubmitting && <LoadingForeground />}
       <h4 className="form-title">{t("signup-welcome")}</h4>
       <UserTypeInput
+        hidden
         className="mb-4"
         userType={userType}
         list={userTypes}

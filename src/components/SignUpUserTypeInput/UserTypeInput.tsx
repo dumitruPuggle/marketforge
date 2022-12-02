@@ -7,17 +7,22 @@ interface IUserTypeInput {
   className: string;
   style?: object;
   onSelect: (value: string) => void;
+  hidden?: boolean;
 }
 
 export const UserTypeInput = ({
   userType,
   list,
   onSelect,
+  hidden,
   ...props
 }: IUserTypeInput) => {
   const handleButtonClick = (value: string) => {
 		onSelect(value);
   };
+  if (hidden){
+    return <div className={props.className}></div>
+  }
   return (
     <div
       className={`${props.className} user-type-input-selector`}
