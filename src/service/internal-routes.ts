@@ -1,5 +1,6 @@
 export const routes = {
   root: "/",
+  SignIn: "/auth/sign-in",
   SignUp: "/create/verify-account/sign-up",
   SignUpSteps: {
     root: "general-user-information",
