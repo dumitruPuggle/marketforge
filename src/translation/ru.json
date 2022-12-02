@@ -7,6 +7,7 @@
   "invalidAddress": "Неверный адрес",
   "next": "Далее",
   "signup": "Регистрация",
+  "signin": "Войти",
   "verification": "Проверка",
   "phoneNumber": "Номер телефона",
   "networkError": "Ошибка сети",
@@ -65,5 +66,6 @@
   "passwordTooShort": "Ваш пароль слишком короткий",
   "passwordTooLong": "Ваш пароль слишком длинный",
   "createAccountUsingGoogle": "Зарегистрируйтесь с помощью Google",
-  "thisAccountHasBeenAlreadyCreated": "Этот аккаунт уже создан"
+  "thisAccountHasBeenAlreadyCreated": "Этот аккаунт уже создан",
+  "doYouHaveAnAccount": "Есть аккаунт?"
 }

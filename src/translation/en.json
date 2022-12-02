@@ -7,6 +7,7 @@
   "invalidAddress": "Invalid address",
   "next": "Next",
   "signup": "Sign Up",
+  "signin": "Sign In",
   "verification": "Verification",
   "phoneNumber": "Phone number",
   "networkError": "Network error",
@@ -65,5 +66,6 @@
   "passwordTooShort": "Your password is too short",
   "passwordTooLong": "Your password is too long",
   "createAccountUsingGoogle": "Sign up with Google",
-  "thisAccountHasBeenAlreadyCreated": "This account is already created"
+  "thisAccountHasBeenAlreadyCreated": "This account is already created",
+  "doYouHaveAnAccount": "Do you have an account?"
 }
