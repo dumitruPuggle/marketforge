@@ -8,7 +8,10 @@ import LoadingForeground from "../../../components/LoadingForeground/LoadingFore
 import { useHistory } from "react-router-dom";
 import { routes } from "../../../service/internal-routes";
 import { defaults } from "../../../defaults";
-import { indicatorTotalSteps, verificationStep } from "../../../constant/SignUp.Constant";
+import {
+  indicatorTotalSteps,
+  verificationStep,
+} from "../../../constant/SignUp.Constant";
 import { SessionTwoEmail } from "../../../service/Auth/SignUp/SessionTwo.Email.Service";
 import Error from "../../../service/Auth/SignUp/ErrorHandler";
 import { lang } from "../../../translation/utils";
@@ -34,25 +37,25 @@ function EmailVerification({
   state,
   submitToken,
   setToken,
-  defaultEmail
+  defaultEmail,
 }: VerificationInterface) {
-  const [totalSteps,] = useAtom(indicatorTotalSteps);
-  const [formSubmitted, setSubmitted] = useAtom(emailVerificationSubmitted)
-	const history = useHistory();
+  const [totalSteps] = useAtom(indicatorTotalSteps);
+  const [formSubmitted, setSubmitted] = useAtom(emailVerificationSubmitted);
+  const history = useHistory();
   const { t } = useTranslation();
-	const [verification, setVerification] = state;
+  const [verification, setVerification] = state;
 
-	const errorsInitialState = {
+  const errorsInitialState = {
     email: "",
     "*": "",
   };
 
-	const [errors, setErrors] = useState(errorsInitialState);
-	const ErrorHandler = new Error(errors, setErrors, errorsInitialState);
+  const [errors, setErrors] = useState(errorsInitialState);
+  const ErrorHandler = new Error(errors, setErrors, errorsInitialState);
 
   const formik = useFormik({
     initialValues: {
-      email: defaultEmail
+      email: defaultEmail,
     },
     onSubmit: async (values) => {
       if (!submitToken) return;
@@ -61,7 +64,7 @@ function EmailVerification({
         const { token } = await new SessionTwoEmail().submit(
           {
             provider: "email_provider",
-            email: values.email
+            email: values.email,
           },
           {
             _temptoken: submitToken,
@@ -79,18 +82,18 @@ function EmailVerification({
           ErrorHandler.setFieldError("email", e.response.data.message);
         }
       }
-		},
+    },
   });
   useEffect(() => {
     // Automatically submit form, if not submitted
-    if (!formSubmitted){
-      formik.handleSubmit()
-      setSubmitted(true)
+    if (!formSubmitted) {
+      formik.handleSubmit();
+      setSubmitted(true);
     }
-  }, [])
+  }, []);
   useEffect(() => {
-    document.title = `${t('verification')} - Fluency`
-  }, [i18next.language])
+    document.title = `${t("verification")} - Fluency`;
+  }, [i18next.language]);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {formik.isSubmitting && <LoadingForeground />}
@@ -100,21 +103,19 @@ function EmailVerification({
         value={verificationStep}
         counts={totalSteps}
       />
-			<div style={{ position: "relative" }}>
-        <TextField
-          disabled={true}
-          // helperText={formik.errors.email}
-          id="demo-helper-text-misaligned"
-          label={t("email")}
-          name="email"
-          type="email"
-          className="w-100 mt-2 mb-2"
-          // error={emailError}
-          // onChange={formik.handleChange}
-          // onBlur={formik.handleBlur}
-          defaultValue={formik.values.email}
-        />
-      </div>
+      <TextField
+        disabled={true}
+        // helperText={formik.errors.email}
+        id="demo-helper-text-misaligned"
+        label={t("email")}
+        name="email"
+        type="email"
+        className="w-100 mt-2 mb-2"
+        // error={emailError}
+        // onChange={formik.handleChange}
+        // onBlur={formik.handleBlur}
+        defaultValue={formik.values.email}
+      />
       <NativeButton className="mt-3" type="submit" title={t("next")} />
       {/* <hr />
       <small className="w-100 form-disclaimer">

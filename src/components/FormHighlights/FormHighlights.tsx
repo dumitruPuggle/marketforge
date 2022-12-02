@@ -4,8 +4,9 @@ import "./FormHighlights.css";
 function FormHighlights() {
   const { t } = useTranslation();
   return (
-    <small>
-      {t("doYouHaveAnAccount")} <strong>{t("signin")}</strong>
+    <small className="form-highlight-label">
+      {t("doYouHaveAnAccount")}{" "}
+      <strong style={{ cursor: "pointer" }}>{t("signin")}</strong>
     </small>
   );
 }

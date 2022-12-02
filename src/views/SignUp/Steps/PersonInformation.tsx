@@ -24,7 +24,6 @@ import { emailVerificationSubmitted } from "../../../constant/SignUp.Constant";
 // import AppleSignUp from '../../../assets/apple-id-sign-up-with_2x.png'
 // import GoogleSignUp from '../../../assets/google-sign-up-with_2x.png'
 import GoogleIcon from "../../../assets/google-small-logo.svg";
-import FormHighlights from "../../../components/FormHighlights/FormHighlights";
 
 type PersonalInfoState = {
   firstName: string;

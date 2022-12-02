@@ -10,3 +10,8 @@
   background-color: transparent;
   backdrop-filter: blur(30px);
 }
+
+.form-highlight-label {
+  font-size: 13.5px;
+  color: #424242;
+}

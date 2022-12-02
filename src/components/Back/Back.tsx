@@ -4,6 +4,7 @@ import back from "./back.svg";
 import { useTranslation } from "react-i18next";
 import { accentColor } from "../../constant/colors";
 import React from "react";
+
 function Back({ right }: { right?: React.ReactNode }) {
   const history = useHistory();
   const { t } = useTranslation();
@@ -17,4 +18,19 @@ function Back({ right }: { right?: React.ReactNode }) {
     </div>
   );
 }
-export default Back;
+
+function BackItem({ children, style }: { children: React.ReactNode, style?: object }) {
+  return (
+    <div
+      style={{
+        position: "static",
+        inset: "none",
+        ...style
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+export { Back, BackItem };

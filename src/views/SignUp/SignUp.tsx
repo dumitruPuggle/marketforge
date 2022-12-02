@@ -11,7 +11,7 @@ import {
   getRemoteConfig,
   getValue,
 } from "firebase/remote-config";
-import Back from "../../components/Back/Back";
+import { Back, BackItem } from "../../components/Back/Back";
 import "./SignUp.css";
 import PersonInfo from "./Steps/PersonInformation";
 import PhoneVerification from "./Steps/Verification";
@@ -32,12 +32,9 @@ import AppIcon from "../../assets/app-icon.png";
 import queryString from "query-string";
 import { atom, useAtom } from "jotai";
 import OptionalQuiz from "./Steps/OptionalQuiz";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import i18next from "i18next";
+import FormHighlights from "../../components/FormHighlights/FormHighlights";
 
 export const verifyExistingAccountAtom = atom(false);
 export const backgroundBlurred = atom(false);
@@ -156,20 +153,26 @@ function SignUp() {
       setShowLangPopUp(true);
     }
   }, [location.pathname]);
+  
   return (
     <div className="row sign-up-row">
       <Back
         right={
           <>
-            <LanguagePopUp
-              style={{
-                opacity: showLangPopUp ? 1 : 0,
-                position: "static",
-                inset: "none",
-                padding: 3,
-                transition: "200ms linear"
-              }}
-            />
+            <BackItem style={{marginRight: 8}}>
+              <FormHighlights />
+            </BackItem>
+            <BackItem>
+              <LanguagePopUp
+                style={{
+                  opacity: showLangPopUp ? 1 : 0,
+                  position: "static",
+                  inset: "none",
+                  padding: 3,
+                  transition: "200ms linear",
+                }}
+              />
+            </BackItem>
           </>
         }
       />
@@ -180,14 +183,13 @@ function SignUp() {
         }}
         className="col"
       >
-        <div className="form-center mt-5">
+        <div className="form-center mt-5 fade-in-image">
           <img
             draggable={false}
             alt=""
             src={AppIcon}
             style={{ width: 100, height: 100 }}
           />
-          <div className="fade-in-image">
             <Switch>
               <Route exact path={`${path}`}>
                 <Redirect to={`${path}/${routes.SignUpSteps.root}`} />
@@ -324,7 +326,6 @@ function SignUp() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
 
