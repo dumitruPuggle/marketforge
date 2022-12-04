@@ -19,6 +19,7 @@ import "./views/SignUp/SignUp.css";
 import "./views/SignIn/SignIn.css";
 import LanguagePopUp from "./components/LanguagePopUp/LanguagePopUp";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import RoutesViewDebug from "./views/RoutesViewDebug/RoutesViewDebug";
 
 export const isUserAuthed = atomWithStorage('userSignedIn', false)
 // export const useBackupApi = atomWithStorage('useBackupApi', false)
@@ -111,6 +112,12 @@ function App() {
           <Route path={routes.SetupAccount}>
             <DashboardLayout />
           </Route>
+          {
+            process.env.NODE_ENV === "development" &&
+            <Route path="/routes" exact>
+              <RoutesViewDebug />
+            </Route>
+          }
         </Switch>
       </Router>
     </div>
