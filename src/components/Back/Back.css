@@ -15,7 +15,8 @@
   user-select: none;
   margin: 0px;
   z-index: 10;
-  box-shadow: 0 0.15px 0px 0.5px rgb(0, 0, 0, 0.195);
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.623));
+  /* box-shadow: 0 0.15px 0px 0.5px rgb(0, 0, 0, 0.195); */
   /* font-family: !important -apple-system; */
 }
 

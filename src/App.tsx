@@ -18,6 +18,8 @@ import SignIn from "./views/SignIn/SignIn";
 import "./views/SignUp/SignUp.css";
 import "./views/SignIn/SignIn.css";
 import LanguagePopUp from "./components/LanguagePopUp/LanguagePopUp";
+import { getAuth } from "firebase/auth";
+import { useEffect } from "react";
 
 // export const useBackupApi = atomWithStorage('useBackupApi', false)
 export const statisticsDialog = atomWithStorage("statsDialogShown", true);
@@ -66,6 +68,11 @@ function App() {
   const handleStatsDialogClose = () => {
     setStats(false);
   };
+
+  const auth = getAuth()
+  useEffect(() => {
+    console.log(auth.currentUser?.displayName)
+  }, [])
   return (
     <div className="App">
       <Router>
@@ -89,6 +96,7 @@ function App() {
                 right: "20px",
                 bottom: "none",
                 left: "none",
+                zIndex: 100
               }}
             />
             <SignIn />
