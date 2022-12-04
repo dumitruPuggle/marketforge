@@ -1,4 +1,9 @@
-# Fluency client
-Development - Dumitru Cucu
+# Fluency Web
 
-This repository is under closed distribution, please do not compromise your .env files!
+## To install modules:
+
+`yarn`
+
+## To start the project:
+
+`yarn start`
