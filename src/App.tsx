@@ -18,9 +18,9 @@ import SignIn from "./views/SignIn/SignIn";
 import "./views/SignUp/SignUp.css";
 import "./views/SignIn/SignIn.css";
 import LanguagePopUp from "./components/LanguagePopUp/LanguagePopUp";
-import { getAuth } from "firebase/auth";
-import { useEffect } from "react";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
+export const isUserAuthed = atomWithStorage('userSignedIn', false)
 // export const useBackupApi = atomWithStorage('useBackupApi', false)
 export const statisticsDialog = atomWithStorage("statsDialogShown", true);
 
@@ -63,14 +63,18 @@ function App() {
     auth_provider: "phone",
   };
 
-  const [statsShow, setStats] = useAtom(statisticsDialog);
+  // const [statsShow, setStats] = useAtom(statisticsDialog);
 
-  const handleStatsDialogClose = () => {
-    setStats(false);
-  };
+  // const handleStatsDialogClose = () => {
+  //   setStats(false);
+  // };
 
-  const auth = getAuth()
-  console.log(auth.currentUser)
+  const [, setUserAuthenticated] = useAtom(isUserAuthed);
+
+  const auth = getAuth();
+  onAuthStateChanged(auth, async (user) => {
+    setUserAuthenticated(Boolean(user))
+  })
   return (
     <div className="App">
       <Router>

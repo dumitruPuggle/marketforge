@@ -5,6 +5,11 @@ import LoadingForeground from "../../../components/LoadingForeground/LoadingFore
 import NativeButton from "../../../components/Buttons/NativeButton";
 import { useMediaQuery } from "react-responsive";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useEffect } from "react";
+import { isUserAuthed } from "../../../App";
+import { useAtom } from "jotai";
+import { useHistory } from "react-router-dom";
+import { routes } from "../../../service/internal-routes";
 
 type SignInRootState = {
   email: string;
@@ -17,30 +22,37 @@ interface SignInRoot {
 
 function SignInRoot({ state }: SignInRoot) {
   const [signInRoot, setSignInRoot] = state;
-	
+
   const isMobile = useMediaQuery({ maxWidth: 767 });
-	
+
   const formik = useFormik({
-		initialValues: {
-			email: signInRoot.email,
+    initialValues: {
+      email: signInRoot.email,
       password: signInRoot.password,
     },
-		onSubmit: async function (values) {
-			const auth = getAuth();
+    onSubmit: async function (values) {
+      const auth = getAuth();
       setSignInRoot(values);
-      signInWithEmailAndPassword(auth, values.email, values.password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-					
-        })
-        .catch((error) => {
+      signInWithEmailAndPassword(auth, values.email, values.password).catch(
+        (error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-        })
+
+          console.log(errorCode)
+        }
+      );
     },
   });
   const { t } = useTranslation();
+
+  const [isUserAuthenticated] = useAtom(isUserAuthed);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (isUserAuthenticated) {
+      history.push(routes.SetupAccount);
+    }
+  }, [isUserAuthenticated]);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {formik.isSubmitting && <LoadingForeground />}
