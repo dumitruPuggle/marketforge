@@ -12,7 +12,6 @@ import {
   getValue,
 } from "firebase/remote-config";
 import { Back, BackItem } from "../../components/Back/Back";
-import "./SignUp.css";
 import PersonInfo from "./Steps/PersonInformation";
 import PhoneVerification from "./Steps/Verification";
 import EmailVerification from "./Steps/EmailVerification";

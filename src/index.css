@@ -18,3 +18,7 @@ code {
 .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
   border-color: #424242 !important;
 }
+
+.css-nbg81b-MuiInputBase-root-MuiInput-root:after {
+  border-bottom: 2px solid #424242 !important;
+}
