@@ -70,9 +70,7 @@ function App() {
   };
 
   const auth = getAuth()
-  useEffect(() => {
-    console.log(auth.currentUser?.displayName)
-  }, [])
+  console.log(auth.currentUser)
   return (
     <div className="App">
       <Router>
