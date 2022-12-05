@@ -67,5 +67,6 @@
   "passwordTooLong": "Your password is too long",
   "createAccountUsingGoogle": "Sign up with Google",
   "thisAccountHasBeenAlreadyCreated": "This account is already created",
-  "doYouHaveAnAccount": "Do you have an account?"
+  "doYouHaveAnAccount": "Do you have an account?",
+  "signInUsingGoogle": "Sign in with Google"
 }

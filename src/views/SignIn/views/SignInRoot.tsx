@@ -4,12 +4,14 @@ import { useTranslation } from "react-i18next";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
 import NativeButton from "../../../components/Buttons/NativeButton";
 import { useMediaQuery } from "react-responsive";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useEffect } from "react";
-import { isUserAuthed } from "../../../App";
-import { useAtom } from "jotai";
-import { useHistory } from "react-router-dom";
-import { routes } from "../../../service/internal-routes";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import GoogleSignInButton from "../../../components/GoogleSignInButton/GoogleSignInButton";
+import i18next from "i18next";
 
 type SignInRootState = {
   email: string;
@@ -38,21 +40,37 @@ function SignInRoot({ state }: SignInRoot) {
           const errorCode = error.code;
           const errorMessage = error.message;
 
-          console.log(errorCode)
+          console.log(errorCode);
         }
       );
     },
   });
   const { t } = useTranslation();
 
-  const [isUserAuthenticated] = useAtom(isUserAuthed);
-  const history = useHistory();
+  const handleGoogleSignInButton = () => {
+    const auth = getAuth();
+    auth.languageCode = i18next.language;
 
-  useEffect(() => {
-    if (isUserAuthenticated) {
-      history.push(routes.SetupAccount);
-    }
-  }, [isUserAuthenticated]);
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then(async (result) => {
+        // Check if user is valid:  
+      })
+      .catch((error) => {
+        // setBackgroundBlurred(false);
+        // setVerifyExistingAccount(false);
+        // // Handle Errors here.
+        const errorCode = error.code;
+        // const errorMessage = error.message;
+        // // The email of the user's account used.
+        // const email = error.customData.email;
+        // // The AuthCredential type that was used.
+        // const credential =
+        //   GoogleAuthProvider.credentialFromError(error);
+        // // ...
+        console.log(errorCode);
+      });
+  };
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {formik.isSubmitting && <LoadingForeground />}
@@ -100,6 +118,8 @@ function SignInRoot({ state }: SignInRoot) {
         type="submit"
         title={t("next")}
       />
+      <hr />
+      <GoogleSignInButton type="sign-in" onClick={handleGoogleSignInButton} />
     </form>
   );
 }

@@ -1,5 +1,10 @@
 // import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 import "./App.css";
 import { getAnalytics } from "firebase/analytics";
 import { getRemoteConfig } from "firebase/remote-config";
@@ -18,12 +23,15 @@ import SignIn from "./views/SignIn/SignIn";
 import "./views/SignUp/SignUp.css";
 import "./views/SignIn/SignIn.css";
 import LanguagePopUp from "./components/LanguagePopUp/LanguagePopUp";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import RoutesViewDebug from "./views/RoutesViewDebug/RoutesViewDebug";
+import { IsAccountVerifiedService } from "./service/Auth/SignIn/IsAccountVerified.Service";
+import { useEffect } from "react";
 
-export const isUserAuthed = atomWithStorage('userSignedIn', false)
+export const isUserAuthed = atomWithStorage("cs419-eol-04", false);
 // export const useBackupApi = atomWithStorage('useBackupApi', false)
 export const statisticsDialog = atomWithStorage("statsDialogShown", true);
+export const user = atomWithStorage<object | any>("cs419-eol-05", {});
 
 function App() {
   // const [, setBackupApi] = useAtom(useBackupApi)
@@ -70,12 +78,55 @@ function App() {
   //   setStats(false);
   // };
 
-  const [, setUserAuthenticated] = useAtom(isUserAuthed);
+  const [isUserAuthenticated, setUserAuthenticated] = useAtom(isUserAuthed);
+  const [currentUser, setUser] = useAtom(user);
+
+  const requestUserValid = async (email: string) => {
+    const result = await new IsAccountVerifiedService().submit({
+      email,
+    });
+    return result;
+  };
+
+  const signOutAndRefreshState = async () => {
+    await signOut(auth);
+    setUserAuthenticated(false);
+  };
 
   const auth = getAuth();
   onAuthStateChanged(auth, async (user) => {
-    setUserAuthenticated(Boolean(user))
-  })
+    if (!user) {
+      await signOutAndRefreshState();
+    }
+    setUser(user);
+    const email = user?.email;
+    // Check if user is validated and account respects the corresponding rules.
+    if (email) {
+      const { isValid, success } = await requestUserValid(email);
+      if (!isValid && success) {
+        await signOutAndRefreshState();
+      } else if (isValid && success && user) {
+        setUserAuthenticated(true);
+      } else {
+        setUserAuthenticated(false);
+      }
+    }
+  });
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const email = currentUser?.email;
+      if (email) {
+        const { isValid, success } = await requestUserValid(email);
+        if (!isValid && success) {
+          await signOutAndRefreshState();
+        }
+      }
+    };
+    if (isUserAuthenticated) {
+      checkUser();
+    }
+  }, [isUserAuthenticated]);
   return (
     <div className="App">
       <Router>
@@ -92,32 +143,45 @@ function App() {
             </div>
           </Route>
           <Route path={routes.SignIn}>
-            <LanguagePopUp
-              style={{
-                position: "fixed",
-                top: "20px",
-                right: "20px",
-                bottom: "none",
-                left: "none",
-                zIndex: 100
-              }}
-            />
-            <SignIn />
+            {!isUserAuthenticated ? (
+              <>
+                <LanguagePopUp
+                  style={{
+                    position: "fixed",
+                    top: "20px",
+                    right: "20px",
+                    bottom: "none",
+                    left: "none",
+                    zIndex: 100,
+                  }}
+                />
+                <SignIn />
+              </>
+            ) : (
+              <Redirect to={routes.RedirectPathAfterAuth} />
+            )}
           </Route>
           <Route path={routes.SignUp}>
             {/* <RadarDialog state={[radarDialog, setRadarDialog]} /> */}
             {/* <StatsDialog isOpen={statsShow} onClose={handleStatsDialogClose} /> */}
-            <SignUp />
+            {!isUserAuthenticated ? (
+              <SignUp />
+            ) : (
+              <Redirect to={routes.RedirectPathAfterAuth} />
+            )}
           </Route>
           <Route path={routes.SetupAccount}>
-            <DashboardLayout />
+            {isUserAuthenticated ? (
+              <DashboardLayout />
+            ) : (
+              <Redirect to={routes.SignIn} />
+            )}
           </Route>
-          {
-            process.env.NODE_ENV === "development" &&
+          {process.env.NODE_ENV === "development" && (
             <Route path="/routes" exact>
               <RoutesViewDebug />
             </Route>
-          }
+          )}
         </Switch>
       </Router>
     </div>

@@ -12,6 +12,7 @@ export const routes = {
     finish: "finish",
     pathLevelSplit: 4,
   },
+  RedirectPathAfterAuth: "/account/setup",
   SetupAccount: "/account/setup",
   SetupAccountSteps: {
     root: "/",
