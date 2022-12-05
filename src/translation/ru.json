@@ -67,5 +67,6 @@
   "passwordTooLong": "Ваш пароль слишком длинный",
   "createAccountUsingGoogle": "Зарегистрируйтесь с помощью Google",
   "thisAccountHasBeenAlreadyCreated": "Этот аккаунт уже создан",
-  "doYouHaveAnAccount": "Есть аккаунт?"
+  "doYouHaveAnAccount": "Есть аккаунт?",
+  "signInUsingGoogle": "Войти с помощью Google"
 }

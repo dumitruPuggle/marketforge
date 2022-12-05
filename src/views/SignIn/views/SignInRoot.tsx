@@ -4,7 +4,14 @@ import { useTranslation } from "react-i18next";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
 import NativeButton from "../../../components/Buttons/NativeButton";
 import { useMediaQuery } from "react-responsive";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import GoogleSignInButton from "../../../components/GoogleSignInButton/GoogleSignInButton";
+import i18next from "i18next";
 
 type SignInRootState = {
   email: string;
@@ -17,30 +24,53 @@ interface SignInRoot {
 
 function SignInRoot({ state }: SignInRoot) {
   const [signInRoot, setSignInRoot] = state;
-	
+
   const isMobile = useMediaQuery({ maxWidth: 767 });
-	
+
   const formik = useFormik({
-		initialValues: {
-			email: signInRoot.email,
+    initialValues: {
+      email: signInRoot.email,
       password: signInRoot.password,
     },
-		onSubmit: async function (values) {
-			const auth = getAuth();
+    onSubmit: async function (values) {
+      const auth = getAuth();
       setSignInRoot(values);
-      signInWithEmailAndPassword(auth, values.email, values.password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-					
-        })
-        .catch((error) => {
+      signInWithEmailAndPassword(auth, values.email, values.password).catch(
+        (error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-        })
+
+          console.log(errorCode);
+        }
+      );
     },
   });
   const { t } = useTranslation();
+
+  const handleGoogleSignInButton = () => {
+    const auth = getAuth();
+    auth.languageCode = i18next.language;
+
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then(async (result) => {
+        // Check if user is valid:  
+      })
+      .catch((error) => {
+        // setBackgroundBlurred(false);
+        // setVerifyExistingAccount(false);
+        // // Handle Errors here.
+        const errorCode = error.code;
+        // const errorMessage = error.message;
+        // // The email of the user's account used.
+        // const email = error.customData.email;
+        // // The AuthCredential type that was used.
+        // const credential =
+        //   GoogleAuthProvider.credentialFromError(error);
+        // // ...
+        console.log(errorCode);
+      });
+  };
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {formik.isSubmitting && <LoadingForeground />}
@@ -88,6 +118,8 @@ function SignInRoot({ state }: SignInRoot) {
         type="submit"
         title={t("next")}
       />
+      <hr />
+      <GoogleSignInButton type="sign-in" onClick={handleGoogleSignInButton} />
     </form>
   );
 }

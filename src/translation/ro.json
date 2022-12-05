@@ -67,5 +67,6 @@
   "passwordTooLong": "Parola ta este prea lungă",
   "createAccountUsingGoogle": " Înregistrează-te cu Google",
   "thisAccountHasBeenAlreadyCreated": "Acest cont a fost deja creat",
-  "doYouHaveAnAccount": "Ai deja un cont?"
+  "doYouHaveAnAccount": "Ai deja un cont?",
+  "signInUsingGoogle": "Conectați-vă folosind Google"
 }

@@ -24,6 +24,7 @@ import { emailVerificationSubmitted } from "../../../constant/SignUp.Constant";
 // import AppleSignUp from '../../../assets/apple-id-sign-up-with_2x.png'
 // import GoogleSignUp from '../../../assets/google-sign-up-with_2x.png'
 import GoogleIcon from "../../../assets/google-small-logo.svg";
+import GoogleSignInButton from "../../../components/GoogleSignInButton/GoogleSignInButton";
 
 type PersonalInfoState = {
   firstName: string;
@@ -206,46 +207,10 @@ function PersonInfo({
       />
       <NativeButton className="mt-3" type="submit" title={t("next")} />
       <hr />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <div
-          draggable={false}
-          onClick={() => onGoogleProviderClick(formik.handleSubmit)}
-          className="auth-provider"
-        >
-          <img
-            draggable={false}
-            src={GoogleIcon}
-            className="auth-provider-icon"
-          />
-          <small className="mt-2 auth-provider-description">
-            {t("createAccountUsingGoogle")}
-          </small>
-          {/* <NativeButton
-            style={{
-              backgroundColor: "white",
-              color: "black",
-              border: "1px solid #BDBDBD",
-            }}
-            className="w-100"
-            title={t("createAccountUsingGoogle")}
-          /> */}
-        </div>
-        {/* <div style={{ fontWeight: 700 }} className="auth-provider-apple">
-          <img
-            draggable={false}
-            style={{ width: "100%" }}
-            alt=""
-            onClick={() => onAppleProviderClick(formik.handleSubmit)}
-            src={AppleSignUp}
-          />
-        </div> */}
-      </div>
+      <GoogleSignInButton
+        type="sign-up"
+        onClick={() => onGoogleProviderClick(formik.handleSubmit)}
+      />
     </form>
   );
 }

@@ -1,6 +1,6 @@
 export const routes = {
   root: "/",
-  SignIn: "/auth/sign-in",
+  SignIn: "/auth/separate-dflow/sign-in",
   SignUp: "/create/verify-account/sign-up",
   SignUpSteps: {
     root: "general-user-information",
@@ -12,7 +12,8 @@ export const routes = {
     finish: "finish",
     pathLevelSplit: 4,
   },
-  SetupAccount: "/creator/account/setup",
+  RedirectPathAfterAuth: "/account/setup",
+  SetupAccount: "/account/setup",
   SetupAccountSteps: {
     root: "/",
   },
