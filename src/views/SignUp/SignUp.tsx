@@ -156,8 +156,22 @@ function SignUp() {
 
   const [isUserAuthenticated] = useAtom(isUserAuthed);
 
+  const Logo = () => {
+    return (
+      <img
+        draggable={false}
+        alt=""
+        src={AppIcon}
+        style={{ width: 100, height: 100 }}
+      />
+    );
+  };
+
   return (
-    <div className="row sign-up-row">
+    <div
+      style={{ position: "absolute", inset: 0, top: '-40px' }}
+      className="form-center mt-5"
+    >
       <Back
         right={
           <>
@@ -185,22 +199,17 @@ function SignUp() {
         }}
         className="col"
       >
-        <div className="form-center mt-5">
-          <img
-            draggable={false}
-            alt=""
-            src={AppIcon}
-            style={{ width: 100, height: 100 }}
-          />
-          <Switch>
-            <Route exact path={`${path}`}>
-              <Redirect to={`${path}/${routes.SignUpSteps.root}`} />
-            </Route>
-            <Route
-              exact
-              path={`${path}/${routes.SignUpSteps.personalInformation}`}
-            >
-              {!isUserAuthenticated ? (
+        <Logo />
+        <Switch>
+          <Route exact path={`${path}`}>
+            <Redirect to={`${path}/${routes.SignUpSteps.root}`} />
+          </Route>
+          <Route
+            exact
+            path={`${path}/${routes.SignUpSteps.personalInformation}`}
+          >
+            {!isUserAuthenticated ? (
+              <>
                 <PersonInfo
                   userType={userType}
                   changeUserType={setUserType}
@@ -249,78 +258,75 @@ function SignUp() {
                       });
                   }}
                 />
+              </>
+            ) : (
+              <Redirect to={routes.RedirectPathAfterAuth} />
+            )}
+          </Route>
+          {isPersonalInfoCompleted && (
+            <Route exact path={`${path}/${routes.SignUpSteps.verification}`}>
+              {authProvider === "phone" ? (
+                <PhoneVerification
+                  state={verification}
+                  submitToken={personalInfoToken}
+                  setToken={setVerificationToken}
+                />
               ) : (
-                <Redirect to={routes.RedirectPathAfterAuth} />
+                authProvider === "email" && (
+                  <EmailVerification
+                    state={emailVerification}
+                    defaultEmail={personalInfo[0].email}
+                    submitToken={personalInfoToken}
+                    setToken={setEmailVerificationToken}
+                  />
+                )
               )}
             </Route>
-            {isPersonalInfoCompleted && (
-              <Route exact path={`${path}/${routes.SignUpSteps.verification}`}>
-                {authProvider === "phone" ? (
-                  <PhoneVerification
-                    state={verification}
-                    submitToken={personalInfoToken}
-                    setToken={setVerificationToken}
-                  />
-                ) : (
-                  authProvider === "email" && (
-                    <EmailVerification
-                      state={emailVerification}
-                      defaultEmail={personalInfo[0].email}
-                      submitToken={personalInfoToken}
-                      setToken={setEmailVerificationToken}
-                    />
-                  )
-                )}
-              </Route>
-            )}
-            {isVerficationCompleted && !codeValidationSubmitted && (
-              <Route exact path={`${path}/${routes.SignUpSteps.confirmation}`}>
-                <CodeValidation
-                  state={codeValidation}
-                  onDialogRetryClick={() => resetAllTokens()}
-                  submitToken={
-                    authProvider === "phone"
-                      ? verificationToken
-                      : emailVerificationToken
-                  }
-                  setToken={setCodeValidationToken}
-                  onApproved={() => setCodeValidationSubmitted(true)}
-                />
-              </Route>
-            )}
-            {codeValidationSubmitted && (
-              <Route
-                exact
-                path={`${path}/${routes.SignUpSteps.passwordService}`}
-              >
-                <PasswordService
-                  state={password}
-                  submitToken={codeValidationToken}
-                  indicator={{
-                    counts: totalSteps,
-                    value: passwordServiceStep,
-                  }}
-                  otherState={{
-                    email: personalInfo[0].email,
-                  }}
-                />
-              </Route>
-            )}
-            {isPasswordCompleted && (
-              <Route exact path={`${path}/${routes.SignUpSteps.optionalQuiz}`}>
-                <OptionalQuiz state={quiz} setToken={setQuizToken} />
-              </Route>
-            )}
-            {isPasswordCompleted && (
-              <Route exact path={`${path}/${routes.SignUpSteps.finish}`}>
-                <Success />
-              </Route>
-            )}
-            <Route exact path={`*`}>
-              <Redirect to={`${path}`} />
+          )}
+          {isVerficationCompleted && !codeValidationSubmitted && (
+            <Route exact path={`${path}/${routes.SignUpSteps.confirmation}`}>
+              <CodeValidation
+                state={codeValidation}
+                onDialogRetryClick={() => resetAllTokens()}
+                submitToken={
+                  authProvider === "phone"
+                    ? verificationToken
+                    : emailVerificationToken
+                }
+                setToken={setCodeValidationToken}
+                onApproved={() => setCodeValidationSubmitted(true)}
+              />
             </Route>
-          </Switch>
-        </div>
+          )}
+          {codeValidationSubmitted && (
+            <Route exact path={`${path}/${routes.SignUpSteps.passwordService}`}>
+              <PasswordService
+                state={password}
+                submitToken={codeValidationToken}
+                indicator={{
+                  counts: totalSteps,
+                  value: passwordServiceStep,
+                }}
+                otherState={{
+                  email: personalInfo[0].email,
+                }}
+              />
+            </Route>
+          )}
+          {isPasswordCompleted && (
+            <Route exact path={`${path}/${routes.SignUpSteps.optionalQuiz}`}>
+              <OptionalQuiz state={quiz} setToken={setQuizToken} />
+            </Route>
+          )}
+          {isPasswordCompleted && (
+            <Route exact path={`${path}/${routes.SignUpSteps.finish}`}>
+              <Success />
+            </Route>
+          )}
+          <Route exact path={`*`}>
+            <Redirect to={`${path}`} />
+          </Route>
+        </Switch>
       </div>
     </div>
   );

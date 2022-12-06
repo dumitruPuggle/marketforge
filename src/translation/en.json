@@ -68,5 +68,6 @@
   "createAccountUsingGoogle": "Sign up with Google",
   "thisAccountHasBeenAlreadyCreated": "This account is already created",
   "doYouHaveAnAccount": "Do you have an account?",
-  "signInUsingGoogle": "Sign in with Google"
+  "signInUsingGoogle": "Sign in with Google",
+  "incorrectLoginOrPassword": "Incorrect Address or Password"
 }

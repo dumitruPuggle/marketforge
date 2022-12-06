@@ -68,5 +68,6 @@
   "createAccountUsingGoogle": " Înregistrează-te cu Google",
   "thisAccountHasBeenAlreadyCreated": "Acest cont a fost deja creat",
   "doYouHaveAnAccount": "Ai deja un cont?",
-  "signInUsingGoogle": "Conectați-vă folosind Google"
+  "signInUsingGoogle": "Conectați-vă folosind Google",
+  "incorrectLoginOrPassword": "Incorrect Address or Password"
 }

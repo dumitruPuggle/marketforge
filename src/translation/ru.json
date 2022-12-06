@@ -68,5 +68,6 @@
   "createAccountUsingGoogle": "Зарегистрируйтесь с помощью Google",
   "thisAccountHasBeenAlreadyCreated": "Этот аккаунт уже создан",
   "doYouHaveAnAccount": "Есть аккаунт?",
-  "signInUsingGoogle": "Войти с помощью Google"
+  "signInUsingGoogle": "Войти с помощью Google",
+  "incorrectLoginOrPassword": "Неверный адрес или пароль"
 }
