@@ -79,7 +79,7 @@ function App() {
   // };
 
   const [isUserAuthenticated, setUserAuthenticated] = useAtom(isUserAuthed);
-  const [currentUser, setUser] = useAtom(user);
+  const [, setUser] = useAtom(user);
 
   const requestUserValid = async (email: string) => {
     const result = await new IsAccountVerifiedService().submit({
@@ -113,20 +113,20 @@ function App() {
     }
   });
 
-  useEffect(() => {
-    const checkUser = async () => {
-      const email = currentUser?.email;
-      if (email) {
-        const { isValid, success } = await requestUserValid(email);
-        if (!isValid && success) {
-          await signOutAndRefreshState();
-        }
-      }
-    };
-    if (isUserAuthenticated) {
-      checkUser();
-    }
-  }, [isUserAuthenticated]);
+  // useEffect(() => {
+  //   const checkUser = async () => {
+  //     const email = currentUser?.email;
+  //     if (email) {
+  //       const { isValid, success } = await requestUserValid(email);
+  //       if (!isValid && success) {
+  //         await signOutAndRefreshState();
+  //       }
+  //     }
+  //   };
+  //   if (isUserAuthenticated) {
+  //     checkUser();
+  //   }
+  // }, [isUserAuthenticated]);
   return (
     <div className="App">
       <Router>
@@ -164,11 +164,7 @@ function App() {
           <Route path={routes.SignUp}>
             {/* <RadarDialog state={[radarDialog, setRadarDialog]} /> */}
             {/* <StatsDialog isOpen={statsShow} onClose={handleStatsDialogClose} /> */}
-            {!isUserAuthenticated ? (
-              <SignUp />
-            ) : (
-              <Redirect to={routes.RedirectPathAfterAuth} />
-            )}
+            <SignUp />
           </Route>
           <Route path={routes.SetupAccount}>
             {isUserAuthenticated ? (

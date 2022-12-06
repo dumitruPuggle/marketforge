@@ -17,7 +17,7 @@ function SignIn() {
   return (
     <div
       style={{ position: "absolute", inset: 0, top: -80 }}
-      className="form-center-flex mt-5 fade-in-image"
+      className="form-center-flex mt-5"
     >
       <img
         draggable={false}
