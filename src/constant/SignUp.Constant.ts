@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 
-export const indicatorTotalSteps = atom(4);
+export const indicatorTotalSteps = atom(5);
 export const personalInfoStep = 0;
 export const verificationStep = 1;
 export const codeValidationStep = 2;

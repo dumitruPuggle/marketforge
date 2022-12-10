@@ -23,12 +23,9 @@ import LanguagePopUp from "../../components/LanguagePopUp/LanguagePopUp";
 import {
   passwordServiceStep,
   indicatorTotalSteps,
-  defUserType,
-  userTypes,
-  userTypesIndicators,
+  userTypes
 } from "../../constant/SignUp.Constant";
 import AppIcon from "../../assets/app-icon.png";
-import queryString from "query-string";
 import { atom, useAtom } from "jotai";
 import OptionalQuiz from "./Steps/OptionalQuiz";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -38,10 +35,11 @@ import { isUserAuthed } from "../../App";
 
 export const verifyExistingAccountAtom = atom(false);
 export const backgroundBlurred = atom(false);
+export const quizUserType = atom(userTypes[1]);
 
 function SignUp() {
   const location = useLocation();
-  const [totalSteps, setIndicatorTotalSteps] = useAtom(indicatorTotalSteps);
+  const [totalSteps,] = useAtom(indicatorTotalSteps);
   const [, setVerifyExistingAccount] = useAtom(verifyExistingAccountAtom);
   const [isBlurred, setBackgroundBlurred] = useAtom(backgroundBlurred);
 
@@ -122,28 +120,6 @@ function SignUp() {
     });
   }, []);
 
-  // Process User type
-  const rawUserSearchParam = queryString
-    .parse(document.location.search)
-    ?.u_type?.toString();
-  const sanitizeUserTypeFromParam = (u_type: string | undefined) => {
-    if (!u_type) {
-      return defUserType;
-    }
-    if (userTypes.includes(u_type)) {
-      return u_type;
-    }
-    return defUserType;
-  };
-
-  // Implement changes on the sessions based on each individual user-type
-  const [userType, setUserType] = useState(
-    sanitizeUserTypeFromParam(rawUserSearchParam)
-  );
-  useEffect(() => {
-    setIndicatorTotalSteps(userTypesIndicators[userTypes.indexOf(userType)]);
-  }, [userType]);
-
   const [showLangPopUp, setShowLangPopUp] = useState(true);
 
   useEffect(() => {
@@ -211,8 +187,6 @@ function SignUp() {
             {!isUserAuthenticated ? (
               <>
                 <PersonInfo
-                  userType={userType}
-                  changeUserType={setUserType}
                   state={personalInfo}
                   setToken={setPersonalInfoToken}
                   onGoogleProviderClick={async (submit) => {

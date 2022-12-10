@@ -69,5 +69,10 @@
   "thisAccountHasBeenAlreadyCreated": "Этот аккаунт уже создан",
   "doYouHaveAnAccount": "Есть аккаунт?",
   "signInUsingGoogle": "Войти с помощью Google",
-  "incorrectLoginOrPassword": "Неверный адрес или пароль"
+  "incorrectLoginOrPassword": "Неверный адрес или пароль",
+  "selectACategory": "Выберите категорию",
+  "marketers": " Маркетолог",
+  "entrepreneurs": "Предприниматель",
+  "agencies": "Агентство",
+  "influencers": "Influencer"
 }

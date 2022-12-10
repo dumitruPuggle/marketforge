@@ -1,4 +1,5 @@
-import { TextField } from "@mui/material";
+import { Box, InputAdornment, TextField } from "@mui/material";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useFormik } from "formik";
 import i18next from "i18next";
 import { useEffect, useState } from "react";
@@ -13,15 +14,18 @@ import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
 // import { SessionOne } from "../../../service/Auth/SignUp/SessionOne.Service";
 import {
-  personalInfoStep,
   indicatorTotalSteps,
   quizStep,
+  userTypes,
 } from "../../../constant/SignUp.Constant";
 import { useAtom } from "jotai";
 import { getAuth } from "firebase/auth";
 import { doc, setDoc, getFirestore } from "firebase/firestore";
 import { routes } from "../../../service/internal-routes";
 import { useHistory } from "react-router-dom";
+import { UserTypeInput } from "../../../components/SignUpUserTypeInput/UserTypeInput";
+import { quizUserType } from "../SignUp";
+import WhoAreYouDialog from "../../../components/WhoAreYouDialog/WhoAreYouDialog";
 
 type OptionalQuizState = {
   companyName: string;
@@ -64,7 +68,7 @@ function OptionalQuiz({ state, setToken }: OptionalQuizInterface) {
       try {
         if (valuesAreEmpty) {
           await setDoc(doc(db, `/users/${uid}/other-data/optional-quiz`), {
-            skipped_optional_data_section: true
+            skipped_optional_data_section: true,
           });
         } else {
           await setDoc(doc(db, `/users/${uid}/other-data/optional-quiz`), {
@@ -97,6 +101,18 @@ function OptionalQuiz({ state, setToken }: OptionalQuizInterface) {
   }, [i18next.language]);
 
   const titleMsg = t("tell-us-a-bit-more-about-you");
+
+  const [userType, setUserType] = useAtom(quizUserType);
+  const [whoAreYouPrompt, openSelectWhoAreYou] = useState(false);
+
+  const handleUserTypeSelect = (userType: string) => {
+    setUserType(userType);
+  };
+
+  const handleSelectWhoAreYou = () => {
+    openSelectWhoAreYou(true);
+  };
+
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {ErrorHandler.hasErrors() && (
@@ -107,8 +123,28 @@ function OptionalQuiz({ state, setToken }: OptionalQuizInterface) {
         {auth.currentUser?.displayName?.split(" ")[0]},{" "}
         {titleMsg.toLocaleLowerCase()}
       </h4>
-      <small className="mb-4">{t("you-can-skip-this-section")}</small>
+      <small className="mb-3">{t("you-can-skip-this-section")}</small>
       <Indicator className="mb-4" value={quizStep} counts={totalSteps} />
+      {/* <UserTypeInput
+        className="mb-3"
+        userType={userType}
+        list={userTypes}
+        onSelect={handleUserTypeSelect}
+      /> */}
+      <WhoAreYouDialog state={whoAreYouPrompt} setState={openSelectWhoAreYou} />
+      <TextField
+        onClick={handleSelectWhoAreYou}
+        label="Cine esti?"
+        className="mb-3"
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <AccountCircle />
+            </InputAdornment>
+          ),
+        }}
+        variant="outlined"
+      />
       <TextField
         helperText={formik.errors.companyName}
         id="demo-helper-text-misaligned"

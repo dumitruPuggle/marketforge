@@ -69,5 +69,10 @@
   "thisAccountHasBeenAlreadyCreated": "Acest cont a fost deja creat",
   "doYouHaveAnAccount": "Ai deja un cont?",
   "signInUsingGoogle": "Conectați-vă folosind Google",
-  "incorrectLoginOrPassword": "Incorrect Address or Password"
+  "incorrectLoginOrPassword": "Incorrect Address or Password",
+  "selectACategory": "Selectați o categorie",
+  "marketers": "Marketer",
+  "entrepreneurs": "Antreprenor",
+  "agencies": "Agenție",
+  "influencers": "Influencer"
 }
