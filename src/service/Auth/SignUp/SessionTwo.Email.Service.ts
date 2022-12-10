@@ -15,7 +15,7 @@ class SessionTwoEmail extends SignUpService {
     { _temptoken }: requireToken
   ) => {
     return this.api
-      .post("signup/2", body, { headers: { _temptoken } })
+      .post("verify/2", body, { headers: { _temptoken } })
       .then(({ data }) => data);
   };
 }
