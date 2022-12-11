@@ -37,6 +37,7 @@ import LoadingBar from "react-top-loading-bar";
 export const barLoadingProgress = atom(0);
 export const verifyExistingAccountAtom = atom(false);
 export const backgroundBlurred = atom(false);
+export const isImageShown = atom(true);
 
 function SignUp() {
   const location = useLocation();
@@ -146,6 +147,7 @@ function SignUp() {
   };
 
   const [progress, setProgress] = useAtom(barLoadingProgress);
+  const [isLogoShown,] = useAtom(isImageShown)
 
   return (
     <div
@@ -173,7 +175,7 @@ function SignUp() {
         }
       />
       <LoadingBar
-        color="#000000"
+        color="#424242"
         progress={progress}
         onLoaderFinished={() => setProgress(0)}
       />
@@ -184,7 +186,7 @@ function SignUp() {
         }}
         className="col"
       >
-        <Logo />
+        {isLogoShown && <Logo />}
         <Switch>
           <Route exact path={`${path}`}>
             <Redirect to={`${path}/${routes.SignUpSteps.root}`} />

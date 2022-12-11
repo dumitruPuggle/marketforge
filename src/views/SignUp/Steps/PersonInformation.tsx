@@ -12,10 +12,10 @@ import { routes } from "../../../service/internal-routes";
 import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
 import { SessionOne } from "../../../service/Auth/SignUp/SessionOne.Service";
-import { verifyExistingAccountAtom } from "../SignUp";
+import { isImageShown, verifyExistingAccountAtom } from "../SignUp";
 import {
   personalInfoStep,
-  indicatorTotalSteps
+  indicatorTotalSteps,
 } from "../../../constant/SignUp.Constant";
 import { useAtom } from "jotai";
 import { emailVerificationSubmitted } from "../../../constant/SignUp.Constant";
@@ -122,9 +122,11 @@ function PersonInfo({
   }, [i18next.language]);
 
   // Reset email state
+  const [, setLogoShown] = useAtom(isImageShown);
   const [, setEmailVerificationSubmitted] = useAtom(emailVerificationSubmitted);
   useEffect(() => {
     setEmailVerificationSubmitted(false);
+    setLogoShown(true);
   }, []);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>

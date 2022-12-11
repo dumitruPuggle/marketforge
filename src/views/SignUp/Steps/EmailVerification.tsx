@@ -18,6 +18,7 @@ import { lang } from "../../../translation/utils";
 import i18next from "i18next";
 import { useAtom } from "jotai";
 import { emailVerificationSubmitted } from "../../../constant/SignUp.Constant";
+import { isImageShown } from "../SignUp";
 
 type VerificationState = {
   email: string;
@@ -84,16 +85,20 @@ function EmailVerification({
       }
     },
   });
+  const [, setLogoShown] = useAtom(isImageShown);
+
   useEffect(() => {
     // Automatically submit form, if not submitted
     if (!formSubmitted) {
       formik.handleSubmit();
       setSubmitted(true);
     }
+    setLogoShown(false);
   }, []);
   useEffect(() => {
     document.title = `${t("verification")} - Fluency`;
   }, [i18next.language]);
+
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {formik.isSubmitting && <LoadingForeground />}

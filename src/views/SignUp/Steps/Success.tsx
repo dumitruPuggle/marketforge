@@ -5,46 +5,26 @@ import { Prompt } from "react-router-dom";
 import successIcon from "../../../assets/success.svg";
 import NativeButtonPillow from "../../../components/Buttons/NativeButtonPillow";
 import { routes } from "../../../service/internal-routes";
-import { barLoadingProgress } from "../SignUp";
+import { barLoadingProgress, isImageShown } from "../SignUp";
 import "../Success.css";
+import ProgressAnimation from "./useAnimation";
 
 function Success() {
   const { t } = useTranslation();
-  const [progress, setProgress] = useAtom(barLoadingProgress);
+  const [, setLogoShown] = useAtom(isImageShown)
+  const [, setProgress] = useAtom(barLoadingProgress);
   const handleSetupAccount = () => {
     window.location.href = routes.SetupAccount;
   };
   useEffect(() => {
-    setTimeout(() => {
-      setProgress(10);
-    }, 400);
-    setTimeout(() => {
-      setProgress(20);
-    }, 600);
-    setTimeout(() => {
-      setProgress(30);
-    }, 800);
-    setTimeout(() => {
-      setProgress(40);
-    }, 1000);
-    setTimeout(() => {
-      setProgress(50);
-    }, 1200);
-    setTimeout(() => {
-      setProgress(60);
-    }, 1400);
-    setTimeout(() => {
-      setProgress(70);
-    }, 1600);
-    setTimeout(() => {
-      setProgress(80);
-    }, 1800);
-    setTimeout(() => {
-      setProgress(90);
-    }, 2000);
-    setTimeout(() => {
-      handleSetupAccount();
-    }, 3500);
+    ProgressAnimation({
+      setProgress,
+      onEnd: () => console.log("finished"),
+      animationDuration: 3600,
+      offset: 200,
+      incrementAmount: 6.58,
+    });
+    setLogoShown(false);
   }, []);
   return (
     <div>
