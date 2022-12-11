@@ -23,7 +23,7 @@ import LanguagePopUp from "../../components/LanguagePopUp/LanguagePopUp";
 import {
   passwordServiceStep,
   indicatorTotalSteps,
-  userTypes
+  userTypes,
 } from "../../constant/SignUp.Constant";
 import AppIcon from "../../assets/app-icon.png";
 import { atom, useAtom } from "jotai";
@@ -41,7 +41,7 @@ export const isImageShown = atom(true);
 
 function SignUp() {
   const location = useLocation();
-  const [totalSteps,] = useAtom(indicatorTotalSteps);
+  const [totalSteps] = useAtom(indicatorTotalSteps);
   const [, setVerifyExistingAccount] = useAtom(verifyExistingAccountAtom);
   const [isBlurred, setBackgroundBlurred] = useAtom(backgroundBlurred);
 
@@ -147,11 +147,11 @@ function SignUp() {
   };
 
   const [progress, setProgress] = useAtom(barLoadingProgress);
-  const [isLogoShown,] = useAtom(isImageShown)
+  const [isLogoShown] = useAtom(isImageShown);
 
   return (
     <div
-      style={{ position: "absolute", inset: 0, top: '-40px' }}
+      style={{ position: "absolute", inset: 0, top: "-40px" }}
       className="form-center mt-5"
     >
       <Back
@@ -183,6 +183,11 @@ function SignUp() {
         style={{
           filter: isBlurred ? "blur(30px)" : "blur(0px)",
           transition: "200ms linear",
+          width: '100%',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
         }}
         className="col"
       >
@@ -303,7 +308,7 @@ function SignUp() {
               <OptionalQuiz state={quiz} setToken={setQuizToken} />
             </Route>
           )}
-          {true && (
+          {isPasswordCompleted && (
             <Route exact path={`${path}/${routes.SignUpSteps.finish}`}>
               <Success />
             </Route>
