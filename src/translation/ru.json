@@ -71,8 +71,9 @@
   "signInUsingGoogle": "Войти с помощью Google",
   "incorrectLoginOrPassword": "Неверный адрес или пароль",
   "selectACategory": "Выберите категорию",
-  "marketers": " Маркетолог",
+  "marketers": "Маркетолог",
   "entrepreneurs": "Предприниматель",
   "agencies": "Агентство",
-  "influencers": "Influencer"
+  "influencers": "Инфлюенсер",
+  "whoAreYou": "Кто вы?"
 }

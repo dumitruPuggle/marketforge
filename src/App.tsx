@@ -170,7 +170,7 @@ function App() {
             {isUserAuthenticated ? (
               <DashboardLayout />
             ) : (
-              <Redirect to={routes.SignIn} />
+              <Redirect to={routes.SignIn} />              
             )}
           </Route>
           {process.env.NODE_ENV === "development" && (

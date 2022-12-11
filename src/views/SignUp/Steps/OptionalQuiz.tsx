@@ -1,5 +1,6 @@
-import { Box, InputAdornment, TextField } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import * as Yup from "yup";
 import { useFormik } from "formik";
 import i18next from "i18next";
 import { useEffect, useState } from "react";
@@ -17,17 +18,17 @@ import {
   indicatorTotalSteps,
   quizStep,
   userTypes,
+  userTypesGenerics,
 } from "../../../constant/SignUp.Constant";
 import { useAtom } from "jotai";
 import { getAuth } from "firebase/auth";
-import { doc, setDoc, getFirestore } from "firebase/firestore";
+import { doc, setDoc, getFirestore, updateDoc } from "firebase/firestore";
 import { routes } from "../../../service/internal-routes";
 import { useHistory } from "react-router-dom";
-import { UserTypeInput } from "../../../components/SignUpUserTypeInput/UserTypeInput";
-import { quizUserType } from "../SignUp";
 import WhoAreYouDialog from "../../../components/WhoAreYouDialog/WhoAreYouDialog";
 
 type OptionalQuizState = {
+  userType: string;
   companyName: string;
   numberOfEmployees: number;
 };
@@ -45,6 +46,7 @@ function OptionalQuiz({ state, setToken }: OptionalQuizInterface) {
   const [optionalQuiz, setOptionalQuiz] = state;
 
   const errorsInitialState = {
+    userType: "",
     companyName: "",
     numberOfEmployees: "",
     "*": "",
@@ -54,11 +56,19 @@ function OptionalQuiz({ state, setToken }: OptionalQuizInterface) {
 
   const auth = getAuth();
 
+  const transformToGenericClass = (raw: string) => {
+    return userTypesGenerics[userTypes.indexOf(raw)]
+  }
+
   const formik = useFormik({
     initialValues: {
+      userType: optionalQuiz.userType,
       companyName: optionalQuiz.companyName,
       numberOfEmployees: optionalQuiz.numberOfEmployees,
     },
+    validationSchema: Yup.object({
+      userType: Yup.string().required(t("required")),
+    }),
     onSubmit: async function (values: OptionalQuizState): Promise<void> {
       const db = getFirestore();
       const uid = getAuth()?.currentUser?.uid;
@@ -77,6 +87,9 @@ function OptionalQuiz({ state, setToken }: OptionalQuizInterface) {
             skipped_optional_data_section: false,
           });
         }
+        await updateDoc(doc(db, `/users/${uid}`), {
+          user_type: transformToGenericClass(values.userType)
+        })
       } catch (e) {
         ErrorHandler.setFieldError("*", t("unknownError"));
       }
@@ -84,34 +97,29 @@ function OptionalQuiz({ state, setToken }: OptionalQuizInterface) {
       history.push(`${routes.SignUp}/${routes.SignUpSteps.finish}`);
     },
   });
+  
 
-  // const emailError =
-  //   (formik.errors.email && formik.touched.email) || errors.email.length > 0;
-
-  // Remove error message when user starts typing again.
-  // useEffect(
-  //   () => ErrorHandler.setFieldError("email", ""),
-  //   [formik.values.email]
-  // );
-
-  //Reset the token to avoid going through errors
+  // Reset the token to avoid going through errors
   useEffect(() => setToken(""), []);
-  useEffect(() => {
-    document.title = `${t("signup")} - Fluency`;
-  }, [i18next.language]);
 
   const titleMsg = t("tell-us-a-bit-more-about-you");
 
-  const [userType, setUserType] = useAtom(quizUserType);
   const [whoAreYouPrompt, openSelectWhoAreYou] = useState(false);
-
-  const handleUserTypeSelect = (userType: string) => {
-    setUserType(userType);
-  };
 
   const handleSelectWhoAreYou = () => {
     openSelectWhoAreYou(true);
   };
+
+  const handleSelectOption = (result: string) => {
+    formik.setValues({
+      ...formik.values,
+      userType: result,
+    });
+  };
+
+  const whoAreYouError = Boolean(
+    formik.errors.userType && formik.touched.userType
+  );
 
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
@@ -131,11 +139,18 @@ function OptionalQuiz({ state, setToken }: OptionalQuizInterface) {
         list={userTypes}
         onSelect={handleUserTypeSelect}
       /> */}
-      <WhoAreYouDialog state={whoAreYouPrompt} setState={openSelectWhoAreYou} />
+      <WhoAreYouDialog
+        state={whoAreYouPrompt}
+        onCloseDialog={() => {
+          openSelectWhoAreYou(false);
+        }}
+        onSelectOption={handleSelectOption}
+      />
       <TextField
+        error={whoAreYouError}
         onClick={handleSelectWhoAreYou}
-        label="Cine esti?"
-        className="mb-3"
+        disabled={true}
+        value={t(formik.values.userType)}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -145,6 +160,7 @@ function OptionalQuiz({ state, setToken }: OptionalQuizInterface) {
         }}
         variant="outlined"
       />
+      <hr style={{ backgroundColor: "transparent" }} />
       <TextField
         helperText={formik.errors.companyName}
         id="demo-helper-text-misaligned"

@@ -16,3 +16,10 @@ export const userTypes = [
 export const defUserType = userTypes[3];
 export const emailVerificationSubmitted = atom(false);
 export const userTypesIndicators = [5, 5, 5, 4];
+
+export const userTypesGenerics = [
+  "marketer",
+  "entrepreneur",
+  "agency",
+  "influencer",
+];

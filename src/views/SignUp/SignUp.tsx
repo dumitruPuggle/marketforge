@@ -32,10 +32,11 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import i18next from "i18next";
 import FormHighlights from "../../components/FormHighlights/FormHighlights";
 import { isUserAuthed } from "../../App";
+import LoadingBar from "react-top-loading-bar";
 
+export const barLoadingProgress = atom(0);
 export const verifyExistingAccountAtom = atom(false);
 export const backgroundBlurred = atom(false);
-export const quizUserType = atom(userTypes[1]);
 
 function SignUp() {
   const location = useLocation();
@@ -79,6 +80,7 @@ function SignUp() {
   // (Conditional) Quiz Component
   const [quizToken, setQuizToken] = useState("");
   const quiz = useState({
+    userType: userTypes[3],
     companyName: "",
     numberOfEmployees: 0,
   });
@@ -143,6 +145,8 @@ function SignUp() {
     );
   };
 
+  const [progress, setProgress] = useAtom(barLoadingProgress);
+
   return (
     <div
       style={{ position: "absolute", inset: 0, top: '-40px' }}
@@ -167,6 +171,11 @@ function SignUp() {
             </BackItem>
           </>
         }
+      />
+      <LoadingBar
+        color="#000000"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
       />
       <div
         style={{
@@ -292,7 +301,7 @@ function SignUp() {
               <OptionalQuiz state={quiz} setToken={setQuizToken} />
             </Route>
           )}
-          {isPasswordCompleted && (
+          {true && (
             <Route exact path={`${path}/${routes.SignUpSteps.finish}`}>
               <Success />
             </Route>

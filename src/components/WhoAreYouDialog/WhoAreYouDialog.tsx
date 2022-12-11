@@ -1,24 +1,49 @@
 import { Classes, Dialog } from "@blueprintjs/core";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 import AccountCircleVector from "../../assets/person.crop.circle.fill.svg";
 import { userTypes } from "../../constant/SignUp.Constant";
 import checkmark from "../../assets/success.svg";
+import { useState } from "react";
 
 export default function WhoAreYouDialog({
   state,
-  setState,
+  onCloseDialog,
+  onSelectOption
 }: {
   state: boolean;
-  setState: Function;
+  onCloseDialog: Function;
+  onSelectOption: Function;
 }) {
   const { t } = useTranslation();
   // const history = useHistory();
 
+  const [userTypesPrc, setUserTypes] = useState(userTypes.map((nameid: string, index) => ({
+    id: index,
+    nameid,
+    selected: false
+  })))
+
+
+  const setSelected = (id: number) => {
+    setUserTypes((prev: any) => prev.map((obj: any) => {
+      if (obj.id === id){
+        onSelectOption(obj.nameid)
+        return {
+          ...obj,
+          selected: true
+        }
+      }
+      return {
+        ...obj,
+        selected: false
+      }
+    }))
+  }
+
   return (
     <Dialog
       isOpen={state}
-      onClose={() => setState(false)}
+      onClose={() => onCloseDialog()}
       canOutsideClickClose={true}
       canEscapeKeyClose={true}
       style={{
@@ -52,16 +77,16 @@ export default function WhoAreYouDialog({
           className="mb-2"
           alt=""
         />
-        <h5>{t("selectACategory")}</h5>
-        <small>{t("required")}</small>
+        <h5>{t("whoAreYou")}</h5>
+        <small>{t("selectACategory")}</small>
         <div style={{ marginBottom: 0, width: '100%' }} className={Classes.DIALOG_BODY}>
           <div className="lang-list">
-            {userTypes.map((nameid: string) => (
-              <div style={{width: '100%'}} className="lang-list-item">
+            {userTypesPrc.map(({id, nameid, selected}) => (
+              <div onClick={() => setSelected(id)} style={{width: '100%'}} className="lang-list-item">
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <small style={{ fontWeight: 600 }}>{t(nameid.split('-')[1])}</small>
                 </div>
-                {true && (
+                {selected && (
                   <img
                     className="lang-list-item-checkmark"
                     src={checkmark}
@@ -75,7 +100,7 @@ export default function WhoAreYouDialog({
         <button
           style={{ fontSize: 18 }}
           className="w-100 mt-3 outline-button"
-          onClick={() => setState(false)}
+          onClick={() => onCloseDialog()}
         >
           {t("ok")}
         </button>
