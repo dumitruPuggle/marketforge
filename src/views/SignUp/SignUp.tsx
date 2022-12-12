@@ -158,10 +158,14 @@ function SignUp() {
         right={
           <>
             <BackItem style={{ marginRight: 8 }}>
-              <FormHighlights />
+              {
+                showLangPopUp &&
+                <FormHighlights />
+              }
             </BackItem>
             <BackItem>
               <LanguagePopUp
+                disabled={!showLangPopUp}
                 style={{
                   opacity: showLangPopUp ? 1 : 0,
                   position: "static",
