@@ -77,8 +77,11 @@ function EmailVerification({
           ErrorHandler.resetAllErrors();
         }
       } catch (e: any) {
+        const message = e.response?.data?.message;
         if (e.message === "Network Error") {
           ErrorHandler.setFieldError("*", t("networkError"));
+        } else if (message === "Token expired") {
+          window.location.reload()
         } else {
           ErrorHandler.setFieldError("email", e.response.data.message);
         }
