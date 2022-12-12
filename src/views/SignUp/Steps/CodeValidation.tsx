@@ -5,7 +5,7 @@ import NativeButton from "../../../components/Buttons/NativeButton";
 import CodeInput from "../../../components/CodeInput/CodeInput";
 import Indicator from "../../../components/Indicator/Indicator";
 import { routes } from "../../../service/internal-routes";
-import { useHistory } from "react-router-dom";
+import { Prompt, useHistory } from "react-router-dom";
 import Timer from "../../../components/Timer/Timer";
 import jwtDecode from "jwt-decode";
 import { useEffect, useState } from "react";
@@ -13,7 +13,10 @@ import Error from "../../../service/Auth/SignUp/ErrorHandler";
 import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
 import { SessionThree } from "../../../service/Auth/SignUp/SessionThree.Service";
-import { codeValidationStep, indicatorTotalSteps } from "../../../constant/SignUp.Constant";
+import {
+  codeValidationStep,
+  indicatorTotalSteps,
+} from "../../../constant/SignUp.Constant";
 import { atom, useAtom } from "jotai";
 import DialogTokenExpired from "../../../components/DialogTokenExpired/DialogTokenExpired";
 import { backShown, backTitle } from "../SignUp";
@@ -22,7 +25,7 @@ export const codeValidationExpire = atom(false);
 
 type CodeVerificationState = {
   code: Array<any>;
-}
+};
 
 interface ICodeVerificationError {
   code: string;
@@ -30,15 +33,24 @@ interface ICodeVerificationError {
 }
 
 interface CodeVerificationInterface {
-  state: [CodeVerificationState, React.Dispatch<React.SetStateAction<CodeVerificationState>>];
+  state: [
+    CodeVerificationState,
+    React.Dispatch<React.SetStateAction<CodeVerificationState>>
+  ];
   submitToken: string;
   setToken: React.Dispatch<React.SetStateAction<string>>;
   onApproved: () => void;
   onDialogRetryClick: () => void;
 }
 
-function CodeValidation({ state, submitToken, setToken, onApproved, onDialogRetryClick }: CodeVerificationInterface) {
-  const [totalSteps,] = useAtom(indicatorTotalSteps);
+function CodeValidation({
+  state,
+  submitToken,
+  setToken,
+  onApproved,
+  onDialogRetryClick,
+}: CodeVerificationInterface) {
+  const [totalSteps] = useAtom(indicatorTotalSteps);
   const history = useHistory();
   const { t } = useTranslation();
 
@@ -96,22 +108,34 @@ function CodeValidation({ state, submitToken, setToken, onApproved, onDialogRetr
   const [, setBackShown] = useAtom(backShown);
   const [, setBackTitle] = useAtom(backTitle);
   useEffect(() => {
-    setBackShown(true)
-    setBackTitle(t('resendCode'))
-  }, [])
+    setBackShown(true);
+    setBackTitle(t("resendCode"));
+  }, []);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
+      <Prompt
+        message={(location, action) => {
+          if (!codeValidationExpired) {
+            return true;
+          }
+          return false;
+          // return location.pathname.endsWith("finish")
+          //   ? true
+          //   : `${t("areYouSureToCancel")}`;
+        }}
+      />
       {ErrorHandler.hasErrors() && (
         <ErrorBubble errorList={ErrorHandler.listErrors()} />
       )}
-      {
-        formik.isSubmitting &&
-        <LoadingForeground />
-      }
+      {formik.isSubmitting && <LoadingForeground />}
       <DialogTokenExpired
         state={codeValidationExpired}
         setState={setExpired}
-        onRetry={() => onDialogRetryClick()}
+        onRetry={() => {
+          setExpired(false);
+          onDialogRetryClick();
+          setTimeout(() => history.push(`${routes.SignUp}${routes.root}`), 100);
+        }}
       />
       <h4 className="mb-4 form-title">{t("verification")}</h4>
       <Indicator
@@ -130,9 +154,14 @@ function CodeValidation({ state, submitToken, setToken, onApproved, onDialogRetr
       <small className="w-100 form-disclaimer">
         {t("disclaimerVerification")}
       </small> */}
-      {submitToken && <Timer onExpire={() => {
-        setExpired(true);
-      }} endTime={expirationTime()} />}
+      {submitToken && (
+        <Timer
+          onExpire={() => {
+            setExpired(true);
+          }}
+          endTime={expirationTime()}
+        />
+      )}
     </form>
   );
 }
