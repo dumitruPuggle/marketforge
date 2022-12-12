@@ -8,7 +8,7 @@ import { routes } from "../../../service/internal-routes";
 import { useHistory } from "react-router-dom";
 import Timer from "../../../components/Timer/Timer";
 import jwtDecode from "jwt-decode";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Error from "../../../service/Auth/SignUp/ErrorHandler";
 import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
@@ -16,6 +16,7 @@ import { SessionThree } from "../../../service/Auth/SignUp/SessionThree.Service"
 import { codeValidationStep, indicatorTotalSteps } from "../../../constant/SignUp.Constant";
 import { atom, useAtom } from "jotai";
 import DialogTokenExpired from "../../../components/DialogTokenExpired/DialogTokenExpired";
+import { backShown, backTitle } from "../SignUp";
 
 export const codeValidationExpire = atom(false);
 
@@ -91,6 +92,13 @@ function CodeValidation({ state, submitToken, setToken, onApproved, onDialogRetr
   const handleValueChange = (value: Array<number | null>) => {
     formik.setFieldValue("code", value);
   };
+
+  const [, setBackShown] = useAtom(backShown);
+  const [, setBackTitle] = useAtom(backTitle);
+  useEffect(() => {
+    setBackShown(true)
+    setBackTitle(t('resendCode'))
+  }, [])
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {ErrorHandler.hasErrors() && (

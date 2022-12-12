@@ -18,7 +18,7 @@ import {
 } from "../../../constant/SignUp.Constant";
 import i18next from "i18next";
 import { useAtom } from "jotai";
-import { isImageShown } from "../SignUp";
+import { backTitle, isImageShown } from "../SignUp";
 
 type VerificationState = {
   phoneNumber: string;
@@ -130,9 +130,11 @@ const Verification = ({
   }, [i18next.language]);
 
   const [, setLogoShown] = useAtom(isImageShown);
+  const [, setBackTitle] = useAtom(backTitle);
 
   useEffect(() => {
     setLogoShown(false);
+    setBackTitle("default")
   }, []);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>

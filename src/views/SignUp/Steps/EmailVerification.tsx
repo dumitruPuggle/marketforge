@@ -18,7 +18,7 @@ import { lang } from "../../../translation/utils";
 import i18next from "i18next";
 import { useAtom } from "jotai";
 import { emailVerificationSubmitted } from "../../../constant/SignUp.Constant";
-import { isImageShown } from "../SignUp";
+import { backShown, backTitle, isImageShown } from "../SignUp";
 
 type VerificationState = {
   email: string;
@@ -81,7 +81,7 @@ function EmailVerification({
         if (e.message === "Network Error") {
           ErrorHandler.setFieldError("*", t("networkError"));
         } else if (message === "Token expired") {
-          window.location.reload()
+          window.location.reload();
         } else {
           ErrorHandler.setFieldError("email", e.response.data.message);
         }
@@ -89,6 +89,8 @@ function EmailVerification({
     },
   });
   const [, setLogoShown] = useAtom(isImageShown);
+  const [, setBackShown] = useAtom(backShown);
+  const [, setBackTitle] = useAtom(backTitle);
 
   useEffect(() => {
     // Automatically submit form, if not submitted
@@ -97,6 +99,8 @@ function EmailVerification({
       setSubmitted(true);
     }
     setLogoShown(false);
+    setBackShown(true);
+    setBackTitle("default");
   }, []);
   useEffect(() => {
     document.title = `${t("verification")} - Fluency`;
