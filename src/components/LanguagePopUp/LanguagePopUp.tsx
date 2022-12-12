@@ -3,13 +3,12 @@ import { getAnalytics, setUserProperties } from "firebase/analytics";
 import "./LanguagePopUp.css";
 import globe from "./globe.svg";
 import globe500 from "./globe500.svg";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18next";
 import checkmark from "../../assets/success.svg";
 import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai";
-import i18next from "i18next";
 // import us from "../../assets/us.png";
 // import ro from "../../assets/ro.png";
 // import ru from "../../assets/ru.png";
@@ -76,6 +75,8 @@ function LanguagePopUp({ style }: ILanguagePopUp) {
           style={{
             background: "transparent",
             boxShadow: "none",
+            paddingLeft: 10,
+            paddingRight: 10
           }}
           className={`${Classes.DIALOG_HEADER} dialog-title-header`}
         >

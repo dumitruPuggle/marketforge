@@ -1,3 +1,7 @@
+*:focus {
+  outline: none !important;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -21,4 +25,12 @@ code {
 
 .css-nbg81b-MuiInputBase-root-MuiInput-root:after {
   border-bottom: 2px solid #424242 !important;
+}
+
+.bp4-overlay-backdrop {
+  background-color: rgba(0, 0, 0, 0.275) !important;
+}
+
+.bp4-overlay {
+  z-index: 10 !important;
 }

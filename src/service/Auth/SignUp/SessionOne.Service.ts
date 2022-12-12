@@ -2,7 +2,6 @@ import SignUpService from "./SignUp.Service";
 
 interface SessionOneSubmitProps {
   lang: string;
-  userType: string;
   verifyExistingAccount: boolean;
   email: string;
   firstName: string;
@@ -14,7 +13,7 @@ class SessionOne extends SignUpService {
     super();
   }
   public submit = async (body: SessionOneSubmitProps) => {
-    return this.api.post("signup/1", body).then(({ data }) => data);
+    return this.api.post("verify/1", body).then(({ data }) => data);
   };
 }
 

@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 
-export const indicatorTotalSteps = atom(4);
+export const indicatorTotalSteps = atom(5);
 export const personalInfoStep = 0;
 export const verificationStep = 1;
 export const codeValidationStep = 2;
@@ -16,3 +16,10 @@ export const userTypes = [
 export const defUserType = userTypes[3];
 export const emailVerificationSubmitted = atom(false);
 export const userTypesIndicators = [5, 5, 5, 4];
+
+export const userTypesGenerics = [
+  "marketer",
+  "entrepreneur",
+  "agency",
+  "influencer",
+];

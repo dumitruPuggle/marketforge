@@ -12,18 +12,13 @@ import { routes } from "../../../service/internal-routes";
 import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
 import { SessionOne } from "../../../service/Auth/SignUp/SessionOne.Service";
-import { verifyExistingAccountAtom } from "../SignUp";
+import { isImageShown, verifyExistingAccountAtom } from "../SignUp";
 import {
   personalInfoStep,
   indicatorTotalSteps,
-  userTypes,
 } from "../../../constant/SignUp.Constant";
-import { UserTypeInput } from "../../../components/SignUpUserTypeInput/UserTypeInput";
 import { useAtom } from "jotai";
 import { emailVerificationSubmitted } from "../../../constant/SignUp.Constant";
-// import AppleSignUp from '../../../assets/apple-id-sign-up-with_2x.png'
-// import GoogleSignUp from '../../../assets/google-sign-up-with_2x.png'
-import GoogleIcon from "../../../assets/google-small-logo.svg";
 import GoogleSignInButton from "../../../components/GoogleSignInButton/GoogleSignInButton";
 
 type PersonalInfoState = {
@@ -35,16 +30,12 @@ type PersonalInfoState = {
 interface PersonInfoInterface {
   state: [PersonalInfoState, Function];
   setToken: Function;
-  userType: string;
-  changeUserType: Function;
   onGoogleProviderClick: (submit: Function) => void;
 }
 
 function PersonInfo({
   state,
   setToken,
-  userType,
-  changeUserType,
   onGoogleProviderClick,
 }: PersonInfoInterface) {
   const [verifyExistingAccount, setVerifyExistingAccount] = useAtom(
@@ -86,7 +77,6 @@ function PersonInfo({
       try {
         const { token } = await new SessionOne().submit({
           verifyExistingAccount,
-          userType,
           lang: i18next.language,
           ...values,
         });
@@ -131,14 +121,12 @@ function PersonInfo({
     document.title = `${t("signup")} - Fluency`;
   }, [i18next.language]);
 
-  const handleUserTypeSelect = (userType: string) => {
-    changeUserType(userType);
-  };
-
   // Reset email state
+  const [, setLogoShown] = useAtom(isImageShown);
   const [, setEmailVerificationSubmitted] = useAtom(emailVerificationSubmitted);
   useEffect(() => {
     setEmailVerificationSubmitted(false);
+    setLogoShown(true);
   }, []);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
@@ -147,15 +135,15 @@ function PersonInfo({
       )}
       {formik.isSubmitting && <LoadingForeground />}
       <h4 className="form-title">{t("signup-welcome")}</h4>
-      <UserTypeInput
+      {/* <UserTypeInput
         hidden
         className="mb-4"
         userType={userType}
         list={userTypes}
         onSelect={handleUserTypeSelect}
-      />
+      /> */}
       <Indicator
-        className="mb-4"
+        className="mb-4 mt-4"
         value={personalInfoStep}
         counts={totalSteps}
       />

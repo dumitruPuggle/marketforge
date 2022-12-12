@@ -8,15 +8,17 @@ import NativeButton from "../../../components/Buttons/NativeButton";
 import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import Indicator from "../../../components/Indicator/Indicator";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
-import { defaults } from "../../../defaults";
 import { SessionTwo } from "../../../service/Auth/SignUp/SessionTwo.Service";
 import Error from "../../../service/Auth/SignUp/ErrorHandler";
 import { routes } from "../../../service/internal-routes";
-import { lang } from "../../../translation/utils";
 import { IMaskInput } from "react-imask";
-import { indicatorTotalSteps, verificationStep } from "../../../constant/SignUp.Constant";
+import {
+  indicatorTotalSteps,
+  verificationStep,
+} from "../../../constant/SignUp.Constant";
 import i18next from "i18next";
 import { useAtom } from "jotai";
+import { isImageShown } from "../SignUp";
 
 type VerificationState = {
   phoneNumber: string;
@@ -30,30 +32,33 @@ interface VerificationInterface {
   setToken: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const TextMaskCustom = React.forwardRef<HTMLElement>(
-  function TextMaskCustom(props: any, ref) {
-    const { onChange, ...other }: any = props;
-    return (
-      <IMaskInput
-        {...other}
-        mask="(#00) 000-0000"
-        definitions={{
-          '#': /[1-9]/,
-        }}
-        inputRef={ref}
-        onAccept={(value: any, mask) => onChange({ target: { name: props.name, value: mask.unmaskedValue } })}
-        overwrite
-      />
-    );
-  },
-);
+const TextMaskCustom = React.forwardRef<HTMLElement>(function TextMaskCustom(
+  props: any,
+  ref
+) {
+  const { onChange, ...other }: any = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="(#00) 000-0000"
+      definitions={{
+        "#": /[1-9]/,
+      }}
+      inputRef={ref}
+      onAccept={(value: any, mask) =>
+        onChange({ target: { name: props.name, value: mask.unmaskedValue } })
+      }
+      overwrite
+    />
+  );
+});
 
 const Verification = ({
   state,
   submitToken,
   setToken,
 }: VerificationInterface) => {
-  const [totalSteps,] = useAtom(indicatorTotalSteps);
+  const [totalSteps] = useAtom(indicatorTotalSteps);
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -87,7 +92,7 @@ const Verification = ({
         const { token } = await new SessionTwo().submit(
           {
             provider: "phone_provider",
-            phoneNumber: `+3730${values.phoneNumber}`
+            phoneNumber: `+3730${values.phoneNumber}`,
           },
           {
             _temptoken: submitToken,
@@ -99,8 +104,11 @@ const Verification = ({
           ErrorHandler.resetAllErrors();
         }
       } catch (e: any) {
+        const message = e.response?.data?.message;
         if (e.message === "Network Error") {
           ErrorHandler.setFieldError("*", t("networkError"));
+        } else if (message === "Token expired") {
+          window.location.reload()
         } else {
           ErrorHandler.setFieldError("phoneNumber", e.response.data.message);
         }
@@ -109,7 +117,7 @@ const Verification = ({
   });
   const error =
     (formik.errors.phoneNumber && formik.touched.phoneNumber) ||
-    errors.phoneNumber?.length > 0
+    errors.phoneNumber?.length > 0;
 
   //Remove error message when user starts typing again.
   // eslint-disable-next-line
@@ -118,17 +126,20 @@ const Verification = ({
     [formik.values.phoneNumber]
   );
   useEffect(() => {
-    document.title = `${t('verification')} - Fluency`
-  }, [i18next.language])
+    document.title = `${t("verification")} - Fluency`;
+  }, [i18next.language]);
+
+  const [, setLogoShown] = useAtom(isImageShown);
+
+  useEffect(() => {
+    setLogoShown(false);
+  }, []);
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {ErrorHandler.hasErrors() && (
         <ErrorBubble errorList={ErrorHandler.listErrors()} />
       )}
-      {
-        formik.isSubmitting &&
-        <LoadingForeground />
-      }
+      {formik.isSubmitting && <LoadingForeground />}
       <h4 className="mb-4 form-title">{t("verification")}</h4>
       <Indicator
         className="mb-4"
@@ -149,7 +160,9 @@ const Verification = ({
         value={formik.values.phoneNumber}
         InputProps={{
           inputComponent: TextMaskCustom as any,
-          startAdornment: <InputAdornment position="start">+373</InputAdornment>
+          startAdornment: (
+            <InputAdornment position="start">+373</InputAdornment>
+          ),
         }}
       />
       <NativeButton className="mt-3" type="submit" title={t("next")} />

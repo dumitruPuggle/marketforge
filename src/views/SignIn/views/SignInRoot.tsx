@@ -12,6 +12,10 @@ import {
 } from "firebase/auth";
 import GoogleSignInButton from "../../../components/GoogleSignInButton/GoogleSignInButton";
 import i18next from "i18next";
+import { useState } from "react";
+import Error from "../../../service/Auth/SignUp/ErrorHandler";
+import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
+import * as Yup from "yup";
 
 type SignInRootState = {
   email: string;
@@ -23,29 +27,54 @@ interface SignInRoot {
 }
 
 function SignInRoot({ state }: SignInRoot) {
+  const { t } = useTranslation();
   const [signInRoot, setSignInRoot] = state;
 
   const isMobile = useMediaQuery({ maxWidth: 767 });
+
+  const errorsInitialState = {
+    email: "",
+    password: "",
+    "*": "",
+  };
+
+  const [errors, setErrors] = useState(errorsInitialState);
+  const ErrorHandler = new Error(errors, setErrors, errorsInitialState);
 
   const formik = useFormik({
     initialValues: {
       email: signInRoot.email,
       password: signInRoot.password,
     },
+    validationSchema: Yup.object({
+      email: Yup.string().email(t("invalidAddress")).required(t("required")),
+      password: Yup.string().required(t('required'))
+    }),
     onSubmit: async function (values) {
       const auth = getAuth();
       setSignInRoot(values);
       signInWithEmailAndPassword(auth, values.email, values.password).catch(
         (error) => {
           const errorCode = error.code;
-          const errorMessage = error.message;
+          // const errorMessage = error.message;
 
-          console.log(errorCode);
+          const USER_NOT_FOUND = "auth/user-not-found";
+          const WRONG_PASSWORD = "auth/wrong-password";
+          const TOO_MANY_REQUESTS = "auth/too-many-requests";
+
+          if (errorCode === USER_NOT_FOUND || errorCode === WRONG_PASSWORD) {
+            ErrorHandler.setFieldError(
+              "*",
+              t("incorrectLoginOrPassword")
+            );
+          }
+          if (errorCode === TOO_MANY_REQUESTS) {
+            ErrorHandler.setFieldError("*", t('unknownError'));
+          }
         }
       );
     },
   });
-  const { t } = useTranslation();
 
   const handleGoogleSignInButton = () => {
     const auth = getAuth();
@@ -54,7 +83,7 @@ function SignInRoot({ state }: SignInRoot) {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then(async (result) => {
-        // Check if user is valid:  
+        // Check if user is valid:
       })
       .catch((error) => {
         // setBackgroundBlurred(false);
@@ -69,11 +98,18 @@ function SignInRoot({ state }: SignInRoot) {
         //   GoogleAuthProvider.credentialFromError(error);
         // // ...
         console.log(errorCode);
+        ErrorHandler.setFieldError("*", errorCode);
       });
   };
+
+  const emailError = formik.errors.email && formik.touched.email ? true : false;
+  const passwordError = formik.errors.password && formik.touched.password ? true : false;
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {formik.isSubmitting && <LoadingForeground />}
+      {ErrorHandler.hasErrors() && (
+        <ErrorBubble errorList={ErrorHandler.listErrors()} />
+      )}
       <h4 className="form-title mt-3">{t("signin")}</h4>
       <TextField
         variant="outlined"
@@ -84,7 +120,7 @@ function SignInRoot({ state }: SignInRoot) {
         type="email"
         className="mb-3 mt-3"
         size={"medium"}
-        // error={emailError}
+        error={emailError}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values.email}
@@ -98,7 +134,7 @@ function SignInRoot({ state }: SignInRoot) {
         type="password"
         className="mb-3"
         size={"medium"}
-        // error={emailError}
+        error={passwordError}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values.password}

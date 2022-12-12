@@ -1,4 +1,4 @@
-import { Button, Classes, Dialog } from "@blueprintjs/core";
+import { Classes, Dialog } from "@blueprintjs/core";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { routes } from "../../service/internal-routes";
@@ -47,6 +47,8 @@ export default function DialogTokenExpired({
           style={{
             background: "transparent",
             boxShadow: "none",
+            paddingLeft: 10,
+            paddingRight: 10
           }}
           className={`${Classes.DIALOG_HEADER} dialog-title-header`}
         >
