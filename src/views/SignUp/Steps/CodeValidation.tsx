@@ -143,6 +143,25 @@ function CodeValidation({
         value={codeValidationStep}
         counts={totalSteps}
       />
+      {submitToken && (
+        <Timer
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            position: "static",
+            fontSize: 10,
+            padding: 0,
+            paddingRight: 8,
+            marginBottom: 10
+          }}
+          onExpire={() => {
+            setExpired(true);
+          }}
+          endTime={expirationTime()}
+        />
+      )}
       {
         <CodeInput
           value={formik.values.code}
@@ -154,14 +173,6 @@ function CodeValidation({
       <small className="w-100 form-disclaimer">
         {t("disclaimerVerification")}
       </small> */}
-      {submitToken && (
-        <Timer
-          onExpire={() => {
-            setExpired(true);
-          }}
-          endTime={expirationTime()}
-        />
-      )}
     </form>
   );
 }
