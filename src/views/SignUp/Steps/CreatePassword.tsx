@@ -15,6 +15,8 @@ import { SessionFour } from "../../../service/Auth/SignUp/SessionFour.Service";
 import Error from "../../../service/Auth/SignUp/ErrorHandler";
 import { routes } from "../../../service/internal-routes";
 import { version } from "../../../constant/version";
+import { useAtom } from "jotai";
+import { backShown, backTitle } from "../SignUp";
 
 interface IPasswordServiceProps {
   state: [object, Function];
@@ -108,6 +110,13 @@ function PasswordService({
     () => ErrorHandler.setFieldError("password", ""),
     [formik.values.password]
   );
+
+  const [, setBackShown] = useAtom(backShown);
+  const [, setBackTitle] = useAtom(backTitle);
+  useEffect(() => {
+    setBackShown(false)
+    setBackTitle('default')
+  }, [])
 
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>

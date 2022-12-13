@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import './Timer.css'
 
-export default function Timer({endTime, onExpire}: {endTime: number, onExpire: () => void;}) {
+export default function Timer({endTime, onExpire, style}: {endTime: number, onExpire: () => void; style?: object;}) {
     const [time, setTime] = useState<string>()
     const [isExpired, setExpirated] = useState<boolean>(false)
     //Display how much time is left until the endTime in MM:SS format
@@ -27,7 +27,7 @@ export default function Timer({endTime, onExpire}: {endTime: number, onExpire: (
         return () => clearInterval(interval);
     }, [])
     if (time && !isExpired) return (
-        <div style={{width: '90px'}} className="timer-body">
+        <div style={{width: '90px', ...style}} className="timer-body">
             <pre className="timer-text mb-0">{time}</pre>
             {/* <small>left until 💣</small> */}
         </div>

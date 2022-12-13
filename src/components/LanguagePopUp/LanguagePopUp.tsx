@@ -20,9 +20,11 @@ export const userChangedLanguageManually = atomWithStorage(
 
 interface ILanguagePopUp {
   style?: any;
+  disabled?: boolean;
 }
 
-function LanguagePopUp({ style }: ILanguagePopUp) {
+function LanguagePopUp({ style, disabled }: ILanguagePopUp) {
+  const isDisabled = disabled ? disabled : false;
   const [userChangedLanguageYet, setUserChangedLanguage] = useAtom(
     userChangedLanguageManually
   );
@@ -132,11 +134,11 @@ function LanguagePopUp({ style }: ILanguagePopUp) {
         <img
           style={{
             width: "20px",
-            cursor: "pointer",
+            cursor: !isDisabled ? "pointer" : "default",
           }}
           draggable={false}
           src={globe}
-          onClick={() => setDialog(true)}
+          onClick={() => !isDisabled && setDialog(true)}
           alt=""
         />
       </div>

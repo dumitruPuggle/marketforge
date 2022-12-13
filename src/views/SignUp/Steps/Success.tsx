@@ -19,7 +19,7 @@ function Success() {
   useEffect(() => {
     ProgressAnimation({
       setProgress,
-      onEnd: () => console.log("finished"),
+      onEnd: () => handleSetupAccount(),
       animationDuration: 3600,
       offset: 200,
       incrementAmount: 6.58,

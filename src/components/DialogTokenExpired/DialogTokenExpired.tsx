@@ -24,7 +24,6 @@ export default function DialogTokenExpired({
     if (onRetry) {
       onRetry();
     }
-    history.push(`${routes.SignUp}${routes.root}`);
   };
 
   return (

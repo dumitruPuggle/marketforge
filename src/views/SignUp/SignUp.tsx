@@ -38,6 +38,8 @@ export const barLoadingProgress = atom(0);
 export const verifyExistingAccountAtom = atom(false);
 export const backgroundBlurred = atom(false);
 export const isImageShown = atom(true);
+export const backShown = atom(false);
+export const backTitle = atom("default");
 
 function SignUp() {
   const location = useLocation();
@@ -148,20 +150,24 @@ function SignUp() {
 
   const [progress, setProgress] = useAtom(barLoadingProgress);
   const [isLogoShown] = useAtom(isImageShown);
-
+  const [isBackShown,] = useAtom(backShown);
+  const [backBtnMessage, ] = useAtom(backTitle)
   return (
     <div
       style={{ position: "absolute", inset: 0, top: "-40px" }}
       className="form-center mt-5"
     >
       <Back
+        value={backBtnMessage}
+        hideBackNavigation={!isBackShown}
         right={
           <>
             <BackItem style={{ marginRight: 8 }}>
-              <FormHighlights />
+              {showLangPopUp && <FormHighlights />}
             </BackItem>
             <BackItem>
               <LanguagePopUp
+                disabled={!showLangPopUp}
                 style={{
                   opacity: showLangPopUp ? 1 : 0,
                   position: "static",
@@ -183,7 +189,7 @@ function SignUp() {
         style={{
           filter: isBlurred ? "blur(30px)" : "blur(0px)",
           transition: "200ms linear",
-          width: '100%',
+          width: "100%",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",

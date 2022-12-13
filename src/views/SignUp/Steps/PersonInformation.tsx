@@ -12,7 +12,7 @@ import { routes } from "../../../service/internal-routes";
 import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import LoadingForeground from "../../../components/LoadingForeground/LoadingForeground";
 import { SessionOne } from "../../../service/Auth/SignUp/SessionOne.Service";
-import { isImageShown, verifyExistingAccountAtom } from "../SignUp";
+import { backShown, backTitle, isImageShown, verifyExistingAccountAtom } from "../SignUp";
 import {
   personalInfoStep,
   indicatorTotalSteps,
@@ -124,10 +124,15 @@ function PersonInfo({
   // Reset email state
   const [, setLogoShown] = useAtom(isImageShown);
   const [, setEmailVerificationSubmitted] = useAtom(emailVerificationSubmitted);
+  const [, setBackShown] = useAtom(backShown);
+  const [, setBackTitle] = useAtom(backTitle);
   useEffect(() => {
     setEmailVerificationSubmitted(false);
     setLogoShown(true);
+    setBackShown(false);
+    setBackTitle('default')
   }, []);
+
   return (
     <form className="form-global" onSubmit={formik.handleSubmit}>
       {ErrorHandler.hasErrors() && (
