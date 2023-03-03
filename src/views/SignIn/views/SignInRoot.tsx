@@ -16,6 +16,8 @@ import { useState } from "react";
 import Error from "../../../service/Auth/SignUp/ErrorHandler";
 import ErrorBubble from "../../../components/ErrorBubble/ErrorBubble";
 import * as Yup from "yup";
+import { isUserAuthed } from "../../../App";
+import { useAtom } from "jotai";
 
 type SignInRootState = {
   email: string;
@@ -40,6 +42,8 @@ function SignInRoot({ state }: SignInRoot) {
 
   const [errors, setErrors] = useState(errorsInitialState);
   const ErrorHandler = new Error(errors, setErrors, errorsInitialState);
+
+  const [isUserAuthenticated,] = useAtom(isUserAuthed)
 
   const formik = useFormik({
     initialValues: {
@@ -70,6 +74,8 @@ function SignInRoot({ state }: SignInRoot) {
           }
           if (errorCode === TOO_MANY_REQUESTS) {
             ErrorHandler.setFieldError("*", t('unknownError'));
+          } else {
+            ErrorHandler.setFieldError("*", t('unknownError'));
           }
         }
       );
@@ -84,6 +90,7 @@ function SignInRoot({ state }: SignInRoot) {
     signInWithPopup(auth, provider)
       .then(async (result) => {
         // Check if user is valid:
+        console.log(isUserAuthenticated)
       })
       .catch((error) => {
         // setBackgroundBlurred(false);
