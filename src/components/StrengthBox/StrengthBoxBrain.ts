@@ -1,22 +1,11 @@
 import axios from "axios";
-import * as brain from "brain.js";
 import TrainingData from "./TrainingData.json";
 
 class StrengthBoxBrain {
-  private brain;
   constructor() {
-    const config = {
-      hiddenLayers: [3],
-			activation: "sigmoid",
-			iterations: 800
-    };
-    this.brain = new brain.NeuralNetwork(config);
-    this.train();
+
   }
 
-  private train(): void {
-    this.brain.train(TrainingData);
-  }
 
   private passwordConfig(password: string) {
     const length = password.length || 0;
@@ -39,10 +28,9 @@ class StrengthBoxBrain {
 	}
 
   public async getStrength(password: string) {
-    const input = this.passwordConfig(password);
 
-    const level = (this.brain.run(input) as any)['strength'];
-		const strength = Math.round(level * 100);
+    
+		const strength = Math.round(10 * 100);
     if (password.length === 0){
       return 0;
     }
